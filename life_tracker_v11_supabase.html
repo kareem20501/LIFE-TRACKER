@@ -8,42 +8,50 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 /* ══════════════════════════════════════════════
-   COLOR SYSTEM — New Palette
-   #EDD8DF  cream/light
-   #E8C283  warm gold light
-   #EBA328  gold
-   #AB6937  amber/brown
-   #1E4445  deep teal (bg base)
-   #233436  darker teal
+   COLOR SYSTEM — Cristache Palette
+   Silver Bird   #FBF5F0  (near-white cream)
+   Prairie Dune  #FBD5BD  (warm peach)
+   Femininity    #C7C2CE  (lavender grey)
+   Indigo Bloom  #8A83DA  (medium indigo)
+   Royal Wisteria#463699  (deep indigo)
+   Cold Steel    #262335  (near-black bg)
 ══════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  /* Core palette */
-  --col-cream:#EDD8DF;
-  --col-gold-lt:#E8C283;
-  --col-gold:#EBA328;
-  --col-amber:#AB6937;
-  --col-teal:#1E4445;
-  --col-teal-dark:#233436;
+  /* Core Cristache palette */
+  --silver-bird:#FBF5F0;
+  --prairie-dune:#FBD5BD;
+  --femininity:#C7C2CE;
+  --indigo-bloom:#8A83DA;
+  --royal-wisteria:#463699;
+  --cold-steel:#262335;
 
   /* Semantic roles */
-  --bg:var(--col-teal-dark);
-  --bg-deep:#1a2a2b;
-  --surface:rgba(30,68,69,0.55);
-  --surface2:rgba(35,52,54,0.85);
-  --border:rgba(235,163,40,0.18);
-  --border2:rgba(235,163,40,0.45);
-  --text:#FFFFFF;
-  --text2:var(--col-cream);
-  --text3:var(--col-gold-lt);
-  --dim:rgba(237,216,223,0.55);
-  --very-dim:rgba(237,216,223,0.28);
+  --bg:#262335;
+  --bg-deep:#1C1A28;
+  --surface:rgba(138,131,218,0.10);
+  --surface2:rgba(138,131,218,0.18);
+  --border:rgba(138,131,218,0.22);
+  --border2:rgba(138,131,218,0.55);
+  --text:#FBF5F0;
+  --text2:#FBD5BD;
+  --text3:#C7C2CE;
+  --dim:rgba(251,245,240,0.78);
+  --very-dim:rgba(251,245,240,0.50);
+
+  /* Accent aliases for buttons / highlights */
+  --col-cream:#FBF5F0;
+  --col-gold-lt:#FBD5BD;
+  --col-gold:#8A83DA;
+  --col-amber:#463699;
+  --col-teal:#463699;
+  --col-teal-dark:#1C1A28;
 
   /* Gradients */
-  --grad-accent:linear-gradient(135deg,#AB6937,#EBA328);
-  --grad-bar:linear-gradient(90deg,#AB6937,#EBA328,#E8C283);
-  --grad-hero:linear-gradient(160deg,#1a2a2b 0%,#1E4445 55%,#AB6937 100%);
-  --grad-nav:rgba(26,42,43,0.97);
+  --grad-accent:linear-gradient(135deg,#463699,#8A83DA);
+  --grad-bar:linear-gradient(90deg,#463699,#8A83DA,#C7C2CE);
+  --grad-hero:linear-gradient(160deg,#1C1A28 0%,#262335 55%,#463699 100%);
+  --grad-nav:rgba(28,26,40,0.98);
 
   /* UI */
   --f-body:'Inter',sans-serif;
@@ -51,16 +59,16 @@
   --f-title:'Cinzel',serif;
   --radius-card:14px;
   --radius-sm:8px;
-  --shadow-glow:0 0 20px rgba(235,163,40,0.15);
-  --shadow-card:0 2px 16px rgba(0,0,0,0.28);
+  --shadow-glow:0 0 28px rgba(138,131,218,0.22);
+  --shadow-card:0 2px 20px rgba(0,0,0,0.28);
 }
 
 html,body{height:100%;overflow:hidden}
-body{font-family:var(--f-body);background:var(--bg);color:var(--text);font-size:15px;-webkit-font-smoothing:antialiased}
+body{font-family:var(--f-body);background:var(--bg);color:var(--text);font-size:16px;-webkit-font-smoothing:antialiased}
 button{cursor:pointer;font-family:var(--f-body);border:none;outline:none;background:none}
 input,select{font-family:var(--f-body);outline:none;color:#fff}
 ::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-thumb{background:rgba(235,163,40,0.3);border-radius:4px}
+::-webkit-scrollbar-thumb{background:rgba(138,131,218,0.35);border-radius:4px}
 ::-webkit-scrollbar-track{background:transparent}
 
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
@@ -81,11 +89,11 @@ input,select{font-family:var(--f-body);outline:none;color:#fff}
 .hidden-scroll::-webkit-scrollbar{display:none}
 
 .sec-label{
-  font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
-  color:var(--col-gold-lt);margin-bottom:12px;margin-top:24px;
+  font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:var(--col-gold-lt);margin-bottom:14px;margin-top:26px;
   display:flex;align-items:center;gap:8px
 }
-.sec-label::after{content:'';flex:1;height:1px;background:rgba(235,163,40,0.14)}
+.sec-label::after{content:'';flex:1;height:1px;background:rgba(240,168,48,0.22)}
 
 .info-btn{
   background:none;border:1px solid rgba(237,216,223,0.28);border-radius:50%;
@@ -102,22 +110,22 @@ input,select{font-family:var(--f-body);outline:none;color:#fff}
   pointer-events:none
 }
 .toast{
-  background:#1a2e2f;border:1px solid var(--border2);border-radius:12px;
+  background:#1C1A28;border:1px solid var(--border2);border-radius:12px;
   padding:11px 20px;font-size:13px;font-weight:600;color:#fff;
   white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,0.45);
   animation:toastIn .28s ease;pointer-events:auto;max-width:90vw;white-space:normal;text-align:center
 }
-.toast.success{border-color:rgba(100,200,100,0.4);background:#0f2a1a}
-.toast.error{border-color:rgba(235,100,80,0.4);background:#2a0f0f}
-.toast.warn{border-color:rgba(235,163,40,0.4);background:#2a1e0a}
+.toast.success{border-color:rgba(100,220,140,0.4);background:#0f1e16}
+.toast.error{border-color:rgba(235,100,80,0.4);background:#200f0f}
+.toast.warn{border-color:rgba(251,213,189,0.4);background:#1e1512}
 
 /* ── Confirm modal (replaces browser confirm()) ── */
 #confirm-overlay{
   display:none;position:fixed;inset:0;z-index:8000;
-  background:rgba(0,0,0,0.7);backdrop-filter:blur(6px)
+  background:rgba(0,0,0,0.75);backdrop-filter:blur(6px)
 }
 .confirm-box{
-  background:#162324;border:1px solid var(--border2);border-radius:var(--radius-card);
+  background:#1C1A28;border:1px solid var(--border2);border-radius:var(--radius-card);
   padding:24px;width:90%;max-width:360px;
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
   animation:fadeIn .2s ease-out
@@ -129,31 +137,31 @@ input,select{font-family:var(--f-body);outline:none;color:#fff}
 /* ── Nav ── */
 nav{
   position:sticky;top:0;z-index:100;display:flex;align-items:center;
-  justify-content:space-between;padding:0 20px;height:52px;
+  justify-content:space-between;padding:0 22px;height:56px;
   background:var(--grad-nav);backdrop-filter:blur(22px);
   -webkit-backdrop-filter:blur(22px);border-bottom:1px solid var(--border)
 }
 .nav-logo{
-  font-family:var(--f-brand);font-size:15px;font-weight:900;
+  font-family:var(--f-brand);font-size:16px;font-weight:900;
   letter-spacing:2.5px;text-transform:uppercase;
-  background:linear-gradient(90deg,var(--col-cream),var(--col-gold),var(--col-amber));
+  background:linear-gradient(90deg,var(--silver-bird),var(--indigo-bloom),var(--royal-wisteria));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 0 10px rgba(235,163,40,0.4))
+  filter:drop-shadow(0 0 12px rgba(138,131,218,0.5))
 }
-.nav-right{display:flex;gap:4px;align-items:center}
+.nav-right{display:flex;gap:5px;align-items:center}
 .nav-link{
-  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--dim);padding:5px 10px;border-radius:7px;transition:all .2s
+  font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--dim);padding:6px 11px;border-radius:7px;transition:all .2s
 }
-.nav-link:hover,.nav-link.active{color:#fff;background:rgba(235,163,40,0.12)}
+.nav-link:hover,.nav-link.active{color:#fff;background:rgba(138,131,218,0.18)}
 
 /* ── Sync dot ── */
 .sync-dot{
   width:7px;height:7px;border-radius:50%;flex-shrink:0;
   transition:background .3s;margin-right:2px
 }
-.sync-dot.ok{background:#4ecdc4;box-shadow:0 0 6px #4ecdc488}
-.sync-dot.syncing{background:var(--col-gold);animation:spin 1s linear infinite;border-radius:0;clip-path:polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%)}
+.sync-dot.ok{background:#8A83DA;box-shadow:0 0 6px #8A83DA88}
+.sync-dot.syncing{background:var(--indigo-bloom);animation:spin 1s linear infinite;border-radius:0;clip-path:polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%)}
 .sync-dot.error{background:#ff6b6b}
 
 /* ── Loading overlay ── */
@@ -164,10 +172,10 @@ nav{
 }
 #loading-overlay.done{opacity:0;pointer-events:none}
 .loading-spinner{
-  width:36px;height:36px;border:2px solid rgba(235,163,40,0.15);
-  border-top-color:var(--col-gold);border-radius:50%;animation:spin .8s linear infinite
+  width:36px;height:36px;border:2px solid rgba(138,131,218,0.15);
+  border-top-color:var(--indigo-bloom);border-radius:50%;animation:spin .8s linear infinite
 }
-.loading-text{font-family:var(--f-brand);font-size:12px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--col-gold)}
+.loading-text{font-family:var(--f-brand);font-size:12px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--indigo-bloom)}
 .loading-sub{font-size:11px;color:var(--dim);letter-spacing:1px}
 
 /* ══════════════════════
@@ -176,57 +184,67 @@ nav{
 .log-skill-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:10px;margin-bottom:8px
+  gap:11px;margin-bottom:8px
 }
 .log-skill-card{
-  background:var(--surface);border:1px solid var(--border);border-radius:12px;
-  padding:14px 12px;transition:border-color .2s,box-shadow .2s,background .2s;
-  display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden
+  background:var(--surface);border:1px solid var(--border);border-radius:13px;
+  padding:16px 14px;transition:border-color .2s,box-shadow .2s,background .2s;
+  display:flex;flex-direction:column;gap:7px;position:relative;overflow:hidden
 }
 .log-skill-card::before{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(235,163,40,0.04),transparent);
+  background:linear-gradient(135deg,rgba(138,131,218,0.06),transparent);
   pointer-events:none
 }
 .log-skill-card.met{
-  border-color:rgba(235,163,40,0.5);
-  background:rgba(235,163,40,0.07);
-  box-shadow:0 0 16px rgba(235,163,40,0.12)
+  border-color:rgba(138,131,218,0.65);
+  background:rgba(138,131,218,0.13);
+  box-shadow:0 0 20px rgba(138,131,218,0.18)
 }
 .log-skill-card-name{
-  font-size:12px;font-weight:700;color:var(--col-cream);
+  font-size:13px;font-weight:700;color:var(--silver-bird);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   display:flex;align-items:center;gap:5px
 }
 .log-skill-card.met .log-skill-card-name{color:#fff}
-.log-skill-card-goal{font-size:10px;color:var(--dim);font-weight:600}
-.log-skill-card-goal.met{color:var(--col-gold);font-weight:700}
+.log-skill-card-goal{font-size:12px;color:var(--dim);font-weight:600}
+.log-skill-card-goal.met{color:var(--indigo-bloom);font-weight:700}
 .log-skill-input-wrap{display:flex;align-items:center;gap:5px;margin-top:2px}
 .log-skill-input{
-  flex:1;min-width:0;background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.08);border-radius:7px;
-  padding:7px 9px;color:#fff;font-size:15px;font-weight:700;
-  text-align:center;width:100%;transition:border-color .2s
+  flex:1;min-width:0;background:rgba(70,54,153,0.22);
+  border:1px solid rgba(138,131,218,0.30);border-radius:8px;
+  padding:8px 10px;color:#FBF5F0;font-size:16px;font-weight:700;
+  text-align:center;width:100%;transition:border-color .2s;
+  -moz-appearance:textfield
 }
-.log-skill-input:focus{border-color:var(--border2);background:rgba(235,163,40,0.07)}
-.log-skill-input::placeholder{font-size:12px;font-weight:400;color:var(--very-dim)}
+.log-skill-input::-webkit-inner-spin-button,
+.log-skill-input::-webkit-outer-spin-button{
+  -webkit-appearance:inner-spin-button;
+  opacity:1;
+  background:rgba(138,131,218,0.25);
+  border-left:1px solid rgba(138,131,218,0.30);
+  cursor:pointer;
+  filter:invert(1) hue-rotate(240deg) brightness(1.3)
+}
+.log-skill-input:focus{border-color:var(--border2);background:rgba(70,54,153,0.30)}
+.log-skill-input::placeholder{font-size:13px;font-weight:400;color:var(--very-dim)}
 .log-save-btn{
-  background:var(--col-amber);border:none;border-radius:7px;
-  padding:7px 10px;color:#fff;font-size:12px;font-weight:700;
+  background:var(--royal-wisteria);border:none;border-radius:8px;
+  padding:8px 11px;color:#FBF5F0;font-size:12px;font-weight:700;
   transition:background .2s;white-space:nowrap;flex-shrink:0
 }
-.log-save-btn:hover{background:var(--col-gold)}
-.log-progress-bar{height:3px;border-radius:100px;background:rgba(255,255,255,0.06);overflow:hidden;margin-top:2px}
+.log-save-btn:hover{background:var(--indigo-bloom)}
+.log-progress-bar{height:4px;border-radius:100px;background:rgba(255,255,255,0.08);overflow:hidden;margin-top:2px}
 .log-progress-fill{height:100%;border-radius:100px;transition:width .6s}
 
 /* ── Dashboard ── */
 .dash-skill-card{
-  background:var(--surface);border:1px solid var(--border);border-radius:12px;
-  padding:13px;cursor:pointer;transition:border-color .2s,transform .18s,box-shadow .2s;
+  background:var(--surface);border:1px solid var(--border);border-radius:13px;
+  padding:14px;cursor:pointer;transition:border-color .2s,transform .18s,box-shadow .2s;
   box-shadow:var(--shadow-card)
 }
 .dash-skill-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:var(--shadow-glow)}
-.rank-pts-bar{height:5px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden;margin:4px 0 2px}
+.rank-pts-bar{height:6px;background:rgba(255,255,255,0.08);border-radius:100px;overflow:hidden;margin:5px 0 3px}
 .rank-pts-fill{height:100%;border-radius:100px;transition:width 1s cubic-bezier(0.4,0,0.2,1)}
 
 /* ── Overall Level — mobile-first stacked ── */
@@ -247,12 +265,12 @@ nav{
 /* Rank road — scrolls horizontally, always readable */
 .rank-road-wrap{overflow-x:auto;padding:10px 0 6px;margin-top:8px}
 .rank-road{display:inline-flex;gap:0;align-items:center;padding:4px 8px;white-space:nowrap}
-.rank-point{display:flex;flex-direction:column;align-items:center;min-width:44px;flex-shrink:0}
-.rank-dot{width:10px;height:10px;border-radius:50%;background:var(--surface2);margin:3px 0;border:2px solid var(--border)}
+.rank-point{display:flex;flex-direction:column;align-items:center;min-width:48px;flex-shrink:0}
+.rank-dot{width:11px;height:11px;border-radius:50%;background:var(--surface2);margin:3px 0;border:2px solid var(--border)}
 .rank-dot.current{background:var(--col-gold);border-color:#fff;box-shadow:0 0 10px var(--col-gold)}
-.rank-dot.past{background:var(--col-amber);border-color:rgba(235,163,40,0.5)}
-.rank-name{font-size:6.5px;font-weight:700;color:var(--dim);text-align:center;line-height:1.2;max-width:44px;white-space:normal}
-.rank-xp-lbl{font-size:5.5px;color:var(--very-dim);white-space:nowrap}
+.rank-dot.past{background:var(--col-amber);border-color:rgba(240,168,48,0.5)}
+.rank-name{font-size:8px;font-weight:700;color:var(--dim);text-align:center;line-height:1.2;max-width:48px;white-space:normal}
+.rank-xp-lbl{font-size:7px;color:var(--very-dim);white-space:nowrap}
 .rank-connector{width:18px;height:2px;background:var(--border);align-self:center;flex-shrink:0}
 .rank-connector.past-conn{background:var(--col-amber)}
 
@@ -265,15 +283,15 @@ nav{
 .sd-body{max-width:660px;margin:0 auto;padding:20px 16px 90px}
 
 /* ── Streak ── */
-.streak-box{margin-bottom:14px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-card)}
-.streak-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.streak-lbl{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3)}
-.streak-num{font-family:var(--f-title);font-size:22px;font-weight:700;color:#fff}
-.streak-unit{font-size:10px;font-weight:600;color:var(--dim)}
-.streak-track{position:relative;height:9px;background:rgba(255,255,255,0.05);border-radius:100px;overflow:visible}
-.streak-fill{height:9px;border-radius:100px;background:var(--grad-bar);transition:width 1.2s cubic-bezier(.16,1,.3,1);position:relative;min-width:3px;box-shadow:0 0 10px rgba(235,163,40,0.45)}
+.streak-box{margin-bottom:16px;padding:16px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-card)}
+.streak-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.streak-lbl{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3)}
+.streak-num{font-family:var(--f-title);font-size:26px;font-weight:700;color:#fff}
+.streak-unit{font-size:12px;font-weight:600;color:var(--dim)}
+.streak-track{position:relative;height:10px;background:rgba(255,255,255,0.07);border-radius:100px;overflow:visible}
+.streak-fill{height:10px;border-radius:100px;background:var(--grad-bar);transition:width 1.2s cubic-bezier(.16,1,.3,1);position:relative;min-width:3px;box-shadow:0 0 12px rgba(138,131,218,0.55)}
 .streak-flame{position:absolute;right:-9px;top:-11px;font-size:18px;filter:drop-shadow(0 0 5px rgba(255,140,50,.65))}
-.streak-miles{display:flex;justify-content:space-between;margin-top:6px;font-size:8.5px;font-weight:600;letter-spacing:1px;color:var(--very-dim)}
+.streak-miles{display:flex;justify-content:space-between;margin-top:7px;font-size:10px;font-weight:600;letter-spacing:1px;color:var(--very-dim)}
 
 /* ── Skill level bar ── */
 .sd-rank-bar-box{margin-bottom:14px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-card)}
@@ -283,25 +301,25 @@ nav{
 /* ── Chart ── */
 .chart-box{margin-bottom:14px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-card)}
 .chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.chart-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3)}
+.chart-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3)}
 .chart-tabs{display:flex;gap:3px}
-.chart-tab{background:none;border:1px solid var(--border);border-radius:5px;padding:4px 8px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--dim);transition:all .2s}
-.chart-tab.active{background:rgba(235,163,40,0.15);border-color:var(--border2);color:#fff}
-.chart-tab:hover:not(.active){border-color:rgba(235,163,40,0.3);color:var(--text3)}
+.chart-tab{background:none;border:1px solid var(--border);border-radius:5px;padding:5px 9px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--dim);transition:all .2s}
+.chart-tab.active{background:rgba(138,131,218,0.22);border-color:var(--border2);color:#FBF5F0}
+.chart-tab:hover:not(.active){border-color:rgba(138,131,218,0.4);color:var(--text3)}
 .chart-wrap{position:relative;height:200px;overflow-x:hidden;overflow-y:visible}
-.chart-scroll{overflow-x:auto;height:100%;scrollbar-width:thin;scrollbar-color:rgba(235,163,40,0.25) transparent}
+.chart-scroll{overflow-x:auto;height:100%;scrollbar-width:thin;scrollbar-color:rgba(138,131,218,0.30) transparent}
 .chart-scroll::-webkit-scrollbar{height:3px}
-.chart-scroll::-webkit-scrollbar-thumb{background:rgba(235,163,40,0.25);border-radius:3px}
+.chart-scroll::-webkit-scrollbar-thumb{background:rgba(138,131,218,0.30);border-radius:3px}
 .bar-group{display:inline-flex;gap:4px;align-items:flex-end;height:100%;padding:28px 8px 32px;min-width:max-content}
-.bar-col-wrap{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:22px;height:100%;gap:0}
-.bar-val{font-size:7px;font-weight:700;color:var(--text3);margin-bottom:3px;white-space:nowrap;text-align:center;line-height:1;flex-shrink:0}
-.bar-col{width:13px;border-radius:3px 3px 0 0;min-height:2px;flex-shrink:0}
+.bar-col-wrap{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:24px;height:100%;gap:0}
+.bar-val{font-size:8px;font-weight:700;color:var(--text3);margin-bottom:3px;white-space:nowrap;text-align:center;line-height:1;flex-shrink:0}
+.bar-col{width:14px;border-radius:3px 3px 0 0;min-height:2px;flex-shrink:0}
 .bar-lbl-wrap{display:flex;flex-direction:column;align-items:center;margin-top:4px;gap:1px;flex-shrink:0}
-.bar-lbl{font-size:7px;font-weight:600;color:var(--dim);white-space:nowrap}
-.bar-lbl-yr{font-size:6px;font-weight:700;color:rgba(235,163,40,0.5);white-space:nowrap}
-.goal-line{position:absolute;left:0;right:0;border-top:1.5px dashed rgba(235,163,40,0.5);pointer-events:none;z-index:2}
-.goal-lbl{position:absolute;right:6px;top:-13px;font-size:7px;font-weight:700;color:var(--col-gold);background:rgba(26,42,43,0.85);padding:1px 4px;border-radius:3px}
-.chart-empty{display:flex;align-items:center;justify-content:center;height:100%;font-size:12px;color:var(--dim)}
+.bar-lbl{font-size:8px;font-weight:600;color:var(--dim);white-space:nowrap}
+.bar-lbl-yr{font-size:7px;font-weight:700;color:rgba(138,131,218,0.70);white-space:nowrap}
+.goal-line{position:absolute;left:0;right:0;border-top:1.5px dashed rgba(138,131,218,0.60);pointer-events:none;z-index:2}
+.goal-lbl{position:absolute;right:6px;top:-13px;font-size:8px;font-weight:700;color:var(--indigo-bloom);background:rgba(28,26,40,0.92);padding:1px 4px;border-radius:3px}
+.chart-empty{display:flex;align-items:center;justify-content:center;height:100%;font-size:13px;color:var(--dim)}
 
 /* ── Calendar ── */
 .cal-box{padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-card)}
@@ -311,26 +329,26 @@ nav{
 .cal-nav-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--text3);font-size:14px;line-height:1;transition:all .2s}
 .cal-nav-btn:hover{border-color:var(--border2);color:#fff}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.cal-head{text-align:center;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--very-dim);padding-bottom:6px}
-.cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:5px;font-size:9px;font-weight:600;color:rgba(237,216,223,0.25);background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.025);transition:all .2s;gap:1px;padding:2px}
+.cal-head{text-align:center;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--very-dim);padding-bottom:7px}
+.cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:6px;font-size:10px;font-weight:600;color:rgba(251,245,240,0.32);background:rgba(255,255,255,0.028);border:1px solid rgba(255,255,255,0.05);transition:all .2s;gap:1px;padding:2px}
 .cal-cell.empty{background:none;border:none}
-.cal-cell.cal-today{border-color:rgba(235,163,40,0.4);color:var(--col-gold-lt)}
-.cal-cell.cal-met{background:rgba(235,163,40,0.4);border-color:var(--col-gold);color:#fff;font-weight:800;box-shadow:0 0 8px rgba(235,163,40,0.3)}
-.cal-cell.cal-partial{background:rgba(235,163,40,0.1);border-color:rgba(235,163,40,0.28);color:var(--col-gold)}
-.cal-day-num{font-size:9px;font-weight:700;line-height:1}
-.cal-day-val{font-size:6px;font-weight:600;line-height:1;opacity:.8}
-.cal-legend{display:flex;gap:12px;margin-top:8px;justify-content:flex-end}
-.cal-legend-item{display:flex;align-items:center;gap:4px;font-size:8px;color:var(--very-dim)}
-.cal-legend-dot{width:7px;height:7px;border-radius:2px}
+.cal-cell.cal-today{border-color:rgba(138,131,218,0.6);color:var(--indigo-bloom)}
+.cal-cell.cal-met{background:rgba(138,131,218,0.50);border-color:var(--indigo-bloom);color:#FBF5F0;font-weight:800;box-shadow:0 0 10px rgba(138,131,218,0.40)}
+.cal-cell.cal-partial{background:rgba(138,131,218,0.14);border-color:rgba(138,131,218,0.38);color:var(--indigo-bloom)}
+.cal-day-num{font-size:10px;font-weight:700;line-height:1}
+.cal-day-val{font-size:7px;font-weight:600;line-height:1;opacity:.85}
+.cal-legend{display:flex;gap:12px;margin-top:9px;justify-content:flex-end}
+.cal-legend-item{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--very-dim)}
+.cal-legend-dot{width:8px;height:8px;border-radius:2px}
 
 /* ── Analytics ── */
 .analytics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:16px}
 .analytics-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-card);padding:16px;box-shadow:var(--shadow-card);min-width:0;overflow:hidden}
-.analytics-card h4{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--col-gold-lt);margin-bottom:11px}
-.analytics-bar-item{display:flex;align-items:center;gap:7px;margin-bottom:7px;min-width:0}
-.analytics-bar-label{flex:1;font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.analytics-bar-value{font-size:11px;font-weight:600;color:var(--text);min-width:40px;text-align:right;flex-shrink:0}
-.analytics-bar-track{flex:2;height:7px;background:rgba(255,255,255,0.05);border-radius:100px;overflow:hidden;min-width:40px}
+.analytics-card h4{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--col-gold-lt);margin-bottom:12px}
+.analytics-bar-item{display:flex;align-items:center;gap:7px;margin-bottom:8px;min-width:0}
+.analytics-bar-label{flex:1;font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.analytics-bar-value{font-size:12px;font-weight:600;color:var(--text);min-width:40px;text-align:right;flex-shrink:0}
+.analytics-bar-track{flex:2;height:8px;background:rgba(255,255,255,0.07);border-radius:100px;overflow:hidden;min-width:40px}
 .analytics-bar-fill{height:100%;border-radius:100px;transition:width .8s}
 
 /* Category level card */
@@ -342,8 +360,8 @@ nav{
 }
 .cat-level-big{font-family:var(--f-title);font-size:44px;font-weight:700;color:#fff;line-height:1;flex-shrink:0}
 .cat-level-details{flex:1;min-width:140px}
-.cat-level-rank{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
-.cat-level-xp{font-size:11px;color:var(--dim);margin-bottom:8px}
+.cat-level-rank{font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px}
+.cat-level-xp{font-size:12px;color:var(--dim);margin-bottom:9px}
 .cat-level-bar-track{height:8px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden}
 .cat-level-bar-fill{height:100%;border-radius:100px;transition:width 1s cubic-bezier(0.4,0,0.2,1)}
 .line-chart-container{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
@@ -352,17 +370,26 @@ nav{
 
 /* ── Control ── */
 .control-input{
-  background:rgba(255,255,255,0.06);border:1px solid var(--border);
-  border-radius:var(--radius-sm);padding:8px 11px;color:#fff;font-size:13px;
-  transition:border-color .2s
+  background:rgba(70,54,153,0.20);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:9px 12px;color:#FBF5F0;font-size:14px;
+  transition:border-color .2s;-moz-appearance:textfield
 }
-.control-input:focus{border-color:var(--border2);background:rgba(235,163,40,0.06)}
-.btn-danger{background:rgba(255,80,80,0.13);color:#ff7070;border:1px solid rgba(255,80,80,0.25);border-radius:6px;padding:5px 11px;font-size:11px;font-weight:600;transition:all .2s}
-.btn-danger:hover{background:rgba(255,80,80,0.25)}
-.btn-sm{background:rgba(255,255,255,0.06);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:11px;font-weight:600;transition:all .2s}
+.control-input::-webkit-inner-spin-button,
+.control-input::-webkit-outer-spin-button{
+  -webkit-appearance:inner-spin-button;
+  opacity:1;
+  background:rgba(138,131,218,0.25);
+  border-left:1px solid rgba(138,131,218,0.28);
+  cursor:pointer;
+  filter:invert(1) hue-rotate(240deg) brightness(1.2)
+}
+.control-input:focus{border-color:var(--border2);background:rgba(70,54,153,0.28)}
+.btn-danger{background:rgba(255,80,80,0.14);color:#ff9090;border:1px solid rgba(255,80,80,0.30);border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;transition:all .2s}
+.btn-danger:hover{background:rgba(255,80,80,0.26)}
+.btn-sm{background:rgba(138,131,218,0.12);color:var(--silver-bird);border:1px solid var(--border);border-radius:6px;padding:6px 11px;font-size:12px;font-weight:600;transition:all .2s}
 .btn-sm:hover{border-color:var(--border2);color:#fff}
-.btn-primary{background:var(--col-amber);color:#fff;border:1px solid var(--col-gold);border-radius:6px;padding:6px 14px;font-size:12px;font-weight:600;transition:all .2s}
-.btn-primary:hover{background:var(--col-gold)}
+.btn-primary{background:var(--royal-wisteria);color:#FBF5F0;border:1px solid var(--indigo-bloom);border-radius:6px;padding:7px 15px;font-size:13px;font-weight:600;transition:all .2s}
+.btn-primary:hover{background:var(--indigo-bloom)}
 
 /* ── Emoji picker wider (accepts all emoji) ── */
 .emoji-input{width:60px;font-size:18px;text-align:center;padding:6px 8px}
@@ -371,10 +398,10 @@ nav{
    RESPONSIVE
 ══════════════════════ */
 @media(max-width:640px){
-  .log-skill-grid{grid-template-columns:repeat(2,1fr);gap:8px}
-  .log-skill-card{padding:11px 10px}
-  .log-skill-card-name{font-size:11px}
-  .log-skill-input{font-size:16px;padding:8px}
+  .log-skill-grid{grid-template-columns:repeat(2,1fr);gap:9px}
+  .log-skill-card{padding:12px 11px}
+  .log-skill-card-name{font-size:12px}
+  .log-skill-input{font-size:17px;padding:8px}
 
   /* Overall card: stack vertically on mobile */
   .overall-card{flex-direction:column;align-items:center;text-align:center;gap:10px}
@@ -384,25 +411,25 @@ nav{
 
   .sd-hero-inner{flex-direction:column;text-align:center;gap:12px}
   .sd-rank-big{margin:0 auto}
-  .sd-body{padding:14px 10px 90px}
-  .sd-skill-name{font-size:19px}
+  .sd-body{padding:14px 12px 90px}
+  .sd-skill-name{font-size:20px}
 
-  nav{padding:0 10px}
-  .nav-logo{font-size:12px;letter-spacing:1.5px}
-  .nav-link{padding:4px 7px;font-size:9px}
+  nav{padding:0 12px}
+  .nav-logo{font-size:13px;letter-spacing:1.5px}
+  .nav-link{padding:5px 8px;font-size:10px}
 
   /* Analytics — constrain to screen */
   .analytics-grid{grid-template-columns:1fr}
   .analytics-card{max-width:100%;overflow:hidden}
   .cat-level-hero{flex-direction:column;align-items:center;text-align:center}
-  .cat-level-big{font-size:36px}
+  .cat-level-big{font-size:38px}
   .cat-level-details{min-width:0;width:100%}
 
   /* Prevent horizontal bleed */
   .line-chart-container{max-width:calc(100vw - 32px)}
 
-  .sec-label{font-size:9px}
-  body{font-size:14px}
+  .sec-label{font-size:10px}
+  body{font-size:15px}
 }
 </style>
 </head>
@@ -533,6 +560,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 /* لا تغير أي شيء تحت هذا السطر */
 let _sb = null; // Supabase client instance
 </script>
+
 <!-- ══════════════════════════════════════════════
      TOAST + CONFIRM HELPERS
 ══════════════════════════════════════════════ -->
@@ -961,30 +989,30 @@ function renderDashboard(){
       <div class="overall-card">
         <div class="overall-badge-wrap">${rankBadgeSVG(tier,sub,46)}</div>
         <div class="overall-info">
-          <div style="font-family:var(--f-title);font-size:19px;font-weight:700;line-height:1">Level ${level}</div>
-          <div style="font-size:10px;color:var(--dim);margin-top:2px">${Math.round(totalXP).toLocaleString()} XP &nbsp;·&nbsp; <span style="color:${rank.col};font-weight:700">${rank.label}</span></div>
+          <div style="font-family:var(--f-title);font-size:21px;font-weight:700;line-height:1">Level ${level}</div>
+        <div style="font-size:12px;color:var(--dim);margin-top:3px">${Math.round(totalXP).toLocaleString()} XP &nbsp;·&nbsp; <span style="color:${rank.col};font-weight:700">${rank.label}</span></div>
         </div>
         <div class="overall-bar-wrap">
-          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3);margin-bottom:4px">
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:5px">
             <span style="color:${rank.col};font-weight:700">${rank.label}</span>
             ${nextRank?`<span><strong style="color:#fff">${xpToNext.toLocaleString()}</strong> XP → ${nextRank.label}</span>`:'<span style="color:var(--col-gold)">✨ MAX</span>'}
           </div>
-          <div class="progress-bar" style="height:8px">
+          <div class="progress-bar" style="height:9px">
             <div class="progress-fill" style="width:${levelPct}%;background:linear-gradient(90deg,${rank.col}88,${rank.col})"></div>
           </div>
-          <div style="font-size:9px;color:var(--text3);text-align:right;margin-top:3px">${levelPct}% · Lv${Math.min(level+1,LEVEL_MAX)}</div>
+          <div style="font-size:10px;color:var(--text3);text-align:right;margin-top:4px">${levelPct}% · Lv${Math.min(level+1,LEVEL_MAX)}</div>
         </div>
-        <div style="font-size:9px;color:var(--very-dim);width:100%;text-align:center">Tap to view rank road →</div>
+        <div style="font-size:11px;color:var(--very-dim);width:100%;text-align:center">Tap to view rank road →</div>
       </div>`;
   } else {
     document.getElementById('overall-level').innerHTML=`
       <div class="card" style="max-width:820px;margin:0 auto">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:6px">
-          <div style="font-family:var(--f-title);font-size:14px;color:var(--col-gold-lt)">
+          <div style="font-family:var(--f-title);font-size:15px;color:var(--col-gold-lt)">
             Rank Road &nbsp;·&nbsp; Level <strong style="color:#fff">${level}</strong>
-            <span style="font-size:10px;color:${rank.col};font-weight:700;margin-left:6px">${rank.label}</span>
+            <span style="font-size:11px;color:${rank.col};font-weight:700;margin-left:6px">${rank.label}</span>
           </div>
-          <div style="font-size:9px;color:var(--very-dim)">Tap to collapse</div>
+          <div style="font-size:10px;color:var(--very-dim)">Tap to collapse</div>
         </div>
         <div class="rank-road-wrap hidden-scroll">${buildRankRoad(level)}</div>
       </div>`;
@@ -1001,25 +1029,25 @@ function renderDashboard(){
     const skills=SKILLS.filter(s=>s.cat===cat.id);
     if(!skills.length) return;
     const catXP=calcCategoryXP(cat.id); const catInfo=getLevelInfo(catXP,XP_PER_CAT_LEVEL);
-    let cards=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:9px;margin-top:10px">`;
+    let cards=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px">`;
     skills.forEach(s=>{
       const total=calcTotal(s.key); const sxp=calcSkillXP(s.key);
       const si=getLevelInfo(sxp,XP_PER_SKILL_LEVEL); const streak=calcStreak(s.key);
       const sp=si.rank.label.split(' ');
       cards+=`<div class="dash-skill-card" onclick="navigate('skill','${s.key}')">
-        <div style="display:flex;align-items:center;gap:5px;margin-bottom:6px">
-          <span style="color:rgba(237,216,223,0.35)">${skillSVG(s.key,15)}</span>
-          <span style="flex:1;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(237,216,223,0.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.name}</span>
-          <span>${rankBadgeSVG(sp[0],sp.slice(1).join(' ')||'',17)}</span>
+        <div style="display:flex;align-items:center;gap:5px;margin-bottom:7px">
+          <span style="color:rgba(255,248,240,0.40)">${skillSVG(s.key,16)}</span>
+          <span style="flex:1;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,248,240,0.65);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.name}</span>
+          <span>${rankBadgeSVG(sp[0],sp.slice(1).join(' ')||'',18)}</span>
         </div>
-        <div style="font-size:18px;font-weight:800;color:#fff;line-height:1">${total}</div>
-        <div style="font-size:9px;color:var(--dim);margin-bottom:5px">${s.unit}${streak?' 🔥'+streak+'d':''}</div>
-        <div style="display:flex;justify-content:space-between;font-size:8px;font-weight:700;text-transform:uppercase;margin-bottom:3px">
+        <div style="font-size:22px;font-weight:800;color:#fff;line-height:1">${total}</div>
+        <div style="font-size:10px;color:var(--dim);margin-bottom:6px">${s.unit}${streak?' 🔥'+streak+'d':''}</div>
+        <div style="display:flex;justify-content:space-between;font-size:9px;font-weight:700;text-transform:uppercase;margin-bottom:4px">
           <span style="color:${si.rank.col}">Lv${si.level} · ${si.rank.label}</span>
           <span style="color:var(--dim)">${si.levelPct}%</span>
         </div>
         <div class="rank-pts-bar"><div class="rank-pts-fill" style="width:${si.levelPct}%;background:linear-gradient(90deg,${si.rank.col}70,${si.rank.col})"></div></div>
-        ${si.nextRank?`<div style="font-size:8px;color:var(--dim);margin-top:3px"><strong style="color:var(--col-gold-lt)">${si.xpToNext}</strong> XP → Lv${si.level+1}</div>`:`<div style="font-size:8px;color:var(--col-gold);margin-top:3px">✨ Max Level</div>`}
+        ${si.nextRank?`<div style="font-size:9px;color:var(--dim);margin-top:4px"><strong style="color:var(--col-gold-lt)">${si.xpToNext}</strong> XP → Lv${si.level+1}</div>`:`<div style="font-size:9px;color:var(--col-gold);margin-top:4px">✨ Max Level</div>`}
       </div>`;
     });
     cards+='</div>';
@@ -1027,7 +1055,7 @@ function renderDashboard(){
       <div class="sec-label">${cat.icon} ${cat.name}
         <button class="info-btn" onclick="event.stopPropagation();navigate('analytics','${cat.id}')" title="Analytics">i</button>
       </div>
-      <div style="font-size:11px;color:var(--text3);margin-bottom:4px">
+      <div style="font-size:12px;color:var(--text3);margin-bottom:6px">
         Level <strong style="color:#fff">${catInfo.level}</strong>
         &nbsp;·&nbsp; <span style="color:${catInfo.rank.col};font-weight:700">${catInfo.rank.label}</span>
         &nbsp;·&nbsp; ${Math.round(catXP).toLocaleString()} XP
@@ -1057,12 +1085,12 @@ function renderSkillDetail(){
       <div class="sd-rank-big">${rankBadgeSVG(lt,ls,62)}</div>
       <div class="sd-right">
         <div style="display:flex;align-items:center;gap:8px">
-          <span style="color:var(--col-gold)">${skillSVG(detailKey,20)}</span>
+          <span style="color:var(--col-gold)">${skillSVG(detailKey,22)}</span>
           <span class="sd-skill-name">${skill.name}</span>
         </div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:${rank.col}">${rank.label}</div>
-        <div style="font-size:13px;color:var(--text3)">Level <strong style="color:#fff;font-size:20px;font-family:var(--f-title)">${level}</strong><span style="font-size:10px;color:var(--dim)"> / ${LEVEL_MAX}</span></div>
-        <div style="font-size:13px;color:var(--text3)">Total: <strong style="color:#fff">${total} ${skill.unit}</strong> &nbsp;·&nbsp; <span style="color:var(--col-gold)">${Math.round(sxp).toLocaleString()} XP</span></div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:${rank.col}">${rank.label}</div>
+        <div style="font-size:14px;color:var(--text3)">Level <strong style="color:#fff;font-size:22px;font-family:var(--f-title)">${level}</strong><span style="font-size:11px;color:var(--dim)"> / ${LEVEL_MAX}</span></div>
+        <div style="font-size:14px;color:var(--text3)">Total: <strong style="color:#fff">${total} ${skill.unit}</strong> &nbsp;·&nbsp; <span style="color:var(--col-gold)">${Math.round(sxp).toLocaleString()} XP</span></div>
       </div>
     </div>`;
 
@@ -1085,16 +1113,16 @@ function renderSkillDetail(){
     </div>
 
     <div class="sd-rank-bar-box">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;flex-wrap:wrap;gap:4px">
-        <div style="font-size:13px;font-weight:700;color:${rank.col}">${rank.label}</div>
-        <div style="font-size:11px;color:var(--dim)">Level ${level} / ${LEVEL_MAX}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:4px">
+        <div style="font-size:14px;font-weight:700;color:${rank.col}">${rank.label}</div>
+        <div style="font-size:12px;color:var(--dim)">Level ${level} / ${LEVEL_MAX}</div>
       </div>
-      <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:600;margin-bottom:5px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;margin-bottom:6px">
         <span style="color:var(--dim)">${Math.round(sxp%XP_PER_SKILL_LEVEL)} / ${XP_PER_SKILL_LEVEL} XP</span>
         ${nextRank?`<span style="color:var(--dim)">Next: <span style="color:${nextRank.col};font-weight:700">${nextRank.label}</span></span>`:`<span style="color:var(--col-gold)">✨ MAX</span>`}
       </div>
       <div class="sd-rank-bar-track"><div class="sd-rank-bar-fill" style="width:${levelPct}%;background:linear-gradient(90deg,${rank.col}55,${rank.col})"></div></div>
-      ${nextRank?`<div style="font-size:10px;color:var(--dim);margin-top:6px"><strong style="color:var(--col-gold-lt)">${xpToNext.toLocaleString()} XP</strong> to Level ${level+1}${level%3===0?` · Next rank: <span style="color:${nextRank.col};font-weight:700">${nextRank.label}</span>`:''}</div>`:''}
+      ${nextRank?`<div style="font-size:11px;color:var(--dim);margin-top:7px"><strong style="color:var(--col-gold-lt)">${xpToNext.toLocaleString()} XP</strong> to Level ${level+1}${level%3===0?` · Next rank: <span style="color:${nextRank.col};font-weight:700">${nextRank.label}</span>`:''}</div>`:''}
     </div>
 
     <div class="chart-box">
@@ -1203,14 +1231,14 @@ function renderAnalytics(catId){
     <div class="cat-level-hero" style="border-color:${ci.rank.col}44">
       <div>${rankBadgeSVG(cP[0],cP.slice(1).join(' ')||'',52)}</div>
       <div style="min-width:0">
-        <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--dim);margin-bottom:4px">Category Level</div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);margin-bottom:5px">Category Level</div>
         <div class="cat-level-big">${ci.level}</div>
       </div>
       <div class="cat-level-details">
         <div class="cat-level-rank" style="color:${ci.rank.col}">${ci.rank.label}</div>
         <div class="cat-level-xp">${Math.round(catXP).toLocaleString()} XP &nbsp;·&nbsp; ${ci.xpToNext.toLocaleString()} XP to Lv${Math.min(ci.level+1,LEVEL_MAX)}</div>
         <div class="cat-level-bar-track"><div class="cat-level-bar-fill" style="width:${ci.levelPct}%;background:linear-gradient(90deg,${ci.rank.col}66,${ci.rank.col})"></div></div>
-        <div style="font-size:9px;color:var(--very-dim);margin-top:5px">${ci.levelPct}% through this level</div>
+        <div style="font-size:10px;color:var(--very-dim);margin-top:6px">${ci.levelPct}% through this level</div>
       </div>
     </div>`;
 
