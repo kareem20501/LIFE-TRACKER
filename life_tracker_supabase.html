@@ -1054,7 +1054,9 @@ function renderDashboard(){
     });
     cards+='</div>';
     catHTML+=`
-      <div class="sec-label">${cat.icon} ${cat.name}</div>
+      <div class="sec-label">${cat.icon} ${cat.name}
+        <button class="info-btn" onclick="event.stopPropagation();navigate('analytics','${cat.id}')" title="Analytics">i</button>
+      </div>
       <div style="font-size:12px;color:var(--text3);margin-bottom:6px">
         Level <strong style="color:#fff">${catInfo.level}</strong>
         &nbsp;·&nbsp; <span style="color:${catInfo.rank.col};font-weight:700">${catInfo.rank.label}</span>
