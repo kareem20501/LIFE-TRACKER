@@ -35,9 +35,9 @@
   --border2:rgba(138,131,218,0.55);
   --text:#FBF5F0;
   --text2:#FBD5BD;
-  --text3:#C7C2CE;
-  --dim:rgba(251,245,240,0.78);
-  --very-dim:rgba(251,245,240,0.50);
+  --text3:#F0EEF8;
+  --dim:rgba(251,245,240,0.95);
+  --very-dim:rgba(251,245,240,0.75);
 
   /* Accent aliases for buttons / highlights */
   --col-cream:#FBF5F0;
@@ -67,6 +67,9 @@ html,body{height:100%;overflow:hidden}
 body{font-family:var(--f-body);background:var(--bg);color:var(--text);font-size:16px;-webkit-font-smoothing:antialiased}
 button{cursor:pointer;font-family:var(--f-body);border:none;outline:none;background:none}
 input,select{font-family:var(--f-body);outline:none;color:#fff}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-thumb{background:rgba(138,131,218,0.35);border-radius:4px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -215,17 +218,8 @@ nav{
   border:1px solid rgba(138,131,218,0.30);border-radius:8px;
   padding:8px 10px;color:#FBF5F0;font-size:16px;font-weight:700;
   text-align:center;width:100%;transition:border-color .2s;
-  -moz-appearance:textfield
 }
-.log-skill-input::-webkit-inner-spin-button,
-.log-skill-input::-webkit-outer-spin-button{
-  -webkit-appearance:inner-spin-button;
-  opacity:1;
-  background:rgba(138,131,218,0.25);
-  border-left:1px solid rgba(138,131,218,0.30);
-  cursor:pointer;
-  filter:invert(1) hue-rotate(240deg) brightness(1.3)
-}
+
 .log-skill-input:focus{border-color:var(--border2);background:rgba(70,54,153,0.30)}
 .log-skill-input::placeholder{font-size:13px;font-weight:400;color:var(--very-dim)}
 .log-save-btn{
@@ -276,9 +270,9 @@ nav{
 
 /* ── Skill Detail ── */
 .sd-hero{padding:22px 20px;background:var(--grad-hero);border-bottom:1px solid var(--border)}
-.sd-hero-inner{max-width:660px;margin:0 auto;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.sd-hero-inner{max-width:660px;margin:0 auto;display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center}
 .sd-rank-big{flex-shrink:0;width:76px;height:76px;border-radius:16px;border:1px solid var(--border2);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center}
-.sd-right{flex:1;display:flex;flex-direction:column;gap:5px}
+.sd-right{flex:1;display:flex;flex-direction:column;gap:5px;min-width:180px}
 .sd-skill-name{font-family:var(--f-title);font-size:22px;font-weight:700;color:#fff}
 .sd-body{max-width:660px;margin:0 auto;padding:20px 16px 90px}
 
@@ -306,17 +300,17 @@ nav{
 .chart-tab{background:none;border:1px solid var(--border);border-radius:5px;padding:5px 9px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--dim);transition:all .2s}
 .chart-tab.active{background:rgba(138,131,218,0.22);border-color:var(--border2);color:#FBF5F0}
 .chart-tab:hover:not(.active){border-color:rgba(138,131,218,0.4);color:var(--text3)}
-.chart-wrap{position:relative;height:200px;overflow-x:hidden;overflow-y:visible}
-.chart-scroll{overflow-x:auto;height:100%;scrollbar-width:thin;scrollbar-color:rgba(138,131,218,0.30) transparent}
+.chart-wrap{position:relative;height:220px;overflow:hidden}
+.chart-scroll{overflow-x:auto;overflow-y:hidden;height:100%;scrollbar-width:thin;scrollbar-color:rgba(138,131,218,0.30) transparent}
 .chart-scroll::-webkit-scrollbar{height:3px}
 .chart-scroll::-webkit-scrollbar-thumb{background:rgba(138,131,218,0.30);border-radius:3px}
-.bar-group{display:inline-flex;gap:4px;align-items:flex-end;height:100%;padding:28px 8px 32px;min-width:max-content}
-.bar-col-wrap{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:24px;height:100%;gap:0}
-.bar-val{font-size:8px;font-weight:700;color:var(--text3);margin-bottom:3px;white-space:nowrap;text-align:center;line-height:1;flex-shrink:0}
-.bar-col{width:14px;border-radius:3px 3px 0 0;min-height:2px;flex-shrink:0}
-.bar-lbl-wrap{display:flex;flex-direction:column;align-items:center;margin-top:4px;gap:1px;flex-shrink:0}
-.bar-lbl{font-size:8px;font-weight:600;color:var(--dim);white-space:nowrap}
-.bar-lbl-yr{font-size:7px;font-weight:700;color:rgba(138,131,218,0.70);white-space:nowrap}
+.bar-group{display:inline-flex;gap:6px;align-items:flex-end;height:100%;padding:36px 8px 36px;min-width:max-content}
+.bar-col-wrap{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:28px;height:100%;gap:0;position:relative}
+.bar-val{font-size:9px;font-weight:700;color:#fff;margin-bottom:3px;white-space:nowrap;text-align:center;line-height:1;flex-shrink:0;text-shadow:0 1px 3px rgba(0,0,0,0.8)}
+.bar-col{width:16px;border-radius:4px 4px 0 0;min-height:2px;flex-shrink:0}
+.bar-lbl-wrap{display:flex;flex-direction:column;align-items:center;margin-top:5px;gap:1px;flex-shrink:0}
+.bar-lbl{font-size:9px;font-weight:600;color:#fff;white-space:nowrap}
+.bar-lbl-yr{font-size:7px;font-weight:700;color:rgba(138,131,218,0.90);white-space:nowrap}
 .goal-line{position:absolute;left:0;right:0;border-top:1.5px dashed rgba(138,131,218,0.60);pointer-events:none;z-index:2}
 .goal-lbl{position:absolute;right:6px;top:-13px;font-size:8px;font-weight:700;color:var(--indigo-bloom);background:rgba(28,26,40,0.92);padding:1px 4px;border-radius:3px}
 .chart-empty{display:flex;align-items:center;justify-content:center;height:100%;font-size:13px;color:var(--dim)}
@@ -372,17 +366,9 @@ nav{
 .control-input{
   background:rgba(70,54,153,0.20);border:1px solid var(--border);
   border-radius:var(--radius-sm);padding:9px 12px;color:#FBF5F0;font-size:14px;
-  transition:border-color .2s;-moz-appearance:textfield
+  transition:border-color .2s
 }
-.control-input::-webkit-inner-spin-button,
-.control-input::-webkit-outer-spin-button{
-  -webkit-appearance:inner-spin-button;
-  opacity:1;
-  background:rgba(138,131,218,0.25);
-  border-left:1px solid rgba(138,131,218,0.28);
-  cursor:pointer;
-  filter:invert(1) hue-rotate(240deg) brightness(1.2)
-}
+
 .control-input:focus{border-color:var(--border2);background:rgba(70,54,153,0.28)}
 .btn-danger{background:rgba(255,80,80,0.14);color:#ff9090;border:1px solid rgba(255,80,80,0.30);border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;transition:all .2s}
 .btn-danger:hover{background:rgba(255,80,80,0.26)}
@@ -400,8 +386,9 @@ nav{
 @media(max-width:640px){
   .log-skill-grid{grid-template-columns:repeat(2,1fr);gap:9px}
   .log-skill-card{padding:12px 11px}
-  .log-skill-card-name{font-size:12px}
-  .log-skill-input{font-size:17px;padding:8px}
+  .log-skill-card-name{font-size:13px}
+  .log-skill-input{font-size:18px;padding:9px}
+  .log-skill-card-goal{font-size:13px}
 
   /* Overall card: stack vertically on mobile */
   .overall-card{flex-direction:column;align-items:center;text-align:center;gap:10px}
@@ -409,10 +396,17 @@ nav{
   .overall-info{width:100%;text-align:center}
   .overall-bar-wrap{width:100%;max-width:100%;min-width:0}
 
-  .sd-hero-inner{flex-direction:column;text-align:center;gap:12px}
+  /* Dashboard: 1 skill per row on mobile */
+  .dash-skills-grid{grid-template-columns:1fr !important}
+  .dash-skill-card{padding:14px 16px}
+  .dash-skill-card .dash-skill-name{font-size:14px !important}
+
+  /* Skill detail: center everything */
+  .sd-hero-inner{flex-direction:column;align-items:center;text-align:center;gap:14px}
   .sd-rank-big{margin:0 auto}
+  .sd-right{align-items:center;text-align:center;width:100%}
   .sd-body{padding:14px 12px 90px}
-  .sd-skill-name{font-size:20px}
+  .sd-skill-name{font-size:22px;text-align:center}
 
   nav{padding:0 12px}
   .nav-logo{font-size:13px;letter-spacing:1.5px}
@@ -428,8 +422,15 @@ nav{
   /* Prevent horizontal bleed */
   .line-chart-container{max-width:calc(100vw - 32px)}
 
-  .sec-label{font-size:10px}
-  body{font-size:15px}
+  /* Bigger base text on mobile */
+  .sec-label{font-size:12px}
+  body{font-size:16px}
+
+  /* No horizontal overflow ever */
+  .page{overflow-x:hidden}
+  #page-log .page-content,
+  #page-dashboard .page-content,
+  #page-control .page-content{max-width:100vw;overflow-x:hidden}
 }
 </style>
 </head>
@@ -560,6 +561,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 /* لا تغير أي شيء تحت هذا السطر */
 let _sb = null; // Supabase client instance
 </script>
+
 
 <!-- ══════════════════════════════════════════════
      TOAST + CONFIRM HELPERS
@@ -1029,7 +1031,7 @@ function renderDashboard(){
     const skills=SKILLS.filter(s=>s.cat===cat.id);
     if(!skills.length) return;
     const catXP=calcCategoryXP(cat.id); const catInfo=getLevelInfo(catXP,XP_PER_CAT_LEVEL);
-    let cards=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px">`;
+    let cards=`<div class="dash-skills-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px">`;
     skills.forEach(s=>{
       const total=calcTotal(s.key); const sxp=calcSkillXP(s.key);
       const si=getLevelInfo(sxp,XP_PER_SKILL_LEVEL); const streak=calcStreak(s.key);
@@ -1052,9 +1054,7 @@ function renderDashboard(){
     });
     cards+='</div>';
     catHTML+=`
-      <div class="sec-label">${cat.icon} ${cat.name}
-        <button class="info-btn" onclick="event.stopPropagation();navigate('analytics','${cat.id}')" title="Analytics">i</button>
-      </div>
+      <div class="sec-label">${cat.icon} ${cat.name}</div>
       <div style="font-size:12px;color:var(--text3);margin-bottom:6px">
         Level <strong style="color:#fff">${catInfo.level}</strong>
         &nbsp;·&nbsp; <span style="color:${catInfo.rank.col};font-weight:700">${catInfo.rank.label}</span>
@@ -1084,12 +1084,12 @@ function renderSkillDetail(){
     <div class="sd-hero-inner">
       <div class="sd-rank-big">${rankBadgeSVG(lt,ls,62)}</div>
       <div class="sd-right">
-        <div style="display:flex;align-items:center;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
           <span style="color:var(--col-gold)">${skillSVG(detailKey,22)}</span>
           <span class="sd-skill-name">${skill.name}</span>
         </div>
-        <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:${rank.col}">${rank.label}</div>
-        <div style="font-size:14px;color:var(--text3)">Level <strong style="color:#fff;font-size:22px;font-family:var(--f-title)">${level}</strong><span style="font-size:11px;color:var(--dim)"> / ${LEVEL_MAX}</span></div>
+        <div style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:${rank.col}">${rank.label}</div>
+        <div style="font-size:15px;color:var(--text3)">Level <strong style="color:#fff;font-size:24px;font-family:var(--f-title)">${level}</strong><span style="font-size:12px;color:var(--text3)"> / ${LEVEL_MAX}</span></div>
         <div style="font-size:14px;color:var(--text3)">Total: <strong style="color:#fff">${total} ${skill.unit}</strong> &nbsp;·&nbsp; <span style="color:var(--col-gold)">${Math.round(sxp).toLocaleString()} XP</span></div>
       </div>
     </div>`;
@@ -1170,13 +1170,60 @@ function renderChart(){
   if(!scroll||!wrap) return;
   wrap.querySelectorAll('.goal-line').forEach(el=>el.remove());
   if(!data.length||data.every(d=>d.value===0)){ scroll.innerHTML='<div class="chart-empty">No data yet</div>'; return; }
-  const goal=skill.goal||0; const maxV=Math.max(...data.map(d=>d.value),goal||1,1);
-  const IH=140; const PB=32;
-  let bars='<div class="bar-group">';
-  data.forEach(d=>{ const h=d.value>0?Math.max(Math.round(d.value/maxV*IH),3):0; const met=goal>0&&d.value>=goal; const bg=met?'linear-gradient(0deg,#AB6937,#EBA328)':d.value>0?'linear-gradient(0deg,#1E4445,#2a6060)':'rgba(255,255,255,0.03)'; bars+=`<div class="bar-col-wrap"><div class="bar-val">${d.value>0?d.value:''}</div><div class="bar-col" style="height:${h}px;background:${bg}"></div><div class="bar-lbl-wrap"><span class="bar-lbl">${d.label}</span>${d.year?`<span class="bar-lbl-yr">${d.year}</span>`:''}</div></div>`; });
-  bars+='</div>'; scroll.innerHTML=bars;
-  if(goal>0&&goal<=maxV){ const gPx=Math.round(goal/maxV*IH)+PB; const gl=document.createElement('div'); gl.className='goal-line'; gl.style.bottom=gPx+'px'; const glbl=document.createElement('div'); glbl.className='goal-lbl'; glbl.textContent='goal '+goal; gl.appendChild(glbl); wrap.appendChild(gl); }
-  requestAnimationFrame(()=>{ scroll.scrollLeft=scroll.scrollWidth; });
+  const goal=skill.goal||0;
+  const maxV=Math.max(...data.map(d=>d.value),goal||1,1);
+
+  /* Fixed inner bar height: 120px — bars scale within this, labels always fit */
+  const BAR_MAX=120;
+  const PT=30; /* top padding for value labels */
+  const PB=34; /* bottom padding for date labels */
+  const TOTAL_H=BAR_MAX+PT+PB; /* 184px total, fits in 220px wrap */
+
+  /* For year view: fit all bars without horizontal scroll */
+  let barW=16, barGap=6;
+  if(detailRange==='year'){
+    const availW=wrap.offsetWidth||300;
+    const totalBars=data.length;
+    const perBar=Math.floor((availW-16)/totalBars);
+    barW=Math.max(8,Math.min(32,perBar-6));
+    barGap=Math.max(2,perBar-barW);
+  }
+
+  let bars=`<div class="bar-group" style="height:${TOTAL_H}px;padding:${PT}px 8px ${PB}px;gap:${barGap}px">`;
+  data.forEach(d=>{
+    const h=d.value>0?Math.max(Math.round(d.value/maxV*BAR_MAX),3):0;
+    const met=goal>0&&d.value>=goal;
+    const bg=met?'linear-gradient(0deg,#463699,#8A83DA)':d.value>0?'linear-gradient(0deg,#2a3060,#4a5090)':'rgba(255,255,255,0.05)';
+    bars+=`<div class="bar-col-wrap" style="min-width:${barW+6}px">
+      <div class="bar-val" style="min-height:16px">${d.value>0?d.value:''}</div>
+      <div class="bar-col" style="width:${barW}px;height:${h}px;background:${bg}"></div>
+      <div class="bar-lbl-wrap">
+        <span class="bar-lbl">${d.label}</span>
+        ${d.year?`<span class="bar-lbl-yr">${d.year}</span>`:''}
+      </div>
+    </div>`;
+  });
+  bars+='</div>';
+  scroll.innerHTML=bars;
+
+  /* Goal line — positioned relative to chart wrap */
+  if(goal>0&&goal<=maxV){
+    const gH=Math.round(goal/maxV*BAR_MAX);
+    const gBottom=PB+gH; /* px from bottom of the bar-group div */
+    const gl=document.createElement('div');
+    gl.className='goal-line';
+    gl.style.bottom=gBottom+'px';
+    const glbl=document.createElement('div');
+    glbl.className='goal-lbl';
+    glbl.textContent='goal '+goal;
+    gl.appendChild(glbl);
+    wrap.appendChild(gl);
+  }
+
+  /* For year view: no scroll needed — bars fill the width */
+  if(detailRange!=='year'){
+    requestAnimationFrame(()=>{ scroll.scrollLeft=scroll.scrollWidth; });
+  }
 }
 
 function renderCalendar(){
