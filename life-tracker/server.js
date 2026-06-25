@@ -17,7 +17,8 @@ try {
 /* ══════════════════════════════════════════════════════════
    §1  CONFIG
 ══════════════════════════════════════════════════════════ */
-coconst PORT = process.env.PORT || 3000;
+
+const PORT = process.env.PORT || 3000;
 const SUPABASE_URL     = process.env.SUPABASE_URL     || '';
 const SUPABASE_SERVICE = process.env.SUPABASE_SERVICE_KEY || '';
 const APPS_SCRIPT_URL  = process.env.APPS_SCRIPT_URL  || '';
@@ -32,48 +33,38 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE, {
 });
 
 /* ══════════════════════════════════════════════════════════
-   §3  IN-MEMORY SESSION STORE
-   token (string) → { userId, email, expiresAt }
-   يُمسح عند إعادة تشغيل السيرفر — مناسب للـ dev
-   في الإنتاج: خزّن في Redis أو Supabase table
+   §3  SUPABASE SESSION STORE
 ══════════════════════════════════════════════════════════ */
-const sessions = new Map();
+const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
-function createSession(userId, email) {
+async function createSession(userId, email) {
   const token     = randomToken();
-  const expiresAt = Date.now() + SESSION_TTL_MS;
-  sessions.set(token, { userId, email, expiresAt });
-  // ملاحظة: لا تستخدم setTimeout(fn, SESSION_TTL_MS) هنا —
-  // SESSION_TTL_MS (30 يوم = 2,592,000,000ms) أكبر من الحد الأقصى المسموح
-  // لـ setTimeout في Node.js (2,147,483,647ms ≈ 24.8 يوم، حد 32-bit signed int).
-  // أي قيمة أكبر من كده بتعمل overflow وبتخلي الـ callback ينفّذ فورًا تقريبًا،
-  // وده كان بيمسح الـ session لحظة إنشائها! التنظيف الدوري تحت كافي وآمن.
+  const expiresAt = new Date(Date.now() + SESSION_TTL_MS).toISOString();
+  const { error } = await supabase
+    .from('sessions')
+    .insert({ token, user_id: userId, email, expires_at: expiresAt });
+  if (error) throw error;
   return { token, expiresAt };
 }
 
-function getSession(token) {
+async function getSession(token) {
   if (!token) return null;
-  const s = sessions.get(token);
-  if (!s) return null;
-  if (Date.now() > s.expiresAt) { sessions.delete(token); return null; }
-  return s;
+  const { data, error } = await supabase
+    .from('sessions')
+    .select('*')
+    .eq('token', token)
+    .single();
+  if (error || !data) return null;
+  if (new Date(data.expires_at) < new Date()) {
+    await supabase.from('sessions').delete().eq('token', token);
+    return null;
+  }
+  return { userId: data.user_id, email: data.email, expiresAt: data.expires_at };
 }
 
-function deleteSession(token) { sessions.delete(token); }
-
-// تنظيف دوري آمن للـ sessions المنتهية (كل ساعة) بدل setTimeout لكل session
-setInterval(() => {
-  const now = Date.now();
-  for (const [token, s] of sessions) {
-    if (now > s.expiresAt) sessions.delete(token);
-  }
-}, 60 * 60 * 1000); // كل ساعة
-
-function randomToken() {
-  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-  let t = '';
-  for (let i = 0; i < 64; i++) t += chars[Math.floor(Math.random() * chars.length)];
-  return t + Date.now().toString(36);
+async function deleteSession(token) {
+  if (!token) return;
+  await supabase.from('sessions').delete().eq('token', token);
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -119,13 +110,12 @@ function extractToken(req) {
 }
 
 /* ── middleware: يتحقق من الـ session ── */
-function requireAuth(req, res) {
+async function requireAuth(req, res) {
   const token = extractToken(req);
-  const s     = getSession(token);
+  const s = await getSession(token);
   if (!s) { unauth(res); return null; }
   return s;
 }
-
 /* ══════════════════════════════════════════════════════════
    §5  APPS SCRIPT PROXY
    الـ frontend يتكلم مع الـ server،
@@ -303,7 +293,7 @@ async function handle(req, res) {
       }
 
       // أنشئ session
-      const { token, expiresAt } = createSession(profile.id, email);
+      const { token, expiresAt } = await createSession(profile.id, email);
 
       return ok(res, {
         ok:        true,
@@ -326,7 +316,7 @@ async function handle(req, res) {
     // POST /api/auth/logout
     if (p === '/api/auth/logout' && method === 'POST') {
       const token = extractToken(req);
-      if (token) deleteSession(token);
+      if (token) await deleteSession(token);
       return ok(res, { ok: true });
     }
 
@@ -341,7 +331,7 @@ async function handle(req, res) {
     /* ────────────────────────────────────────────────────
        كل الـ routes التالية تحتاج auth
     ──────────────────────────────────────────────────── */
-    const sess = requireAuth(req, res);
+    const sess = await requireAuth(req, res);
     if (!sess) return; // unauth أُرسل بالفعل
     const userId = sess.userId;
 
@@ -747,23 +737,16 @@ async function handleAdmin(req, res, p, method) {
 /* ══════════════════════════════════════════════════════════
    §10  START
 ══════════════════════════════════════════════════════════ */
-http.createServer(handle).listen(PORT, async () => {
-  // اختبر الاتصال بـ Supabase
-  const { error } = await supabase.from('profiles').select('id').limit(1);
-  if (error) {
-    console.warn('\n⚠️  Supabase connection warning:', error.message);
-    console.warn('   تأكد من SUPABASE_SERVICE_KEY الصحيح\n');
-  } else {
-    console.log('✅  Supabase connected');
-  }
+module.exports = handle;
 
-  console.log('\n╔══════════════════════════════════════════════╗');
-  console.log('║   Life Tracker — Development Server          ║');
-  console.log('╠══════════════════════════════════════════════╣');
-  console.log(`║   http://localhost:${PORT}                      ║`);
-  console.log('║   Login:  http://localhost:3000/             ║');
-  console.log('║   App:    http://localhost:3000/app          ║');
-  console.log('╠══════════════════════════════════════════════╣');
-  console.log('║   Ctrl+C to stop                             ║');
-  console.log('╚══════════════════════════════════════════════╝\n');
-});
+if (!process.env.VERCEL) {
+  http.createServer(handle).listen(PORT, async () => {
+    const { error } = await supabase.from('profiles').select('id').limit(1);
+    if (error) {
+      console.warn('⚠️  Supabase:', error.message);
+    } else {
+      console.log('✅  Supabase connected');
+      console.log(`\n  http://localhost:${PORT}\n`);
+    }
+  });
+}
