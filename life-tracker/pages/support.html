@@ -1,0 +1,202 @@
+<style>
+/* ══════════════════════════════════════════════════════════
+   SUPPORT — page-scoped styles
+══════════════════════════════════════════════════════════ */
+
+.support-hero {
+  margin-bottom: 22px;
+}
+.support-title {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+.support-sub {
+  font-size: 13px; color: var(--t3); line-height: 1.6;
+}
+
+/* صفحة Support: .sec-label افتراضيًا بلون خوخي/أحمر — هنا نخليه أبيض */
+.support-page .sec-label { color: var(--t1); }
+.support-page .sec-label::after { background: rgba(251,245,240,0.13); }
+
+/* ── FAQ accordion ── */
+.faq-item {
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: var(--r-md); padding: 15px 16px; margin-bottom: 8px;
+  cursor: pointer; transition: border-color .15s;
+}
+.faq-item:hover { border-color: var(--b2); }
+.faq-item.open  { border-color: var(--b2); }
+.faq-q {
+  font-size: 13px; font-weight: 600; color: var(--t1);
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.faq-chevron {
+  font-size: 14px; color: var(--t3); flex-shrink: 0;
+  transition: transform .2s;
+}
+.faq-item.open .faq-chevron { transform: rotate(180deg); color: var(--indigo); }
+.faq-a {
+  font-size: 12px; color: var(--t3); line-height: 1.75;
+  margin-top: 0; max-height: 0; overflow: hidden;
+  transition: max-height .25s ease, margin-top .25s ease;
+}
+.faq-item.open .faq-a {
+  margin-top: 10px; max-height: 300px;
+}
+
+/* ── Feedback form ── */
+.feedback-card {
+  display: flex; flex-direction: column; gap: 12px;
+}
+.feedback-field label {
+  font-size: 11px; font-weight: 600; color: var(--t3);
+  display: block; margin-bottom: 5px;
+}
+.feedback-field textarea {
+  resize: vertical; line-height: 1.6; min-height: 90px;
+}
+.feedback-meta {
+  font-size: 11px; color: var(--t4); margin-top: -2px;
+}
+</style>
+
+<div class="page-inner support-page">
+
+  <!-- Hero -->
+  <div class="support-hero">
+    <div class="support-title logo-style-text">Support</div>
+    <div class="support-sub">Frequently asked questions and ways to get help with Life Tracker.</div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="sec-label">FAQ</div>
+  <div id="faq-list"></div>
+
+  <!-- Feedback form -->
+  <div class="sec-label" style="margin-top:24px">Send Feedback</div>
+  <div class="card feedback-card">
+    <div class="feedback-field">
+      <label>Subject</label>
+      <input class="ctrl" id="sup-subject" placeholder="Brief description of your issue or idea…" maxlength="100">
+    </div>
+    <div class="feedback-field">
+      <label>Message</label>
+      <textarea class="ctrl" id="sup-message" placeholder="Describe your issue, question, or suggestion in detail…" maxlength="1000"></textarea>
+      <div class="feedback-meta" id="sup-char-count">0 / 1000</div>
+    </div>
+    <button class="btn btn-primary" id="sup-send-btn" onclick="sendFeedback()" style="align-self:flex-start">Send feedback</button>
+  </div>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   SUPPORT JS
+══════════════════════════════════════════════════════════ */
+
+const FAQ_ITEMS = [
+  {
+    q: 'How does the XP system work?',
+    a: 'Each skill earns XP based on a fixed rate per unit. New Words = 5 XP/word, Reviewing = 2 XP/word, Reading = 50 XP/page, Listening = 3 XP/min, Speaking = 7 XP/min. XP accumulates toward your skill level, your language level, and your overall account level — each with its own rank ladder from Bronze to Conqueror. Custom skills you add yourself also earn XP toward your personal stats, but they are not counted in the competitive Weekly League.',
+  },
+  {
+    q: 'What is a streak and how is it calculated?',
+    a: 'A streak counts consecutive days where you met the daily goal for a skill. If you miss a day (log less than the goal, or nothing at all), the streak resets to zero the next day. Touch Typing works differently — it\'s a simple daily checkbox, and the streak counts consecutive days checked.',
+  },
+  {
+    q: 'Can I change my daily goals?',
+    a: 'Yes. Go to Settings → find the skill under your language → update the Goal field. This works for both the 6 fixed skills and any custom skills you\'ve added. Your past entries and XP are not affected.',
+  },
+  {
+    q: 'Why can\'t I edit the XP value for some skills?',
+    a: 'The six core skills (New Words, Reviewing, Reading, Listening, Speaking, Touch Typing) have fixed XP rates to keep the ranking system fair and comparable across all users in the Weekly League. Only custom skills you add yourself allow XP/unit adjustment.',
+  },
+  {
+    q: 'How many languages and custom skills can I add?',
+    a: 'You can track up to 2 languages at once. Each language automatically gets the 6 core skills, plus you can add up to 3 custom skills per language for anything else you want to track.',
+  },
+  {
+    q: 'How does the Weekly League work?',
+    a: 'Each league week runs Saturday through Friday. Only the 5 core XP skills (New Words, Reviewing, Reading, Listening, Speaking) count toward League standings and skill leaderboards — custom skills you add stay part of your personal XP but don\'t affect the competition, keeping it fair for everyone. The top 3 players each week are shown on the podium, with a leader for each of the 5 core skills below it and a history of past champions further down.',
+  },
+  {
+    q: 'My data didn\'t sync — what should I do?',
+    a: 'Check the sync indicator dot in the top bar — indigo (solid) means synced, a spinning peach dot means it\'s syncing, and red means there was an error. If it\'s red, check your internet connection and refresh the page. Your most recent successful sync is always preserved.',
+  },
+  {
+    q: 'How do I delete my account?',
+    a: 'Send a request via the feedback form below with the subject "Account Deletion". We\'ll process it within 48 hours and permanently remove all your data.',
+  },
+  {
+    q: 'Can I get a custom profile picture?',
+    a: 'Yes — send a feedback message with the subject "image" describing the avatar you\'d like, and our team will review and set it up for you.',
+  },
+];
+
+function renderSupport() {
+  document.getElementById('faq-list').innerHTML = FAQ_ITEMS.map((item, i) => `
+    <div class="faq-item" id="faq-${i}" onclick="toggleFaq(${i})">
+      <div class="faq-q">
+        ${item.q}
+        <span class="faq-chevron">▾</span>
+      </div>
+      <div class="faq-a">${item.a}</div>
+    </div>`).join('');
+
+  // Char counter
+  const ta = document.getElementById('sup-message');
+  const counter = document.getElementById('sup-char-count');
+  if (ta && counter) {
+    ta.addEventListener('input', () => {
+      counter.textContent = `${ta.value.length} / 1000`;
+    });
+  }
+}
+
+function toggleFaq(i) {
+  const el = document.getElementById(`faq-${i}`);
+  if (el) el.classList.toggle('open');
+}
+
+/* ── Send feedback ──────────────────────────────────────────
+   يحاول أولاً عبر api.support.sendFeedback() (يحفظ في شيت
+   Feedback على Google Sheets عبر Apps Script). لو فشل الاتصال
+   لأي سبب، يرجع تلقائيًا لفتح mailto: كحل احتياطي. ──*/
+async function sendFeedback() {
+  const subjectEl = document.getElementById('sup-subject');
+  const messageEl = document.getElementById('sup-message');
+  const btn       = document.getElementById('sup-send-btn');
+  const subject   = subjectEl?.value.trim();
+  const message   = messageEl?.value.trim();
+
+  if (!subject || !message) {
+    toast('Please fill in both subject and message', 'warn');
+    return;
+  }
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+
+  try {
+    await api.support.sendFeedback({ subject, message });
+    toast('Feedback sent — thank you! ✓', 'success');
+    _clearFeedbackForm();
+  } catch (err) {
+    console.error('[feedback] API failed, falling back to mailto:', err);
+    const mailto = `mailto:support@lifetracker.app?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+    window.open(mailto, '_blank');
+    toast('Could not reach our server — opening your email client instead', 'info', 3600);
+    _clearFeedbackForm();
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Send feedback'; }
+  }
+}
+
+function _clearFeedbackForm() {
+  const subjectEl = document.getElementById('sup-subject');
+  const messageEl = document.getElementById('sup-message');
+  const counter   = document.getElementById('sup-char-count');
+  if (subjectEl) subjectEl.value = '';
+  if (messageEl) messageEl.value = '';
+  if (counter)   counter.textContent = '0 / 1000';
+}
+</script>

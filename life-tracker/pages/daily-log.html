@@ -1,0 +1,447 @@
+<style>
+/* ══════════════════════════════════════════════════════════
+   DAILY LOG — page-scoped styles
+══════════════════════════════════════════════════════════ */
+
+/* ── Language tabs ── */
+.lang-tabs {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.lang-tab {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px;
+  border-radius: 100px;
+  font-size: 12px; font-weight: 600;
+  border: 1px solid var(--b1);
+  background: var(--glass); color: var(--t2);
+  transition: all .15s; cursor: pointer;
+}
+.lang-tab:hover  { border-color: var(--b2); color: var(--t1); }
+.lang-tab.active {
+  background: var(--glass3); border-color: var(--b3);
+  color: var(--t1); box-shadow: 0 0 12px rgba(138,131,218,0.18);
+}
+.lang-tab-flag { font-size: 16px; }
+.lang-tab-name { white-space: nowrap; }
+
+/* ── Date row ── */
+.log-date-row {
+  display: flex; gap: 8px; align-items: center;
+  margin-bottom: 22px;
+}
+.log-date-input {
+  flex: 1;
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: var(--r-md); padding: 9px 14px;
+  color: var(--t1); font-size: 14px;
+  transition: border-color .12s;
+  color-scheme: dark;
+}
+.log-date-input:focus { border-color: var(--b3); }
+
+/* ── Skill grid ── */
+.log-skill-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+/* ── Skill card ── */
+.sk-card {
+  background: var(--glass);
+  border: 1px solid var(--b1);
+  border-radius: var(--r-lg);
+  padding: 13px 12px;
+  display: flex; flex-direction: column; gap: 7px;
+  position: relative; overflow: hidden;
+  transition: border-color .18s, background .18s, box-shadow .18s;
+}
+.sk-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(138,131,218,0.04), transparent);
+  pointer-events: none;
+}
+.sk-card.met {
+  border-color: rgba(138,131,218,0.55);
+  background: rgba(138,131,218,0.11);
+  box-shadow: 0 0 16px rgba(138,131,218,0.13);
+}
+
+/* Card header */
+.sk-card-head {
+  display: flex; align-items: center; gap: 6px;
+}
+.sk-card-icon { font-size: 14px; flex-shrink: 0; }
+.sk-card-name {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--t2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  flex: 1;
+}
+.sk-card.met .sk-card-name { color: var(--t1); }
+
+/* Goal label */
+.sk-card-goal {
+  font-size: 11px; color: var(--t3); font-weight: 500;
+  line-height: 1.3;
+}
+.sk-card.met .sk-card-goal { color: var(--indigo); font-weight: 600; }
+
+/* Time hint (for minute-based skills) */
+.sk-card-time {
+  font-size: 10px; color: rgba(138,131,218,0.65);
+  font-weight: 500; min-height: 13px;
+}
+
+/* Number input */
+.sk-input {
+  width: 100%;
+  background: rgba(70,54,153,0.18);
+  border: 1px solid var(--b1);
+  border-radius: var(--r-sm);
+  padding: 8px;
+  color: var(--t1);
+  font-size: 18px; font-weight: 700;
+  text-align: center;
+  transition: border-color .12s, background .12s;
+  font-family: 'DM Sans', sans-serif;
+}
+.sk-input:focus { border-color: var(--b3); background: rgba(70,54,153,0.30); }
+.sk-input::placeholder { font-size: 12px; font-weight: 400; color: var(--t4); }
+
+/* Touch typing checkbox card */
+.sk-checkbox-wrap {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; padding: 6px 0;
+}
+.sk-checkbox {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  border: 2px solid var(--b2);
+  background: var(--glass);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+  transition: all .15s;
+}
+.sk-checkbox.checked {
+  background: var(--violet);
+  border-color: var(--indigo);
+  box-shadow: 0 0 10px rgba(138,131,218,0.35);
+}
+.sk-checkbox svg {
+  width: 12px; height: 12px;
+  stroke: #fff; stroke-width: 2.5;
+  stroke-linecap: round; stroke-linejoin: round;
+  fill: none; opacity: 0; transition: opacity .12s;
+}
+.sk-checkbox.checked svg { opacity: 1; }
+.sk-checkbox-lbl {
+  font-size: 12px; font-weight: 600; color: var(--t2);
+}
+.sk-card.met .sk-checkbox-lbl { color: var(--t1); }
+
+/* Progress bar */
+.sk-prog-track {
+  height: 3px; border-radius: 100px;
+  background: rgba(255,255,255,0.07); overflow: hidden;
+}
+.sk-prog-fill {
+  height: 100%; border-radius: 100px;
+  transition: width .55s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Save button */
+.sk-save-btn {
+  background: var(--violet); border: none;
+  border-radius: 6px; padding: 7px 10px;
+  color: var(--t1); font-size: 11px; font-weight: 700;
+  transition: background .12s; letter-spacing: 0.3px;
+  font-family: 'DM Sans', sans-serif;
+}
+.sk-save-btn:hover { background: var(--indigo); }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .log-skill-grid { grid-template-columns: repeat(2,1fr); gap: 8px; }
+}
+@media (max-width: 380px) {
+  .log-skill-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="page-inner">
+
+  <!-- Language tabs -->
+  <div class="lang-tabs" id="log-lang-tabs"></div>
+
+  <!-- Date picker -->
+  <div class="log-date-row">
+    <input type="date" id="log-date" class="log-date-input" onchange="renderLog()">
+    <button class="btn btn-ghost btn-sm" onclick="logSetToday()">Today</button>
+  </div>
+
+  <!-- Skill cards -->
+  <div id="log-sections"></div>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   DAILY LOG JS
+══════════════════════════════════════════════════════════ */
+
+/* ── Init ─────────────────────────────────────────────── */
+function renderLog() {
+  _buildLangTabs();
+  _renderSkills();
+}
+
+function logSetToday() {
+  const el = document.getElementById('log-date');
+  if (el) { el.value = todayStr(STATE.tz); renderLog(); }
+}
+
+/* ── Language tabs ─────────────────────────────────────── */
+function _buildLangTabs() {
+  const langs = STATE.languages;
+  const wrap  = document.getElementById('log-lang-tabs');
+  if (!wrap) return;
+
+  const activeLang = STATE.getActiveLang('log');
+
+  if (langs.length === 0) { wrap.innerHTML = ''; return; }
+
+  // Only show tabs if more than one language
+  if (langs.length === 1) {
+    wrap.innerHTML = '';
+    return;
+  }
+
+  wrap.innerHTML = langs.map(l => `
+    <button class="lang-tab ${l.id === activeLang ? 'active' : ''}"
+      onclick="_switchLogLang('${l.id}')">
+      <span class="lang-tab-flag">${flagIconHTML(langIso(l.code), 18)}</span>
+      <span class="lang-tab-name">${l.name}</span>
+    </button>`).join('');
+}
+
+function _switchLogLang(langId) {
+  STATE.setActiveLang('log', langId);
+  _buildLangTabs();
+  _renderSkills();
+}
+
+/* ── Skill cards ────────────────────────────────────────── */
+async function _renderSkills() {
+  const date    = document.getElementById('log-date')?.value || todayStr(STATE.tz);
+  const sections= document.getElementById('log-sections');
+  if (!sections) return;
+
+  const langs = STATE.languages;
+  if (langs.length === 0) {
+    sections.innerHTML = `
+      <div class="empty-state">
+        <span class="empty-icon">📋</span>
+        <div class="empty-title">No languages yet</div>
+        <div class="empty-body">Go to <strong>Settings</strong> to add your first language.</div>
+      </div>`;
+    return;
+  }
+
+  // Fetch today's entries from API
+  let dateEntries = {};
+  try {
+    const { data } = await api.entries.forDate(date);
+    (data || []).forEach(e => { dateEntries[e.skill_id] = e.value; });
+  } catch (e) { console.error('[renderLog] entries fetch', e); }
+
+  const activeLang = langs.find(l => l.id === STATE.getActiveLang('log')) || langs[0];
+  const skills     = STATE.skillsForLang(activeLang.id)
+    .slice()
+    .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+
+  if (skills.length === 0) {
+    sections.innerHTML = `
+      <div class="empty-state">
+        <span class="empty-icon">📋</span>
+        <div class="empty-title">No skills in ${activeLang.name}</div>
+        <div class="empty-body">Go to Settings to add skills.</div>
+      </div>`;
+    return;
+  }
+
+  let html = `<div class="log-skill-grid">`;
+  skills.forEach(skill => {
+    const done = dateEntries[skill.id] || 0;
+
+    // ── Touch typing — checkbox ──
+    if (skill.is_checkbox || skill.key === 'touch_typing') {
+      const isDone = done >= 1;
+      html += `
+        <div class="sk-card ${isDone ? 'met' : ''}" id="skc-${skill.id}">
+          <div class="sk-card-head">
+            <span class="sk-card-icon">${skillIconHTML(skill, 14)}</span>
+            <span class="sk-card-name">${skill.name}</span>
+          </div>
+          <div class="sk-checkbox-wrap">
+            <div class="sk-checkbox ${isDone ? 'checked' : ''}" id="skchk-${skill.id}"
+              onclick="toggleCheckbox('${date}','${skill.id}')">
+              <svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>
+            </div>
+            <span class="sk-checkbox-lbl">${isDone ? 'Done ✓' : 'Mark done'}</span>
+          </div>
+          <div class="sk-prog-track">
+            <div class="sk-prog-fill" id="skp-${skill.id}"
+              style="width:${isDone ? 100 : 0}%;background:var(--grad-bar)"></div>
+          </div>
+        </div>`;
+      return;
+    }
+
+    // ── Regular numeric skill ──
+    const goal   = skill.goal || 1;
+    const pct    = Math.min(Math.round(done / goal * 100), 100);
+    const met    = done >= goal;
+    const isMin  = skill.unit === 'min';
+    const goalLbl= isMin ? `${fmtMin(done)} / ${fmtMin(goal)}` : `${done} / ${goal} ${skill.unit}`;
+
+    html += `
+      <div class="sk-card ${met ? 'met' : ''}" id="skc-${skill.id}">
+        <div class="sk-card-head">
+          <span class="sk-card-icon">${skillIconHTML(skill, 14)}</span>
+          <span class="sk-card-name">${skill.name}</span>
+        </div>
+        <div class="sk-card-goal">${goalLbl} ${met ? '✓' : ''}</div>
+        <div class="sk-card-time" id="skt-${skill.id}">${isMin && done > 0 ? `(${fmtMin(done)})` : ''}</div>
+        <input type="number" class="sk-input" id="ski-${skill.id}"
+          value="${done || ''}" placeholder="0" min="0" step="1"
+          data-skill-id="${skill.id}" data-date="${date}" data-goal="${goal}" data-unit="${escAttr(skill.unit)}"
+          onkeydown="if(event.key==='Enter') _saveLogFromEl(this)">
+        <div class="sk-prog-track">
+          <div class="sk-prog-fill" id="skp-${skill.id}"
+            style="width:${pct}%;background:${met ? 'var(--grad-bar)' : 'rgba(138,131,218,0.32)'}">
+          </div>
+        </div>
+        <button class="sk-save-btn"
+          data-skill-id="${skill.id}" data-date="${date}" data-goal="${goal}" data-unit="${escAttr(skill.unit)}"
+          onclick="_saveLogFromEl(this)">
+          Save
+        </button>
+      </div>`;
+  });
+  html += `</div>`;
+  sections.innerHTML = html;
+}
+
+/* ── Read data-* attrs off an element and dispatch to saveLog ──
+   (avoids breaking onclick="..." attributes when a custom skill's
+   unit/name contains a quote or other special character) ──*/
+function _saveLogFromEl(el) {
+  const d = el.dataset;
+  saveLog(d.date, d.skillId, d.goal, d.unit);
+}
+
+/* ── Save a numeric entry ───────────────────────────────── */
+async function saveLog(date, skillId, goal, unit) {
+  const inp = document.getElementById('ski-' + skillId);
+  if (!inp) return;
+  const raw = inp.value.trim();
+  if (raw === '') return;
+  const parsed = parseFloat(raw);
+  if (isNaN(parsed)) { toast('Invalid number', 'error'); return; }
+  const newVal = Math.max(0, parsed);
+
+  try {
+    const { data } = await api.entries.upsert({ skill_id: skillId, log_date: date, value: newVal });
+
+    // Update STATE caches
+    STATE.todayMap[skillId] = newVal;
+    if (data.current_streak !== undefined)
+      STATE.streakMap[skillId] = { current: data.current_streak, longest: data.longest_streak };
+    if (data.total_xp !== undefined)
+      STATE.xpMap[skillId] = data.total_xp;
+
+    // Patch card in-place (no full re-render)
+    const met   = newVal >= Number(goal);
+    const pct   = Math.min(Math.round(newVal / Number(goal) * 100), 100);
+    const isMin = unit === 'min';
+
+    const card = document.getElementById('skc-' + skillId);
+    if (card) {
+      card.className = 'sk-card ' + (met ? 'met' : '');
+      const gEl = card.querySelector('.sk-card-goal');
+      if (gEl) {
+        const lbl = isMin
+          ? `${fmtMin(newVal)} / ${fmtMin(Number(goal))}`
+          : `${newVal} / ${goal} ${unit}`;
+        gEl.className = 'sk-card-goal ' + (met ? 'met' : '');
+        gEl.textContent = lbl + (met ? ' ✓' : '');
+      }
+      const tEl = document.getElementById('skt-' + skillId);
+      if (tEl) tEl.textContent = (isMin && newVal > 0) ? `(${fmtMin(newVal)})` : '';
+
+      const pEl = document.getElementById('skp-' + skillId);
+      if (pEl) {
+        pEl.style.width = pct + '%';
+        pEl.style.background = met ? 'var(--grad-bar)' : 'rgba(138,131,218,0.32)';
+      }
+      inp.value = newVal || '';
+    }
+
+    const label = isMin ? fmtMin(newVal) : `${newVal} ${unit}`;
+    toast(met ? `✓ Goal met! 🎯` : `Saved ${label}`, met ? 'success' : 'info', 1800);
+
+    // فحص سريع للإنجازات الجديدة (بدون إعادة بناء كل الصفحة)
+    quickAchievementCheck(skillId, data.current_streak).catch(() => {});
+  } catch (err) {
+    toast(err.message || 'Failed to save', 'error');
+  }
+}
+
+/* ── Toggle checkbox (touch typing) ─────────────────────── */
+async function toggleCheckbox(date, skillId) {
+  const current = STATE.todayMap[skillId] || 0;
+  const newVal  = current >= 1 ? 0 : 1;
+
+  try {
+    if (newVal === 0) {
+      await api.entries.delete(skillId, date);
+    } else {
+      await api.entries.upsert({ skill_id: skillId, log_date: date, value: 1 });
+    }
+    STATE.todayMap[skillId] = newVal;
+
+    // Patch checkbox in-place
+    const chk  = document.getElementById('skchk-' + skillId);
+    const card = document.getElementById('skc-'   + skillId);
+    const pEl  = document.getElementById('skp-'   + skillId);
+    const lbl  = card?.querySelector('.sk-checkbox-lbl');
+
+    if (chk)  chk.classList.toggle('checked', newVal === 1);
+    if (card) card.classList.toggle('met', newVal === 1);
+    if (lbl)  lbl.textContent = newVal === 1 ? 'Done ✓' : 'Mark done';
+    if (pEl)  pEl.style.width = (newVal === 1 ? 100 : 0) + '%';
+
+    toast(newVal === 1 ? '⌨️ Touch typing done!' : 'Unmarked', 'info', 1600);
+
+    if (newVal === 1) quickAchievementCheck(skillId, STATE.streakMap[skillId]?.current).catch(() => {});
+  } catch (err) {
+    toast(err.message || 'Failed', 'error');
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   NOTE: renderLog() is invoked explicitly by app.html's
+   navigate() dispatch table after this script is injected.
+   We only need to set the default date here — do NOT call
+   renderLog() again, that caused a double-fetch race.
+───────────────────────────────────────────────────────── */
+(function initLogDate() {
+  const el = document.getElementById('log-date');
+  if (el && !el.value) el.value = todayStr(STATE.tz || 'Africa/Cairo');
+})();
+</script>

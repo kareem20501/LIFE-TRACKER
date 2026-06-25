@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Life Tracker</title>
+<!-- ══ SECURITY GUARD — يمنع عرض أي شيء بدون session ══
+     هذا أول كود يعمل في الصفحة قبل أي CSS أو HTML
+     إذا لم يجد token صالح → يُحيل لصفحة Login فوراً -->
+<script>
+(function() {
+  'use strict';
+  var token = sessionStorage.getItem('lt_token');
+  if (!token || token.length < 20) {
+    // لا session → اذهب لـ login فوراً قبل أي render
+    window.location.replace('/');
+  }
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Sora:wght@600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.11.0/css/flag-icons.min.css">
+<style>
+/* ══════════════════════════════════════════════════════════
+   §1  RESET
+══════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #12101C;
+  color: #FBF5F0;
+  font-size: 15px;
+  line-height: 1.6;
+  height: 100%;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+button   { cursor: pointer; font-family: 'DM Sans', sans-serif; border: none; outline: none; background: none; }
+input, select, textarea { font-family: 'DM Sans', sans-serif; outline: none; color: #FBF5F0; }
+a { color: inherit; text-decoration: none; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-thumb { background: rgba(138,131,218,0.28); border-radius: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+input[type=number] { -moz-appearance: textfield; }
+
+/* ══════════════════════════════════════════════════════════
+   §2  DESIGN TOKENS
+══════════════════════════════════════════════════════════ */
+:root {
+  --bg:      #12101C;
+  --bg2:     #1A1728;
+  --bg3:     #201D30;
+  --glass:   rgba(138,131,218,0.07);
+  --glass2:  rgba(138,131,218,0.13);
+  --glass3:  rgba(138,131,218,0.22);
+  --b1:      rgba(138,131,218,0.13);
+  --b2:      rgba(138,131,218,0.28);
+  --b3:      rgba(138,131,218,0.55);
+  --t1:      #FBF5F0;
+  --t2:      rgba(251,245,240,0.72);
+  --t3:      rgba(251,245,240,0.42);
+  --t4:      rgba(251,245,240,0.22);
+  --cream:   #FBF5F0;
+  --peach:   #FBD5BD;
+  --lav:     #C7C2CE;
+  --indigo:  #8A83DA;
+  --violet:  #463699;
+  --grad:    linear-gradient(135deg,#463699,#8A83DA);
+  --grad-bar:linear-gradient(90deg,#463699,#8A83DA,#C7C2CE);
+  --shadow:  0 4px 24px rgba(0,0,0,0.35);
+  --glow:    0 0 24px rgba(138,131,218,0.18);
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 22px;
+  --sidebar-w: 272px;
+  --f-display: 'Sora', sans-serif;
+}
+
+/* ══════════════════════════════════════════════════════════
+   §3  ANIMATIONS
+══════════════════════════════════════════════════════════ */
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes spin   { to{transform:rotate(360deg)} }
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration:.01ms !important; transition-duration:.01ms !important; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   §3b  SHARED LOGO-STYLE GRADIENT TEXT
+   نفس أسلوب .tb-logo — يُستخدم في أي مكان محتاجين فيه
+   نفس هوية الشعار (مثلاً أسماء اللغات، عناوين الصفحات)
+══════════════════════════════════════════════════════════ */
+.logo-style-text {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  background: linear-gradient(90deg, var(--cream), var(--indigo));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ══════════════════════════════════════════════════════════
+   §4  LOADING OVERLAY
+══════════════════════════════════════════════════════════ */
+#loading-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 14px;
+  transition: opacity .4s;
+}
+#loading-overlay.done { opacity: 0; pointer-events: none; }
+.lo-spin {
+  width: 30px; height: 30px;
+  border: 2px solid rgba(138,131,218,0.14);
+  border-top-color: var(--indigo);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+.lo-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px; font-weight: 800;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: var(--indigo);
+}
+.lo-sub { font-size: 11px; color: var(--t3); letter-spacing: 1px; }
+
+/* ══════════════════════════════════════════════════════════
+   §5  APP SHELL
+══════════════════════════════════════════════════════════ */
+#app-shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Sidebar overlay (click outside to close) ── */
+#sb-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.60);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: fadeIn .2s ease;
+}
+#sb-overlay.open { display: block; }
+
+/* ══════════════════════════════════════════════════════════
+   §6  SIDEBAR — always fixed right, hidden by default
+══════════════════════════════════════════════════════════ */
+#sidebar {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: var(--sidebar-w);
+  z-index: 210;
+  background: var(--bg2);
+  border-left: 1px solid var(--b1);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* hidden to the right by default — opens on button press */
+  transform: translateX(100%);
+  transition: transform .3s cubic-bezier(0.16,1,0.3,1);
+}
+#sidebar.open { transform: translateX(0); }
+
+/* ── Sidebar: profile block ── */
+.sb-profile {
+  padding: 26px 18px 18px;
+  border-bottom: 1px solid var(--b1);
+  cursor: pointer;
+}
+.sb-profile:hover { background: rgba(255,255,255,0.02); }
+
+.sb-avatar-wrap {
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  background: var(--grad);
+  border: 2px solid var(--b2);
+  box-shadow: var(--glow);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.sb-name {
+  font-family: var(--f-display);
+  font-size: 15px; font-weight: 700; line-height: 1.4;
+  color: var(--t1); margin-bottom: 3px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sb-email {
+  font-size: 11px; color: var(--t3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 13px;
+}
+
+/* XP bar */
+.sb-xp-row {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 5px;
+}
+#sb-level-lbl {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  background: var(--grad);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+#sb-xp-val { font-size: 10px; color: var(--t3); }
+.sb-xp-bar  {
+  height: 3px; background: var(--glass2);
+  border-radius: 100px; overflow: hidden;
+}
+#sb-xp-fill {
+  height: 100%; background: var(--grad-bar);
+  border-radius: 100px;
+  transition: width .8s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── Sidebar: nav ── */
+.sb-nav   { padding: 12px 0; flex: 1; }
+.sb-sect  {
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--t4); padding: 0 18px;
+  margin: 14px 0 4px;
+}
+
+.sb-link {
+  display: flex; align-items: center; gap: 11px;
+  padding: 10px 18px;
+  font-size: 13px; font-weight: 500; color: var(--t2);
+  width: 100%; text-align: left;
+  border: none; background: none;
+  transition: background .12s, color .12s;
+  position: relative; cursor: pointer;
+}
+.sb-link:hover  { background: var(--glass); color: var(--t1); }
+.sb-link.active { background: var(--glass2); color: var(--t1); font-weight: 600; }
+.sb-link.active::before {
+  content: '';
+  position: absolute; left: 0; top: 22%; bottom: 22%;
+  width: 3px; background: var(--indigo);
+  border-radius: 0 3px 3px 0;
+}
+.sb-link-icon {
+  width: 30px; height: 30px;
+  border-radius: var(--r-sm);
+  background: var(--glass);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+  transition: background .12s;
+}
+.sb-link.active .sb-link-icon { background: var(--glass3); }
+
+/* ── Sidebar: logout ── */
+.sb-bottom  { padding: 10px 0 16px; border-top: 1px solid var(--b1); }
+.sb-logout  {
+  display: flex; align-items: center; gap: 11px;
+  padding: 10px 18px; width: 100%;
+  font-size: 13px; font-weight: 500;
+  color: rgba(255,100,100,0.60);
+  transition: background .12s, color .12s;
+}
+.sb-logout:hover { background: rgba(255,80,80,0.06); color: rgba(255,130,130,0.9); }
+.sb-logout-icon {
+  width: 30px; height: 30px;
+  border-radius: var(--r-sm);
+  background: rgba(255,80,80,0.08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   §7  MAIN CONTENT
+══════════════════════════════════════════════════════════ */
+#main {
+  flex: 1; min-width: 0;
+  height: 100vh;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Topbar ── */
+#topbar {
+  height: 54px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 18px;
+  background: rgba(18,16,28,0.92);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--b1);
+  z-index: 100;
+}
+.tb-left  { display: flex; align-items: center; gap: 10px; }
+.tb-logo  {
+  font-family: var(--f-display);
+  font-size: 14px; font-weight: 800; line-height: 1.4;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  background: linear-gradient(90deg, var(--cream), var(--indigo));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: nowrap;
+}
+.tb-sep   { width: 1px; height: 16px; background: var(--b1); }
+.tb-page  { font-size: 13px; font-weight: 500; color: var(--t3); white-space: nowrap; }
+.tb-right { display: flex; align-items: center; gap: 8px; }
+
+/* Sync dot */
+.sync-dot { width: 7px; height: 7px; border-radius: 50%; transition: background .3s; }
+.sync-dot.ok      { background: var(--indigo); box-shadow: 0 0 6px rgba(138,131,218,0.5); }
+.sync-dot.syncing { background: var(--peach); animation: spin .8s linear infinite; border-radius: 2px; }
+.sync-dot.error   { background: #ff6b6b; }
+
+/* Date chip */
+.date-chip {
+  font-size: 10px; font-weight: 600; color: var(--t3);
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: 100px; padding: 3px 9px;
+  white-space: nowrap;
+}
+
+/* Hamburger button */
+.btn-menu {
+  width: 34px; height: 34px;
+  border-radius: var(--r-sm);
+  background: var(--glass); border: 1px solid var(--b1);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--t2);
+  transition: background .12s, border-color .12s, color .12s;
+}
+.btn-menu:hover { background: var(--glass2); border-color: var(--b2); color: var(--t1); }
+.btn-menu svg {
+  width: 16px; height: 16px;
+  stroke: currentColor; stroke-width: 1.8;
+  stroke-linecap: round; fill: none;
+}
+
+/* ── Page area ── */
+#page-area {
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  /* smooth scroll */
+  scroll-behavior: smooth;
+}
+
+/* Page views */
+.page-view { display: none; min-height: 100%; }
+.page-view.active { display: block; animation: fadeUp .3s cubic-bezier(0.16,1,0.3,1) both; }
+
+/* Inner max-width wrapper (used by most pages) */
+.page-inner { max-width: 760px; margin: 0 auto; padding: 22px 18px 80px; }
+
+/* ══════════════════════════════════════════════════════════
+   §8  SHARED COMPONENTS (used across page files)
+══════════════════════════════════════════════════════════ */
+
+/* Section label */
+.sec-label {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--peach);
+  margin: 26px 0 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.sec-label::after {
+  content: ''; flex: 1; height: 1px;
+  background: rgba(251,213,189,0.13);
+}
+
+/* Card */
+.card {
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: var(--r-lg); padding: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.22);
+}
+
+/* Progress bar */
+.prog-track { height: 5px; background: rgba(255,255,255,0.07); border-radius: 100px; overflow: hidden; }
+.prog-fill  { height: 100%; border-radius: 100px; transition: width .9s cubic-bezier(0.4,0,0.2,1); }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border-radius: var(--r-sm); font-size: 13px; font-weight: 600;
+  padding: 7px 15px; transition: all .12s; cursor: pointer; border: none; }
+.btn-primary { background: var(--violet); color: var(--cream); border: 1px solid rgba(138,131,218,0.28); }
+.btn-primary:hover { background: var(--indigo); }
+.btn-ghost   { background: var(--glass); color: var(--t2); border: 1px solid var(--b1); }
+.btn-ghost:hover { background: var(--glass2); border-color: var(--b2); color: var(--t1); }
+.btn-danger  { background: rgba(255,80,80,0.10); color: #ff9090; border: 1px solid rgba(255,80,80,0.24); }
+.btn-danger:hover { background: rgba(255,80,80,0.18); }
+.btn-sm  { padding: 5px 11px; font-size: 11px; border-radius: 6px; }
+
+/* Form control */
+.ctrl {
+  background: rgba(70,54,153,0.17); border: 1px solid var(--b1);
+  border-radius: var(--r-sm); padding: 9px 12px;
+  color: var(--t1); font-size: 13px; width: 100%;
+  transition: border-color .12s, background .12s;
+}
+.ctrl:focus { border-color: var(--b3); background: rgba(70,54,153,0.26); }
+.ctrl::placeholder { color: var(--t4); }
+
+/* Empty state */
+.empty-state {
+  text-align: center; padding: 56px 20px; color: var(--t3);
+}
+.empty-icon  { font-size: 40px; margin-bottom: 14px; display: block; }
+.empty-title { font-size: 15px; font-weight: 600; color: var(--t2); margin-bottom: 6px; }
+.empty-body  { font-size: 13px; line-height: 1.65; }
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+.skel {
+  background: linear-gradient(90deg, var(--glass), var(--glass2), var(--glass));
+  background-size: 400% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  border-radius: var(--r-sm);
+}
+
+/* Tooltip */
+.tooltip-box {
+  position: fixed; background: #162428; border: 1px solid var(--b2);
+  border-radius: 7px; padding: 5px 9px; font-size: 10px; color: var(--t1);
+  pointer-events: none; white-space: nowrap; z-index: 9999;
+  display: none; box-shadow: var(--shadow);
+}
+
+/* ══════════════════════════════════════════════════════════
+   §9  RESPONSIVE HELPERS
+══════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  .page-inner { padding: 16px 14px 80px; }
+  .tb-logo    { font-size: 11px; letter-spacing: 2px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ Loading ══ -->
+<div id="loading-overlay">
+  <div class="lo-spin"></div>
+  <div class="lo-title">Life Tracker</div>
+  <div class="lo-sub" id="lo-sub">Loading…</div>
+</div>
+
+<!-- ══ Tooltip ══ -->
+<div class="tooltip-box" id="tip"></div>
+
+<!-- ══ Sidebar overlay ══ -->
+<div id="sb-overlay" onclick="closeSidebar()"></div>
+
+<!-- ══ App Shell ══ -->
+<div id="app-shell">
+
+  <!-- ── Sidebar ── -->
+  <aside id="sidebar">
+
+    <!-- Profile (click → go to profile page) -->
+    <div class="sb-profile" onclick="navigate('profile')" title="View profile">
+      <div class="sb-avatar-wrap" id="sb-avatar-wrap">
+        <span style="font-size:18px;font-weight:700;color:#fff">?</span>
+      </div>
+      <div class="sb-name"  id="sb-name">Loading…</div>
+      <div class="sb-email" id="sb-email"></div>
+      <div class="sb-xp-row">
+        <span id="sb-level-lbl">Level 1</span>
+        <span id="sb-xp-val">0 XP</span>
+      </div>
+      <div class="sb-xp-bar">
+        <div id="sb-xp-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Nav links -->
+    <nav class="sb-nav">
+      <div class="sb-sect">Track</div>
+      <button class="sb-link active" data-page="log"       onclick="navigate('log')">
+        <span class="sb-link-icon" id="nav-icon-log"></span>Daily Log
+      </button>
+      <button class="sb-link" data-page="dashboard"        onclick="navigate('dashboard')">
+        <span class="sb-link-icon" id="nav-icon-dashboard"></span>Dashboard
+      </button>
+      <button class="sb-link" data-page="league"           onclick="navigate('league')">
+        <span class="sb-link-icon" id="nav-icon-league"></span>League
+      </button>
+
+      <button class="sb-link" data-page="achievements"      onclick="navigate('achievements')">
+        <span class="sb-link-icon" id="nav-icon-achievements"></span>Achievements
+      </button>
+
+      <div class="sb-sect">Account</div>
+      <button class="sb-link" data-page="settings"         onclick="navigate('settings')">
+        <span class="sb-link-icon" id="nav-icon-settings"></span>Settings
+      </button>
+      <button class="sb-link" data-page="support"          onclick="navigate('support')">
+        <span class="sb-link-icon" id="nav-icon-support"></span>Support
+      </button>
+    </nav>
+
+    <!-- Logout -->
+    <div class="sb-bottom">
+      <button class="sb-logout" onclick="confirmLogout()">
+        <span class="sb-logout-icon" id="nav-icon-logout"></span>Log out
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <div id="main">
+
+    <!-- Topbar -->
+    <header id="topbar">
+      <div class="tb-left">
+        <span class="tb-logo">Life Tracker</span>
+        <div class="tb-sep"></div>
+        <span class="tb-page" id="tb-page">Daily Log</span>
+      </div>
+      <div class="tb-right">
+        <div class="sync-dot ok" id="sync-dot"></div>
+        <span class="date-chip" id="date-chip"></span>
+        <button class="btn-menu" id="btn-menu" onclick="toggleSidebar()" aria-label="Menu">
+          <svg viewBox="0 0 24 24">
+            <line x1="4" y1="7"  x2="20" y2="7"/>
+            <line x1="4" y1="12" x2="20" y2="12"/>
+            <line x1="4" y1="17" x2="20" y2="17"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Page area — pages are injected here -->
+    <div id="page-area">
+      <div id="page-log"          class="page-view active"></div>
+      <div id="page-dashboard"    class="page-view"></div>
+      <div id="page-league"       class="page-view"></div>
+      <div id="page-profile"      class="page-view"></div>
+      <div id="page-settings"     class="page-view"></div>
+      <div id="page-support"      class="page-view"></div>
+      <div id="page-achievements" class="page-view"></div>
+      <div id="page-skill-detail" class="page-view"></div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app-shell -->
+
+<!-- ══════════════════════════════════════════════════════════
+     SCRIPTS — order matters
+══════════════════════════════════════════════════════════ -->
+<script src="/js/utils.js"></script>
+<script src="/js/state.js"></script>
+<script src="/js/api.js"></script>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   SIDEBAR ICONS (Lucide-style SVG بدل الإيموجي)
+══════════════════════════════════════════════════════════ */
+function _initNavIcons() {
+  const map = {
+    'nav-icon-log':          'list-checks',
+    'nav-icon-dashboard':    'trending-up',
+    'nav-icon-league':       'swords',
+    'nav-icon-achievements': 'trophy',
+    'nav-icon-settings':     'settings',
+    'nav-icon-support':      'message-circle',
+    'nav-icon-logout':       'log-out',
+  };
+  Object.entries(map).forEach(([id, name]) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = icon(name, 15);
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════════════════════════ */
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('sb-overlay');
+  const isOpen = sb.classList.contains('open');
+  if (isOpen) {
+    sb.classList.remove('open');
+    ov.classList.remove('open');
+  } else {
+    sb.classList.add('open');
+    ov.classList.add('open');
+  }
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('open');
+}
+
+/* ══════════════════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════════════════ */
+const PAGE_TITLES = {
+  log: 'Daily Log', dashboard: 'Dashboard', league: 'League',
+  profile: 'Profile', settings: 'Settings',
+  support: 'Support', achievements: 'Achievements',
+  'skill-detail': 'Skill Detail',
+};
+
+// Pages already loaded (avoid re-fetching)
+const _loadedPages = new Set();
+
+async function navigate(page, param, _skipHistory) {
+  closeSidebar();
+
+  // صفحة تفاصيل المهارة
+  if (page === 'skill-detail' && param) {
+    if (STATE.detailSkill !== param) {
+      STATE.detailRange = 'day';
+      STATE.detailCalY  = new Date().getFullYear();
+      STATE.detailCalM  = new Date().getMonth();
+    }
+    STATE.detailSkill = param;
+  }
+
+  // ── History API: كل صفحة تحصل على URL خاص بها ──
+  if (!_skipHistory) {
+    const state = { page, param: param || null };
+    const url   = param ? `?p=${page}&id=${param}` : `?p=${page}`;
+    window.history.pushState(state, '', url);
+  }
+
+  // Mark active link
+  document.querySelectorAll('.sb-link').forEach(l => {
+    l.classList.toggle('active', l.dataset.page === page);
+  });
+
+  // Update topbar
+  const tp = document.getElementById('tb-page');
+  if (tp) tp.textContent = PAGE_TITLES[page] || page;
+
+  STATE.currentPage = page;
+
+  // Show correct page div
+  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+  const pg = document.getElementById('page-' + page);
+  if (pg) pg.classList.add('active');
+
+  // Lazy-load the page HTML if not loaded yet
+  if (!_loadedPages.has(page)) {
+    const pageFiles = {
+      log:          '/pages/daily-log.html',
+      dashboard:    '/pages/dashboard.html',
+      league:       '/pages/league.html',
+      profile:      '/pages/profile.html',
+      settings:     '/pages/settings.html',
+      support:      '/pages/support.html',
+      achievements: '/pages/achievements.html',
+      'skill-detail': '/pages/skill-detail.html',
+    };
+    const file = pageFiles[page];
+    if (file) {
+      try {
+        const res  = await fetch(file);
+        const html = await res.text();
+        if (pg) pg.innerHTML = html;
+        if (pg) {
+          pg.querySelectorAll('script').forEach(oldScript => {
+            const s = document.createElement('script');
+            if (oldScript.src) { s.src = oldScript.src; }
+            else { s.textContent = oldScript.textContent; }
+            document.head.appendChild(s);
+            oldScript.remove();
+          });
+        }
+        _loadedPages.add(page);
+      } catch (e) {
+        console.error(`Failed to load page: ${file}`, e);
+        if (pg) pg.innerHTML = `<div class="page-inner"><div class="empty-state"><span class="empty-icon">⚠️</span><div class="empty-title">Page failed to load</div><div class="empty-body">Check the console for details.</div></div></div>`;
+        return;
+      }
+    }
+  }
+
+  // Call the page's render function if it exists
+  const renderFns = {
+    log:          () => typeof renderLog          === 'function' && renderLog(),
+    dashboard:    () => typeof renderDashboard    === 'function' && renderDashboard(),
+    league:       () => typeof renderLeague       === 'function' && renderLeague(),
+    profile:      () => typeof renderProfile      === 'function' && renderProfile(),
+    settings:     () => typeof renderSettings     === 'function' && renderSettings(),
+    support:      () => typeof renderSupport      === 'function' && renderSupport(),
+    achievements: () => typeof renderAchievements === 'function' && renderAchievements(),
+    'skill-detail': () => typeof renderSkillDetail === 'function' && renderSkillDetail(),
+  };
+  if (renderFns[page]) renderFns[page]();
+}
+
+/* ══════════════════════════════════════════════════════════
+   LOGOUT
+══════════════════════════════════════════════════════════ */
+async function confirmLogout() {
+  const ok = await showConfirm('Log out?', 'You\'ll need to sign in again.', 'Log out');
+  if (ok) doLogout();
+}
+
+/* ══════════════════════════════════════════════════════════
+   TOOLTIP
+══════════════════════════════════════════════════════════ */
+function showTip(ev, html) {
+  const t = document.getElementById('tip');
+  t.innerHTML = html;
+  t.style.display = 'block';
+  t.style.left = (ev.clientX + 12) + 'px';
+  t.style.top  = (ev.clientY - 32) + 'px';
+}
+function hideTip() { document.getElementById('tip').style.display = 'none'; }
+
+/* ══════════════════════════════════════════════════════════
+   DATE CHIP
+══════════════════════════════════════════════════════════ */
+function updateDateChip() {
+  const el = document.getElementById('date-chip');
+  if (el) el.textContent = new Date().toLocaleDateString('en-US', {
+    weekday: 'short', month: 'short', day: 'numeric',
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════════ */
+/* ── popstate: زر الرجوع/التقدم في المتصفح ── */
+window.addEventListener('popstate', async (ev) => {
+  // إذا رجع لما قبل أول صفحة → ارجع لـ login
+  if (!ev.state) {
+    window.location.href = '/';
+    return;
+  }
+  const { page, param } = ev.state;
+  await navigate(page, param || undefined, true); // true = لا تضيف pushState جديد
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+  updateDateChip();
+  setInterval(updateDateChip, 60000);
+  _initNavIcons();
+
+  const sub = document.getElementById('lo-sub');
+
+  // 1. حمّل الـ session من sessionStorage
+  const hadSession = loadTokensFromHash(); // في api.js الجديد يقرأ من sessionStorage
+  if (!hadSession || !STATE.token) {
+    window.location.replace('/');
+    return;
+  }
+
+  // 2. تحقق من صحة الـ session مع السيرفر
+  try {
+    if (sub) sub.textContent = 'Verifying session…';
+    const vRes = await fetch('/api/auth/validate', {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${STATE.token}`,
+      },
+    });
+    const vJson = await vRes.json();
+    if (!vJson.ok || !vJson.data?.ok) {
+      // Session منتهية أو غير صالحة
+      sessionStorage.clear();
+      window.location.replace('/');
+      return;
+    }
+  } catch(err) {
+    console.error('[session-validate]', err);
+    // في حالة خطأ في الشبكة، نكمل (offline graceful)
+  }
+
+  // 3. حمّل Profile + Dashboard
+  try {
+    if (sub) sub.textContent = 'Loading profile…';
+    await loadProfile();
+
+    if (sub) sub.textContent = 'Loading data…';
+    await loadDashboard();
+  } catch (err) {
+    console.error('[init]', err);
+    if (err.status === 401) {
+      sessionStorage.clear();
+      window.location.replace('/');
+      return;
+    }
+    toast('Failed to load — please refresh', 'error', 5000);
+  }
+
+  // 4. أخفِ شاشة التحميل
+  const ov = document.getElementById('loading-overlay');
+  ov.classList.add('done');
+  setTimeout(() => { ov.style.display = 'none'; }, 450);
+
+  // 5. انتقل للصفحة المطلوبة
+  const urlParams  = new URLSearchParams(window.location.search);
+  const startPage  = urlParams.get('p') || 'log';
+  const startParam = urlParams.get('id') || undefined;
+
+  window.history.replaceState({ page: startPage, param: startParam || null }, '', window.location.href);
+  await navigate(startPage, startParam, true);
+
+  // 6. تحقق من إشعارات الإنجازات
+  setTimeout(_checkAchievementNotifications, 1200);
+});
+/* ══════════════════════════════════════════════════════════
+   ACHIEVEMENT NOTIFICATION DOT (quick check on load)
+══════════════════════════════════════════════════════════ */
+async function _checkAchievementNotifications() {
+  try {
+    // اجلب الـ IDs المشاهدة من الـ server (cross-device)
+    const res  = await api.achievements.getSeen();
+    const seen = new Set(res.data || []);
+
+    const skills  = STATE.skills  || [];
+    const totalXP = STATE.overallXP || 0;
+
+    const XP_MS = [1000,5000,10000,25000,50000,100000];
+    const hasNewXP = XP_MS.some(t => totalXP >= t && !seen.has(`xp_${t}`));
+    if (hasNewXP) { _showAchNotifDots(); return; }
+
+    const hasNewStreak = skills.some(s => {
+      const cur  = STATE.streakMap[s.id]?.current || 0;
+      const lang = (STATE.languages||[]).find(l => l.id === s.lang_id);
+      if (!lang) return false;
+      return [1,3,7,14,30,60,100,180,365].some(d =>
+        cur >= d && !seen.has(`streak_${lang.id}_${s.key}_${d}`)
+      );
+    });
+    if (hasNewStreak) { _showAchNotifDots(); return; }
+  } catch(e) {
+    console.error('[notif]', e);
+  }
+}
+
+function _showAchNotifDots() {
+  // Dot on hamburger
+  const menuBtn = document.getElementById('btn-menu');
+  if (menuBtn && !menuBtn.querySelector('.ach-notif-dot')) {
+    const dot = document.createElement('span');
+    dot.className = 'ach-notif-dot';
+    dot.style.cssText = 'position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:#ff4d4d;box-shadow:0 0 6px rgba(255,77,77,0.7);pointer-events:none;z-index:5;';
+    menuBtn.style.position = 'relative';
+    menuBtn.appendChild(dot);
+  }
+  // Dot on achievements sidebar link
+  const achLink = document.querySelector('.sb-link[data-page="achievements"]');
+  if (achLink && !achLink.querySelector('.ach-notif-dot')) {
+    const dot = document.createElement('span');
+    dot.className = 'ach-notif-dot';
+    dot.style.cssText = 'display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff4d4d;box-shadow:0 0 6px rgba(255,77,77,0.7);margin-left:auto;flex-shrink:0;';
+    achLink.appendChild(dot);
+  }
+}
+
+</script>
+
+</body>
+</html>

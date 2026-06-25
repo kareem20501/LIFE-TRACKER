@@ -1,0 +1,436 @@
+<style>
+/* ══════════════════════════════════════════════════════════
+   SKILL DETAIL — page-scoped styles
+══════════════════════════════════════════════════════════ */
+
+.sd-back-row { margin-bottom: 14px; }
+
+/* ── Hero ── */
+.sd-hero-card {
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  padding: 20px; margin-bottom: 18px;
+  background: linear-gradient(160deg, var(--bg) 0%, var(--bg2) 55%, rgba(70,54,153,0.35) 100%);
+  border: 1px solid var(--b1);
+  border-radius: var(--r-xl);
+}
+.sd-rank-badge {
+  width: 76px; height: 76px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--indigo);
+}
+.sd-info { flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 5px; }
+.sd-name-row { display: flex; align-items: center; gap: 9px; }
+.sd-name { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: var(--t1); line-height: 1.3; }
+.sd-lang-line { font-size: 11px; color: var(--t3); }
+.sd-rank-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+.sd-meta { font-size: 13px; color: var(--t3); }
+.sd-meta strong { color: var(--t1); font-family: var(--f-display); font-size: 19px; font-weight: 700; }
+
+.sd-section { margin-bottom: 14px; }
+
+/* ── Streak box ── */
+.streak-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 11px; }
+.streak-lbl  {
+  font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--t3); display: flex; align-items: center; gap: 6px;
+}
+.streak-num  { font-family: var(--f-display); font-size: 26px; font-weight: 800; color: var(--t1); line-height: 1.3; }
+.streak-track {
+  position: relative; height: 10px;
+  background: rgba(255,255,255,0.07); border-radius: 100px; overflow: visible;
+}
+.streak-fill {
+  height: 10px; border-radius: 100px; background: var(--grad-bar);
+  transition: width 1.1s cubic-bezier(.16,1,.3,1);
+  position: relative; min-width: 3px;
+  box-shadow: 0 0 12px rgba(138,131,218,0.5);
+}
+.streak-flame { position: absolute; right: -10px; top: -7px; }
+.streak-miles {
+  display: flex; justify-content: space-between; margin-top: 7px;
+  font-size: 10px; font-weight: 600; letter-spacing: 1px; color: var(--t4);
+}
+
+/* ── Level / rank bar box ── */
+.sd-rank-bar-track { height: 8px; background: rgba(255,255,255,0.06); border-radius: 100px; overflow: hidden; }
+.sd-rank-bar-fill  { height: 100%; border-radius: 100px; transition: width 1s cubic-bezier(0.4,0,0.2,1); }
+
+/* ── History chart ── */
+.chart-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px; flex-wrap: wrap; gap: 8px;
+}
+.chart-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--t3); display: flex; align-items: center; gap: 6px;
+}
+.chart-tabs { display: flex; gap: 4px; }
+.chart-tab {
+  background: none; border: 1px solid var(--b1); border-radius: 6px;
+  padding: 5px 10px; font-size: 10px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--t3);
+  transition: all .15s; cursor: pointer;
+}
+.chart-tab.active { background: var(--glass3); border-color: var(--b3); color: var(--t1); }
+.chart-tab:hover:not(.active) { border-color: var(--b2); color: var(--t2); }
+
+.chart-wrap { position: relative; height: 190px; }
+.chart-scroll {
+  overflow-x: auto; height: 100%;
+  scrollbar-width: thin; scrollbar-color: rgba(138,131,218,0.30) transparent;
+}
+.chart-scroll::-webkit-scrollbar { height: 3px; }
+.chart-scroll::-webkit-scrollbar-thumb { background: rgba(138,131,218,0.30); border-radius: 3px; }
+
+.bar-group { display: inline-flex; gap: 5px; align-items: flex-end; height: 100%; padding: 24px 8px 30px; min-width: max-content; }
+.bar-col-wrap { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; min-width: 22px; height: 100%; }
+.bar-val { font-size: 8px; font-weight: 700; color: var(--t3); margin-bottom: 3px; white-space: nowrap; line-height: 1; }
+.bar-col { width: 13px; border-radius: 3px 3px 0 0; min-height: 2px; flex-shrink: 0; }
+.bar-lbl { font-size: 8px; font-weight: 600; color: var(--t3); margin-top: 4px; white-space: nowrap; }
+
+.chart-empty { display: flex; align-items: center; justify-content: center; height: 100%; font-size: 13px; color: var(--t3); }
+
+/* ── Calendar ── */
+.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.cal-title  { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800; color: var(--t1); }
+.cal-nav-btn {
+  background: var(--glass); border: 1px solid var(--b1); border-radius: 6px;
+  padding: 5px 8px; color: var(--t2); display: flex; align-items: center;
+  cursor: pointer; transition: border-color .15s, color .15s;
+}
+.cal-nav-btn:hover { border-color: var(--b2); color: var(--t1); }
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+.cal-head-cell { text-align: center; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--t4); padding-bottom: 6px; }
+.cal-cell {
+  aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border-radius: 6px; font-size: 10px; font-weight: 600; color: var(--t4);
+  background: rgba(255,255,255,0.025); border: 1px solid var(--b1); gap: 1px;
+}
+.cal-cell.empty { background: none; border: none; }
+.cal-cell.today { border-color: var(--b3); color: var(--indigo); }
+.cal-cell.met {
+  background: rgba(138,131,218,0.32); border-color: var(--b3); color: var(--t1);
+  font-weight: 800; box-shadow: 0 0 10px rgba(138,131,218,0.25);
+}
+.cal-cell.partial { background: rgba(138,131,218,0.10); border-color: var(--b2); color: var(--indigo); }
+.cal-day-val { font-size: 7px; opacity: .8; }
+.cal-legend { display: flex; gap: 14px; margin-top: 10px; justify-content: flex-end; flex-wrap: wrap; }
+.cal-legend-item { display: flex; align-items: center; gap: 5px; font-size: 9px; color: var(--t4); }
+.cal-legend-dot { width: 9px; height: 9px; border-radius: 2px; }
+</style>
+
+<div class="page-inner">
+
+  <!-- Back -->
+  <div class="sd-back-row">
+    <button class="btn btn-ghost btn-sm" id="sd-back-btn" onclick="navigate('dashboard')"></button>
+  </div>
+
+  <!-- Hero -->
+  <div id="sd-hero"></div>
+
+  <!-- Body (streak / level / chart / calendar) -->
+  <div id="sd-body"></div>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   SKILL DETAIL JS
+══════════════════════════════════════════════════════════ */
+
+let _sdEntries  = [];   // كل entries المهارة الحالية (من الـ API)
+let _sdDailyMap = {};   // { 'YYYY-MM-DD': value }
+const CAL_DAY_HEADS = ['Sat','Sun','Mon','Tue','Wed','Thu','Fri'];
+
+/* ── Realistic flame icon (multi-layer gradient) ── */
+function realFlame(size = 22) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="flameOuter" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0%" stop-color="#ff7a3c"/>
+        <stop offset="55%" stop-color="#ffae42"/>
+        <stop offset="100%" stop-color="#ffe08a"/>
+      </linearGradient>
+      <linearGradient id="flameInner" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0%" stop-color="#ff4d2e"/>
+        <stop offset="60%" stop-color="#ffd166"/>
+        <stop offset="100%" stop-color="#fff3c2"/>
+      </linearGradient>
+    </defs>
+    <path fill="url(#flameOuter)" d="M12 2c1 3-2 4.2-2 7 0 1.7 1.3 3 3 3 1.2 0 2.2-.7 2.7-1.7.6 1 1 2.2 1 3.4 0 3.5-2.7 6.3-6.2 6.3S3.3 17.2 3.3 13.7c0-3.6 1.9-6 4.2-8.1C8.9 4.4 10.6 3.2 12 2Z"/>
+    <path fill="url(#flameInner)" d="M12.4 9.2c.2 1.4-1 2.1-1 3.4 0 .9.7 1.6 1.6 1.6.7 0 1.3-.4 1.6-1 .3.6.5 1.2.5 1.9 0 1.9-1.5 3.4-3.4 3.4S8.3 17 8.3 15.1c0-2 1-3.4 2.2-4.6.6-.6 1.3-1.1 1.9-1.3Z"/>
+  </svg>`;
+}
+
+async function renderSkillDetail() {
+  const backBtn = document.getElementById('sd-back-btn');
+  if (backBtn) backBtn.innerHTML = icon('chevron-left', 14) + ' Back to Dashboard';
+
+  const skill = STATE.skills.find(s => s.id === STATE.detailSkill);
+  const heroEl = document.getElementById('sd-hero');
+  const bodyEl = document.getElementById('sd-body');
+
+  if (!skill) {
+    heroEl.innerHTML = '';
+    bodyEl.innerHTML = `
+      <div class="empty-state">
+        <span class="empty-icon">${icon('target', 40)}</span>
+        <div class="empty-title">Skill not found</div>
+        <div class="empty-body">Go back to the Dashboard and pick a skill to view its analytics.</div>
+      </div>`;
+    return;
+  }
+
+  const lang     = STATE.languages.find(l => l.id === skill.lang_id);
+  const isCheck  = skill.is_checkbox || skill.key === 'touch_typing';
+  const xp       = STATE.xpMap[skill.id] || 0;
+  const info     = getLevelInfo(xp, XP_SKILL);
+  const streak   = STATE.streakMap[skill.id]?.current || 0;
+  const totalUnits = Math.round(xp / (skill.xp_per_unit || skill.xpU || 1));
+  const rp       = info.rank.label.split(' ');
+  const isMin    = skill.unit === 'min';
+
+  /* ── Hero ── */
+  heroEl.innerHTML = `
+    <div class="sd-hero-card">
+      ${isCheck
+        ? `<div class="sd-rank-badge">${icon(skillIconName(skill), 44, 1.5)}</div>`
+        : `<div class="sd-rank-badge">${rankBadgeSVG(rp[0], rp.slice(1).join(' ') || '', 76)}</div>`}
+      <div class="sd-info">
+        <div class="sd-name-row">
+          <span style="color:var(--t1)">${skillIconHTML(skill, 20)}</span>
+          <span class="sd-name">${skill.name}</span>
+        </div>
+        <div class="sd-lang-line">${lang ? `${flagIconHTML(langIso(lang.code), 14)} ${lang.name}` : ''}</div>
+        ${isCheck
+          ? `<div class="sd-meta" style="margin-top:4px">Daily checkbox skill — counts toward your streak only.</div>`
+          : `<div class="sd-rank-label" style="color:${info.rank.col}">${info.rank.label}</div>
+             <div class="sd-meta">Level <strong>${info.level}</strong> <span style="font-size:11px;color:var(--t4)">/ ${LVL_MAX}</span></div>
+             <div class="sd-meta">Total: <strong style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700">${isMin ? fmtMin(totalUnits) : `${fmtNum(totalUnits)} ${skill.unit}`}</strong>
+               &nbsp;·&nbsp; <span style="color:var(--t1);font-weight:700">${fmtNum(Math.round(xp))} XP</span></div>`}
+      </div>
+    </div>`;
+
+  /* ── Streak box ── */
+  const maxS = streak > 0 ? Math.ceil(streak / 15) * 15 : 15;
+  const sPct = Math.min(streak / maxS * 100, 100);
+
+  let html = `
+    <div class="card sd-section">
+      <div class="streak-head">
+        <span class="streak-lbl">${icon('flame', 13)} Streak</span>
+        <div style="display:flex;align-items:baseline;gap:5px">
+          <span class="streak-num">${streak}</span>
+          <span style="font-size:12px;color:var(--t3);font-weight:600">days</span>
+        </div>
+      </div>
+      <div class="streak-track">
+        <div class="streak-fill" style="width:${sPct}%"><span class="streak-flame">${realFlame(20)}</span></div>
+      </div>
+      <div class="streak-miles">
+        <span>0</span><span>${Math.round(maxS/4)}d</span><span>${Math.round(maxS/2)}d</span><span>${Math.round(maxS*3/4)}d</span><span>${maxS}d</span>
+      </div>
+    </div>`;
+
+  /* ── Level / rank bar (skip for checkbox skills) ── */
+  if (!isCheck) {
+    html += `
+    <div class="card sd-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:4px">
+        <div style="font-size:14px;font-weight:700;color:${info.rank.col}">${info.rank.label}</div>
+        <div style="font-size:12px;color:var(--t3)">Level ${info.level} / ${LVL_MAX}</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;margin-bottom:6px">
+        <span style="color:var(--t3)">${fmtNum(Math.round(info.xpInLvl))} / ${XP_SKILL} XP</span>
+        ${info.nextRank
+          ? `<span style="color:var(--t3)">Next: <span style="color:${info.nextRank.col};font-weight:700">${info.nextRank.label}</span></span>`
+          : `<span style="color:var(--peach)">✨ MAX</span>`}
+      </div>
+      <div class="sd-rank-bar-track"><div class="sd-rank-bar-fill" style="width:${info.pct}%;background:linear-gradient(90deg,${info.rank.col}55,${info.rank.col})"></div></div>
+      ${info.nextRank ? `<div style="font-size:11px;color:var(--t3);margin-top:7px"><strong style="color:var(--peach)">${fmtNum(info.xpToNext)} XP</strong> to Level ${info.level + 1}</div>` : ''}
+    </div>`;
+  }
+
+  /* ── History chart ── */
+  const tabs = ['day','week','month','year'].map(r =>
+    `<button class="chart-tab ${STATE.detailRange === r ? 'active' : ''}" data-range="${r}" onclick="sdSetRange('${r}')">${r}</button>`
+  ).join('');
+
+  html += `
+    <div class="card sd-section">
+      <div class="chart-header">
+        <span class="chart-title">${icon('bar-chart', 12)} History</span>
+        <div class="chart-tabs">${tabs}</div>
+      </div>
+      <div class="chart-wrap" id="sd-chart-wrap">
+        <div class="chart-scroll" id="sd-chart-scroll"><div class="chart-empty">Loading…</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cal-header">
+        <span class="cal-title" id="sd-cal-lbl">—</span>
+        <div style="display:flex;gap:6px">
+          <button class="cal-nav-btn" onclick="sdShiftCal(-1)">${icon('chevron-left', 14)}</button>
+          <button class="cal-nav-btn" onclick="sdShiftCal(1)">${icon('chevron-right', 14)}</button>
+        </div>
+      </div>
+      <div class="cal-grid" id="sd-cal-grid"></div>
+      <div class="cal-legend">
+        <div class="cal-legend-item"><span class="cal-legend-dot" style="background:rgba(138,131,218,0.32);border:1px solid var(--b3)"></span>Goal met</div>
+        <div class="cal-legend-item"><span class="cal-legend-dot" style="background:rgba(138,131,218,0.10);border:1px solid var(--b2)"></span>Partial</div>
+      </div>
+    </div>`;
+
+  bodyEl.innerHTML = html;
+
+  /* ── Fetch entries once, then render chart + calendar ── */
+  try {
+    const { data } = await api.entries.forSkill(skill.id);
+    _sdEntries = data || [];
+  } catch (e) {
+    console.error('[skill-detail] entries fetch', e);
+    _sdEntries = [];
+  }
+  _sdDailyMap = entriesByDate(_sdEntries);
+  sdRenderChart(skill);
+  sdRenderCalendar(skill);
+}
+
+/* ── Chart range switch (no refetch — uses cached entries) ── */
+function sdSetRange(r) {
+  STATE.detailRange = r;
+  document.querySelectorAll('.chart-tab').forEach(b => b.classList.toggle('active', b.dataset.range === r));
+  const skill = STATE.skills.find(s => s.id === STATE.detailSkill);
+  if (skill) sdRenderChart(skill);
+}
+
+/* ── History bar chart ── */
+function sdRenderChart(skill) {
+  const range   = STATE.detailRange;
+  const tz      = STATE.tz;
+  const isCheck = skill.is_checkbox || skill.key === 'touch_typing';
+  let data = [];
+
+  if (range === 'day') {
+    for (let i = 59; i >= 0; i--) {
+      const ds = dateOffsetStr(i, tz);
+      const d  = new Date(ds + 'T12:00:00');
+      data.push({ label: `${d.getMonth()+1}/${d.getDate()}`, value: _sdDailyMap[ds] || 0 });
+    }
+  } else if (range === 'week') {
+    for (let i = 25; i >= 0; i--) {
+      const ref = new Date(); ref.setDate(ref.getDate() - i * 7);
+      const ws  = weekStartDate(ref);
+      let sum = 0;
+      for (let d = 0; d < 7; d++) {
+        const cd = new Date(ws); cd.setDate(cd.getDate() + d);
+        const ds = `${cd.getFullYear()}-${pad(cd.getMonth()+1)}-${pad(cd.getDate())}`;
+        sum += _sdDailyMap[ds] || 0;
+      }
+      data.push({ label: `${ws.getMonth()+1}/${ws.getDate()}`, value: sum });
+    }
+  } else if (range === 'month') {
+    const now = new Date();
+    const MN  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    for (let i = 11; i >= 0; i--) {
+      const ms = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const me = new Date(now.getFullYear(), now.getMonth() - i + 1, 0);
+      let sum = 0;
+      Object.keys(_sdDailyMap).forEach(ds => {
+        const ed = new Date(ds + 'T12:00:00');
+        if (ed >= ms && ed <= me) sum += _sdDailyMap[ds];
+      });
+      data.push({ label: MN[ms.getMonth()], value: sum });
+    }
+  } else { // year
+    const map = {};
+    Object.keys(_sdDailyMap).forEach(ds => {
+      const y = ds.split('-')[0];
+      map[y] = (map[y] || 0) + _sdDailyMap[ds];
+    });
+    data = Object.keys(map).sort().map(y => ({ label: y, value: map[y] }));
+    if (!data.length) data.push({ label: String(new Date().getFullYear()), value: 0 });
+  }
+
+  const scroll = document.getElementById('sd-chart-scroll');
+  const wrap   = document.getElementById('sd-chart-wrap');
+  if (!scroll || !wrap) return;
+
+  if (!data.length || data.every(d => d.value === 0)) {
+    scroll.innerHTML = '<div class="chart-empty">No data yet</div>';
+    return;
+  }
+
+  // Goal threshold per-bar, scaled to the period length
+  let periodGoal = 0;
+  if (!isCheck && skill.goal) {
+    if (range === 'day')   periodGoal = skill.goal;
+    else if (range === 'week')  periodGoal = skill.goal * 7;
+    else if (range === 'month') periodGoal = skill.goal * 30;
+    else if (range === 'year')  periodGoal = skill.goal * 365;
+  }
+
+  const maxV = Math.max(...data.map(d => d.value), 1);
+  const IH = 110; // max bar height in px — bars never exceed this
+
+  let bars = '<div class="bar-group">';
+  data.forEach(d => {
+    // proportional height — strictly mathematically proportional to value/maxV, capped at IH
+    const h = d.value > 0 ? Math.max(Math.round((d.value / maxV) * IH), 3) : 0;
+    const met = periodGoal > 0 && d.value >= periodGoal;
+    const bg  = met ? 'var(--grad-bar)' : d.value > 0 ? 'rgba(138,131,218,0.35)' : 'rgba(255,255,255,0.04)';
+    const valLbl = d.value > 0 ? (skill.unit === 'min' ? fmtMin(d.value) : fmtNum(d.value)) : '';
+    bars += `<div class="bar-col-wrap"><div class="bar-val">${valLbl}</div><div class="bar-col" style="height:${h}px;background:${bg}"></div><div class="bar-lbl">${d.label}</div></div>`;
+  });
+  bars += '</div>';
+  scroll.innerHTML = bars;
+
+  requestAnimationFrame(() => { scroll.scrollLeft = scroll.scrollWidth; });
+}
+
+/* ── Calendar ── */
+function sdShiftCal(dir) {
+  STATE.detailCalM += dir;
+  if (STATE.detailCalM > 11) { STATE.detailCalM = 0; STATE.detailCalY++; }
+  if (STATE.detailCalM < 0)  { STATE.detailCalM = 11; STATE.detailCalY--; }
+  const skill = STATE.skills.find(s => s.id === STATE.detailSkill);
+  if (skill) sdRenderCalendar(skill);
+}
+
+function sdRenderCalendar(skill) {
+  const MN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const y = STATE.detailCalY, m = STATE.detailCalM;
+  const lbl = document.getElementById('sd-cal-lbl');
+  if (lbl) lbl.textContent = `${MN[m]} ${y}`;
+
+  const todS    = STATE.today;
+  const firstDay   = new Date(y, m, 1).getDay();
+  const firstOffset = (firstDay + 1) % 7; // الأسبوع يبدأ السبت
+  const daysN   = new Date(y, m + 1, 0).getDate();
+  const goal    = skill.goal || 1;
+
+  let html = '';
+  CAL_DAY_HEADS.forEach(d => { html += `<div class="cal-head-cell">${d}</div>`; });
+  for (let i = 0; i < firstOffset; i++) html += '<div class="cal-cell empty"></div>';
+  for (let day = 1; day <= daysN; day++) {
+    const ds = `${y}-${pad(m+1)}-${pad(day)}`;
+    const v  = _sdDailyMap[ds] || 0;
+    let cls = 'cal-cell';
+    if (ds === todS) cls += ' today';
+    if (v > 0 && v >= goal) cls += ' met';
+    else if (v > 0) cls += ' partial';
+    html += `<div class="${cls}"><span>${day}</span>${v > 0 ? `<span class="cal-day-val">${fmtNum(v)}</span>` : ''}</div>`;
+  }
+  const grid = document.getElementById('sd-cal-grid');
+  if (grid) grid.innerHTML = html;
+}
+
+/* ─────────────────────────────────────────────────────────
+   NOTE: renderSkillDetail() is invoked explicitly by app.html's
+   navigate() dispatch table after this script is injected.
+   Do NOT auto-invoke here — it caused a double-render race.
+───────────────────────────────────────────────────────── */
+
+</script>

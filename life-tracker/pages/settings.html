@@ -1,0 +1,409 @@
+<style>
+/* ══════════════════════════════════════════════════════════
+   SETTINGS — page-scoped styles
+══════════════════════════════════════════════════════════ */
+
+.settings-section {
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: var(--r-lg); overflow: hidden; margin-bottom: 14px;
+}
+.settings-section-title {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--t3);
+  padding: 13px 16px 9px;
+  border-bottom: 1px solid var(--b1);
+}
+.settings-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 16px; gap: 12px; flex-wrap: wrap;
+  border-bottom: 1px solid rgba(138,131,218,0.06);
+}
+.settings-row:last-child { border-bottom: none; }
+.settings-label { font-size: 13px; font-weight: 500; color: var(--t1); margin-bottom: 2px; }
+.settings-desc  { font-size: 11px; color: var(--t3); }
+
+/* ── Language picker ── */
+.lang-picker-row {
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end;
+}
+.lang-select {
+  flex: 1; min-width: 160px;
+  background: rgba(70,54,153,0.17); border: 1px solid var(--b1);
+  border-radius: var(--r-sm); padding: 9px 12px;
+  color: var(--t1); font-size: 13px;
+  appearance: none; cursor: pointer;
+}
+.lang-select option { background: var(--bg2); color: var(--t1); }
+
+/* ── Language card ── */
+.manage-lang-card {
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: var(--r-lg); margin-bottom: 12px; overflow: hidden;
+}
+.manage-lang-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 16px; border-bottom: 1px solid var(--b1);
+  background: rgba(255,255,255,0.02);
+}
+.manage-lang-title { display: flex; align-items: center; gap: 10px; }
+.manage-lang-flag  { font-size: 22px; display: flex; align-items: center; }
+.manage-lang-name  { font-size: 14px; }
+.manage-lang-meta  { font-size: 10px; color: var(--t3); }
+
+/* ── Skill row ── */
+.skill-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px;
+  border-bottom: 1px solid rgba(138,131,218,0.05);
+  flex-wrap: wrap;
+}
+.skill-row:last-child { border-bottom: none; }
+.skill-row-icon { flex-shrink: 0; color: var(--indigo); display:flex; align-items:center; }
+.skill-row-info { flex: 1; min-width: 100px; }
+.skill-row-name { font-size: 13px; font-weight: 600; color: var(--t2); }
+.skill-row-meta { font-size: 10px; color: var(--t4); margin-top: 1px; }
+.skill-row-fixed-badge {
+  font-size: 8px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--t4); border: 1px solid var(--b1); border-radius: 4px;
+  padding: 2px 5px; margin-left: 6px;
+}
+
+.skill-row-controls {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.skill-row-field { display: flex; align-items: center; gap: 4px; }
+.skill-row-field label { font-size: 9px; color: var(--t3); white-space: nowrap; }
+.skill-row-field input {
+  width: 60px; background: rgba(70,54,153,0.17); border: 1px solid var(--b1);
+  border-radius: 6px; padding: 6px 8px; color: var(--t1); font-size: 12px; text-align: center;
+}
+.skill-row-field input:focus { border-color: var(--b3); }
+.skill-row-field input:disabled {
+  opacity: 0.5; cursor: not-allowed; background: rgba(255,255,255,0.02);
+}
+.skill-row-unit { font-size: 10px; color: var(--t3); }
+
+/* Custom skill add form */
+.add-skill-row {
+  padding: 12px 16px; background: rgba(255,255,255,0.01);
+}
+.add-skill-title {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--t3); margin-bottom: 8px;
+}
+.add-skill-form { display: flex; gap: 6px; flex-wrap: wrap; }
+.add-skill-form input { background: rgba(70,54,153,0.17); border: 1px solid var(--b1);
+  border-radius: 6px; padding: 7px 9px; color: var(--t1); font-size: 12px; }
+.add-skill-form input:focus { border-color: var(--b3); }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .skill-row { gap: 8px; }
+  .skill-row-controls { width: 100%; justify-content: flex-end; }
+}
+</style>
+
+<div class="page-inner">
+
+  <!-- Account settings -->
+  <div class="settings-section">
+    <div class="settings-section-title">Account</div>
+    <div class="settings-row">
+      <div>
+        <div class="settings-label">Timezone</div>
+        <div class="settings-desc">Used to determine "today" for streaks and logging</div>
+      </div>
+      <select class="lang-select" id="settings-tz" style="max-width:220px" onchange="updateTimezone()"></select>
+    </div>
+    <div class="settings-row">
+      <div>
+        <div class="settings-label">Email</div>
+        <div class="settings-desc" id="settings-email">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add language -->
+  <div class="sec-label">Add Language</div>
+  <div class="card" style="margin-bottom:18px">
+    <div class="lang-picker-row">
+      <select class="lang-select" id="lang-picker"></select>
+      <button class="btn btn-primary" onclick="uiAddLanguage()">Add Language</button>
+    </div>
+    <div style="font-size:11px;color:var(--t3);margin-top:10px;line-height:1.6">
+      Adding a language creates 6 fixed skills automatically: New Words, Reviewing, Reading,
+      Listening, Speaking, and Touch Typing. You can add up to 3 custom skills per language.
+      Maximum <strong style="color:var(--t1)">2 languages</strong> per account.
+    </div>
+  </div>
+
+  <!-- Languages list -->
+  <div class="sec-label">Your Languages</div>
+  <div id="languages-list"></div>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   SETTINGS JS
+══════════════════════════════════════════════════════════ */
+
+function renderSettings() {
+  _renderTimezone();
+  _renderEmail();
+  _renderLangPicker();
+  _renderLanguagesList();
+}
+
+/* ── Timezone ─────────────────────────────────────────────── */
+function _renderTimezone() {
+  const sel = document.getElementById('settings-tz');
+  const current = STATE.profile?.timezone || 'Africa/Cairo';
+  sel.innerHTML = TIMEZONES.map(tz =>
+    `<option value="${tz.value}" ${tz.value === current ? 'selected' : ''}>${tz.label}</option>`
+  ).join('');
+}
+
+async function updateTimezone() {
+  const tz = document.getElementById('settings-tz').value;
+  try {
+    await api.profile.update({ timezone: tz });
+    STATE.profile.timezone = tz;
+    toast('Timezone updated ✓', 'success', 1600);
+  } catch (err) {
+    toast(err.message || 'Failed to update', 'error');
+  }
+}
+
+/* ── Email ────────────────────────────────────────────────── */
+function _renderEmail() {
+  document.getElementById('settings-email').textContent = STATE.profile?.email || '—';
+}
+
+/* ── Language picker (add new) ───────────────────────────── */
+function _renderLangPicker() {
+  const sel = document.getElementById('lang-picker');
+  const existingCodes = STATE.languages.map(l => l.code);
+  const available = LANGUAGES.filter(l => !existingCodes.includes(l.code));
+
+  if (available.length === 0) {
+    sel.innerHTML = `<option value="">All languages added</option>`;
+    sel.disabled = true;
+    return;
+  }
+  sel.disabled = false;
+  sel.innerHTML = available.map(l =>
+    `<option value="${l.code}|${l.name}|${l.flag}">${l.flag} ${l.name}</option>`
+  ).join('');
+}
+
+async function uiAddLanguage() {
+  const sel = document.getElementById('lang-picker');
+  const val = sel.value;
+  if (!val) { toast('No language selected', 'warn'); return; }
+  const [code, name, flag] = val.split('|');
+
+  if (STATE.languages.length >= 2) {
+    toast('Maximum 2 languages allowed', 'warn');
+    return;
+  }
+
+  try {
+    await api.languages.create({ code, name, flag });
+    await loadDashboard();
+    toast(`✓ ${flag} ${name} added`, 'success');
+    renderSettings();
+  } catch (err) {
+    toast(err.message || 'Failed to add language', 'error');
+  }
+}
+
+/* ── Languages list ───────────────────────────────────────── */
+function _renderLanguagesList() {
+  const wrap  = document.getElementById('languages-list');
+  const langs = STATE.languages;
+
+  if (langs.length === 0) {
+    wrap.innerHTML = `
+      <div class="empty-state">
+        <span class="empty-icon">🌐</span>
+        <div class="empty-title">No languages yet</div>
+        <div class="empty-body">Pick a language above to get started — six skills will be created automatically.</div>
+      </div>`;
+    return;
+  }
+
+  let html = '';
+  langs.forEach(lang => {
+    const skills = STATE.skillsForLang(lang.id)
+      .slice().sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+    const fixedSkills  = skills.filter(s => !s.is_custom);
+    const customSkills = skills.filter(s => s.is_custom);
+
+    html += `
+      <div class="manage-lang-card">
+        <div class="manage-lang-header">
+          <div class="manage-lang-title">
+            <span class="manage-lang-flag">${flagIconHTML(langIso(lang.code), 26)}</span>
+            <div>
+              <div class="manage-lang-name logo-style-text">${lang.name}</div>
+              <div class="manage-lang-meta">${skills.length} skills</div>
+            </div>
+          </div>
+          <button class="btn btn-danger btn-sm" onclick="uiDeleteLanguage('${lang.id}','${escAttr(lang.name)}')">Remove</button>
+        </div>`;
+
+    // Fixed skills
+    fixedSkills.forEach(s => {
+      if (s.is_checkbox || s.key === 'touch_typing') {
+        html += `
+          <div class="skill-row">
+            <span class="skill-row-icon">${skillIconHTML(s, 16)}</span>
+            <div class="skill-row-info">
+              <div class="skill-row-name">${s.name}<span class="skill-row-fixed-badge">Streak only</span></div>
+              <div class="skill-row-meta">Checkbox · counts daily streak</div>
+            </div>
+          </div>`;
+        return;
+      }
+      html += `
+        <div class="skill-row">
+          <span class="skill-row-icon">${skillIconHTML(s, 16)}</span>
+          <div class="skill-row-info">
+            <div class="skill-row-name">${s.name}<span class="skill-row-fixed-badge">Fixed</span></div>
+            <div class="skill-row-meta">${s.xp_per_unit || s.xpU || 0} XP per ${s.unit}</div>
+          </div>
+          <div class="skill-row-controls">
+            <div class="skill-row-field">
+              <label>Goal</label>
+              <input type="number" value="${s.goal}" min="0.1" step="any"
+                onchange="uiUpdateSkillGoal('${s.id}', this.value)">
+            </div>
+            <span class="skill-row-unit">${s.unit}</span>
+          </div>
+        </div>`;
+    });
+
+    // Custom skills
+    customSkills.forEach(s => {
+      html += `
+        <div class="skill-row">
+          <span class="skill-row-icon">${skillIconHTML(s, 16)}</span>
+          <div class="skill-row-info">
+            <div class="skill-row-name">${s.name}</div>
+            <div class="skill-row-meta">Custom skill</div>
+          </div>
+          <div class="skill-row-controls">
+            <div class="skill-row-field">
+              <label>Goal</label>
+              <input type="number" value="${s.goal}" min="0.1" step="any"
+                onchange="uiUpdateSkillGoal('${s.id}', this.value)">
+            </div>
+            <span class="skill-row-unit">${s.unit}</span>
+            <div class="skill-row-field">
+              <label>XP/u</label>
+              <input type="number" value="${s.xp_per_unit || s.xpU || 1}" min="0.1" step="any"
+                onchange="uiUpdateSkillXP('${s.id}', this.value)">
+            </div>
+            <button class="btn btn-danger btn-sm" onclick="uiDeleteSkill('${s.id}','${escAttr(s.name)}')">×</button>
+          </div>
+        </div>`;
+    });
+
+    // Add custom skill form (max 3)
+    if (customSkills.length < 3) {
+      html += `
+        <div class="add-skill-row">
+          <div class="add-skill-title">+ Add Custom Skill (${customSkills.length}/3)</div>
+          <div class="add-skill-form">
+            <input id="cs-name-${lang.id}" placeholder="Skill name" style="flex:1;min-width:100px" maxlength="80">
+            <input id="cs-goal-${lang.id}" type="number" placeholder="Goal" style="width:65px" min="0.1" step="any">
+            <input id="cs-unit-${lang.id}" placeholder="Unit" style="width:60px" maxlength="20">
+            <input id="cs-xpu-${lang.id}"  type="number" placeholder="XP/u" style="width:55px" value="1" min="0.1" step="any">
+            <button class="btn btn-primary btn-sm" onclick="uiAddCustomSkill('${lang.id}')">Add</button>
+          </div>
+        </div>`;
+    }
+
+    html += `</div>`;
+  });
+
+  wrap.innerHTML = html;
+}
+
+/* ── Update goal (allowed for all skills) ────────────────── */
+async function uiUpdateSkillGoal(skillId, rawVal) {
+  const val = parseFloat(rawVal);
+  if (isNaN(val) || val <= 0) { toast('Goal must be greater than 0', 'warn'); return; }
+  try {
+    await api.skills.update(skillId, { goal: val });
+    const sk = STATE.skills.find(s => s.id === skillId);
+    if (sk) sk.goal = val;
+    toast('Goal updated', 'success', 1200);
+  } catch (err) {
+    toast(err.message || 'Failed', 'error');
+  }
+}
+
+/* ── Update XP/unit (custom skills only) ─────────────────── */
+async function uiUpdateSkillXP(skillId, rawVal) {
+  const val = parseFloat(rawVal);
+  if (isNaN(val) || val <= 0) { toast('XP/unit must be greater than 0', 'warn'); return; }
+  try {
+    await api.skills.update(skillId, { xp_per_unit: val });
+    const sk = STATE.skills.find(s => s.id === skillId);
+    if (sk) sk.xp_per_unit = val;
+    toast('XP rate updated', 'success', 1200);
+  } catch (err) {
+    toast(err.message || 'Failed', 'error');
+  }
+}
+
+/* ── Add custom skill ─────────────────────────────────────── */
+async function uiAddCustomSkill(langId) {
+  const name = document.getElementById(`cs-name-${langId}`)?.value.trim();
+  const goal = parseFloat(document.getElementById(`cs-goal-${langId}`)?.value) || 1;
+  const unit = document.getElementById(`cs-unit-${langId}`)?.value.trim() || 'units';
+  const xpu  = parseFloat(document.getElementById(`cs-xpu-${langId}`)?.value) || 1;
+
+  if (!name) { toast('Skill name required', 'warn'); return; }
+
+  try {
+    await api.skills.create({ lang_id: langId, name, goal, unit, xp_per_unit: xpu });
+    await loadDashboard();
+    toast(`✓ "${name}" added`, 'success');
+    renderSettings();
+  } catch (err) {
+    toast(err.message || 'Failed to add skill', 'error');
+  }
+}
+
+/* ── Delete custom skill ──────────────────────────────────── */
+async function uiDeleteSkill(skillId, name) {
+  const ok = await showConfirm('Delete skill?', `Delete "${name}" and all its logged entries? This cannot be undone.`, 'Delete');
+  if (!ok) return;
+  try {
+    await api.skills.delete(skillId);
+    await loadDashboard();
+    toast(`Deleted "${name}"`, 'info');
+    renderSettings();
+  } catch (err) {
+    toast(err.message || 'Failed', 'error');
+  }
+}
+
+/* ── Delete language ──────────────────────────────────────── */
+async function uiDeleteLanguage(langId, name) {
+  const ok = await showConfirm('Remove language?', `Remove "${name}" and ALL its skills and logged entries? This cannot be undone.`, 'Remove all');
+  if (!ok) return;
+  try {
+    await api.languages.delete(langId);
+    await loadDashboard();
+    toast(`Removed "${name}"`, 'info');
+    renderSettings();
+  } catch (err) {
+    toast(err.message || 'Failed', 'error');
+  }
+}
+</script>

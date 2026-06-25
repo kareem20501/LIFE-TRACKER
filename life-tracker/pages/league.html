@@ -1,0 +1,445 @@
+<style>
+/* ══════════════════════════════════════════════════════════
+   LEAGUE — page-scoped styles
+══════════════════════════════════════════════════════════ */
+
+.league-hero {
+  padding: 26px 0 16px; text-align: center;
+  background: radial-gradient(ellipse 60% 50% at 50% 130%, rgba(251,213,189,0.12), transparent 60%);
+  margin: -22px -18px 0;
+}
+.league-tag {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: rgba(251,213,189,0.65); margin-bottom: 8px;
+}
+.league-title {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(22px, 5vw, 34px); font-weight: 800;
+  line-height: 1.35; letter-spacing: 1px; color: var(--t1);
+}
+.league-title em {
+  font-style: normal; color: var(--indigo);
+}
+
+/* ── Timer ── */
+.timer-wrap {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: var(--r-lg); padding: 12px 18px;
+  margin-top: 14px;
+}
+.timer-block { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 42px; }
+.timer-num   { font-family: 'Sora', sans-serif; font-size: 20px; font-weight: 800; color: var(--indigo); line-height: 1; }
+.timer-lbl   { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--t3); }
+.timer-sep   { font-family: 'Sora', sans-serif; font-size: 18px; font-weight: 800; color: var(--b2); margin-bottom: 12px; }
+
+/* ── Standings ── */
+.standings-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 8px; }
+.st-row {
+  display: flex; align-items: center; gap: 11px;
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: var(--r-md); padding: 11px 13px;
+}
+.st-row.gold   { border-color: rgba(232,193,64,0.40);  background: rgba(232,193,64,0.06); }
+.st-row.silver { border-color: rgba(192,192,200,0.35); background: rgba(192,192,200,0.04); }
+.st-row.bronze { border-color: rgba(205,127,50,0.35);  background: rgba(205,127,50,0.04); }
+
+/* 3) رقم الترتيب في قائمة الـ standings العادية (المركز الرابع فما فوق) */
+.st-pos { font-family: var(--f-display); font-size: 16px; font-weight: 700; width: 24px; text-align: center; flex-shrink: 0; color: var(--t3); }.st-pos.p1 { color: #e8c840; } .st-pos.p2 { color: #c0c0d0; } .st-pos.p3 { color: #cd7f32; }
+.st-medal { font-size: 17px; flex-shrink: 0; width: 20px; }
+.st-name  { font-size: 13px; font-weight: 700; color: var(--t1); flex: 1; min-width: 60px; }
+.st-bar-wrap { flex: 2; min-width: 70px; max-width: 240px; }
+.st-bar-track { height: 5px; background: rgba(255,255,255,0.06); border-radius: 100px; overflow: hidden; }
+.st-bar-fill  { height: 100%; border-radius: 100px; transition: width .9s; }
+.st-xp { font-size: 11px; font-weight: 700; color: var(--indigo); white-space: nowrap; flex-shrink: 0; }
+
+/* ── Skill leaders ── */
+.skill-leaders-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 8px; }
+.lcard {
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: var(--r-md); padding: 11px 14px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.lcard-left {
+  display: flex; align-items: center; gap: 8px;
+  min-width: 130px; flex-shrink: 0;
+}
+.lcard-icon  { flex-shrink: 0; color: var(--indigo); display:flex; align-items:center; }
+.lcard-skill { font-size: 12px; font-weight: 800; letter-spacing: 0.5px; color: var(--t1); }
+.lcard-lang  { font-size: 9px; color: var(--t4); }
+.lcard-sep   { width: 1px; height: 26px; background: var(--b1); flex-shrink: 0; }
+.lcard-right { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.lcard-name  { font-size: 13px; font-weight: 800; color: var(--t1); }
+.lcard-amount{ font-size: 14px; font-weight: 800; color: var(--indigo); display:flex; align-items:center; gap:5px; }
+.lcard-none  { font-size: 11px; color: var(--t4); }
+
+/* ── History ── */
+.history-list { display: flex; flex-direction: column; gap: 7px; }
+.hist-row {
+  display: flex; align-items: center; gap: 11px;
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: var(--r-md); padding: 11px 13px;
+}
+.hist-week   { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--t3); min-width: 70px; flex-shrink: 0; }
+.hist-trophy { flex-shrink: 0; color: #EBA328; display:flex; align-items:center; }
+.hist-name   { font-size: 13px; font-weight: 700; color: var(--t1); flex: 1; }
+.hist-xp     { font-size: 11px; font-weight: 700; color: #e8c840; white-space: nowrap; }
+.hist-empty  { text-align: center; color: var(--t4); font-size: 12px; padding: 18px 0; }
+
+/* ── Podium Top 3 ── */
+.podium-wrap {
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: 10px; margin-bottom: 18px; padding: 4px 4px 0;
+}
+.podium-col {
+  display: flex; flex-direction: column; align-items: center; gap: 9px;
+  flex: 1; max-width: 130px; min-width: 86px;
+}
+.podium-avatar-ring {
+  width: 64px; height: 64px;
+  border-radius: 50%; padding: 3px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  animation: podiumRise .5s cubic-bezier(0.16,1,0.3,1) both;
+}
+.podium-avatar-ring.rank-1 {
+  width: 76px; height: 76px;
+  background: conic-gradient(from 180deg, #e8c840, #fff3b0, #e8c840);
+  box-shadow: 0 0 28px rgba(232,200,64,0.55), 0 0 0 1px rgba(232,200,64,0.3);
+  animation-delay: .12s;
+}
+.podium-avatar-ring.rank-2 {
+  background: conic-gradient(from 180deg, #c0c0d0, #eef0f8, #c0c0d0);
+  box-shadow: 0 0 20px rgba(192,192,208,0.40), 0 0 0 1px rgba(192,192,208,0.25);
+}
+.podium-avatar-ring.rank-3 {
+  background: conic-gradient(from 180deg, #cd7f32, #f0b87a, #cd7f32);
+  box-shadow: 0 0 20px rgba(205,127,50,0.40), 0 0 0 1px rgba(205,127,50,0.25);
+  animation-delay: .06s;
+}
+@keyframes podiumRise { from { opacity:0; transform: translateY(14px) scale(.85); } to { opacity:1; transform: translateY(0) scale(1); } }
+.podium-avatar {
+  width: 100%; height: 100%; border-radius: 50%;
+  background: var(--bg2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 800; color: var(--t1);
+  font-size: 18px; overflow: hidden;
+}
+.podium-avatar-ring.rank-1 .podium-avatar { font-size: 21px; }
+.podium-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.podium-crown {
+  position: absolute; top: -17px; left: 50%; transform: translateX(-50%);
+  filter: drop-shadow(0 2px 6px rgba(232,200,64,0.6));
+}
+/* 1) الإطار الصغير اللي فيه رقم 1/2/3 فوق صورة الأفاتار */
+.podium-plat {
+  position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--f-display); font-size: 12px; font-weight: 700;
+  border: 2px solid var(--bg2);
+  color: #fff;
+}
+.podium-rank-num.r1 { background: #e8c840; }
+.podium-rank-num.r2 { background: #c0c0d0; color: #1a1a2a; }
+.podium-rank-num.r3 { background: #cd7f32; }
+.podium-name {
+  font-size: 12px; font-weight: 700; color: var(--t1);
+  text-align: center; white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; width: 100%; margin-top: 4px;
+}
+.podium-xp { font-size: 11px; font-weight: 700; color: var(--indigo); }
+/* 2) الرقم الكبير على منصة التتويج نفسها */
+.podium-plat {
+  border-radius: 10px 10px 0 0; width: 100%;
+  display: flex; align-items: flex-start; justify-content: center; padding-top: 10px;
+  font-family: var(--f-display); font-size: 24px; font-weight: 800; letter-spacing: 0.5px;
+  position: relative; overflow: hidden;
+}
+.podium-plat::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), transparent 60%);
+}
+.podium-plat.p1 { height: 76px; background: linear-gradient(180deg,rgba(232,200,64,0.22),rgba(232,200,64,0.05)); border: 1px solid rgba(232,200,64,0.40); border-bottom: none; color: #e8c840; }
+.podium-plat.p2 { height: 54px; background: linear-gradient(180deg,rgba(192,192,208,0.18),rgba(192,192,208,0.04)); border: 1px solid rgba(192,192,208,0.32); border-bottom: none; color: #c0c0d8; }
+.podium-plat.p3 { height: 40px; background: linear-gradient(180deg,rgba(205,127,50,0.18),rgba(205,127,50,0.04)); border: 1px solid rgba(205,127,50,0.30); border-bottom: none; color: #cd7f32; }
+
+@media (max-width: 420px) {
+  .podium-wrap { gap: 6px; }
+  .podium-col { min-width: 76px; }
+  .podium-avatar-ring { width: 52px; height: 52px; }
+  .podium-avatar-ring.rank-1 { width: 62px; height: 62px; }
+  .podium-name { font-size: 11px; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .lcard { flex-wrap: wrap; }
+  .lcard-sep { display: none; }
+  .lcard-left { min-width: 100%; }
+}
+</style>
+
+<div class="page-inner">
+
+  <!-- Hero + timer -->
+  <div class="league-hero">
+    <div class="league-tag">${icon('swords', 11)} Weekly Competition</div>
+    <h1 class="league-title">WEEKLY <em>LEAGUE</em></h1>
+    <div class="timer-wrap">
+      <div class="timer-block"><div class="timer-num" id="t-d">00</div><div class="timer-lbl">Days</div></div>
+      <div class="timer-sep">:</div>
+      <div class="timer-block"><div class="timer-num" id="t-h">00</div><div class="timer-lbl">Hrs</div></div>
+      <div class="timer-sep">:</div>
+      <div class="timer-block"><div class="timer-num" id="t-m">00</div><div class="timer-lbl">Min</div></div>
+      <div class="timer-sep">:</div>
+      <div class="timer-block"><div class="timer-num" id="t-s">00</div><div class="timer-lbl">Sec</div></div>
+    </div>
+  </div>
+
+  <!-- Podium Top 3 -->
+  <div class="podium-wrap" id="podium-wrap" style="display:none"></div>
+
+  <!-- Standings -->
+  <div class="sec-label" id="standings-label"></div>
+  <div class="standings-list" id="standings-list"></div>
+
+  <!-- Skill leaders -->
+  <div class="sec-label" id="skill-leaders-label"></div>
+  <div class="skill-leaders-list" id="skill-leaders-list"></div>
+
+  <!-- History -->
+  <div class="sec-label" id="history-label"></div>
+  <div class="history-list" id="history-list"></div>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   LEAGUE JS
+══════════════════════════════════════════════════════════ */
+
+let _leagueTimerIv  = null;
+let _leagueData     = null;
+
+function renderLeague() {
+  const sl = document.getElementById('standings-label');
+  const kl = document.getElementById('skill-leaders-label');
+  const hl = document.getElementById('history-label');
+  if (sl) sl.innerHTML = `${icon('swords', 12)} Weekly Standings`;
+  if (kl) kl.innerHTML = `${icon('award', 12)} Skill Leaders This Week`;
+  if (hl) hl.innerHTML = `${icon('crown', 12)} Past Week Champions`;
+
+  _startLeagueTimer();
+  _fetchLeague();
+}
+
+/* ── Countdown timer to end of week (Sunday 23:59:59) ──────── */
+function _startLeagueTimer() {
+  function tick() {
+    const now = new Date();
+    const end = weekEndDate();
+    const diff = Math.max(0, end.getTime() - now.getTime());
+
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+
+    const elD = document.getElementById('t-d');
+    const elH = document.getElementById('t-h');
+    const elM = document.getElementById('t-m');
+    const elS = document.getElementById('t-s');
+    if (elD) elD.textContent = pad(d);
+    if (elH) elH.textContent = pad(h);
+    if (elM) elM.textContent = pad(m);
+    if (elS) elS.textContent = pad(s);
+  }
+  if (_leagueTimerIv) clearInterval(_leagueTimerIv);
+  tick();
+  _leagueTimerIv = setInterval(tick, 1000);
+}
+
+/* ── Fetch league data ────────────────────────────────────── */
+async function _fetchLeague() {
+  try {
+    const { data } = await api.league.get();
+    _leagueData = data;
+    _renderStandings(data);
+    _renderSkillLeaders(data);
+    _renderHistory(data);
+  } catch (err) {
+    console.error('[league]', err);
+    document.getElementById('standings-list').innerHTML =
+      `<div class="hist-empty">Could not load league data.</div>`;
+  }
+}
+
+/* ── Position medal icon (1st/2nd/3rd) ── */
+function positionMedal(rank, size = 18) {
+  const colors = { 1: '#e8c840', 2: '#c0c0d0', 3: '#cd7f32' };
+  const col = colors[rank];
+  if (!col) return '';
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="9" fill="${col}" opacity="0.18"/>
+    <circle cx="12" cy="12" r="9" fill="none" stroke="${col}" stroke-width="1.6"/>
+    <text x="12" y="16" text-anchor="middle" font-family="Sora,sans-serif" font-size="11" font-weight="800" fill="${col}">${rank}</text>
+  </svg>`;
+}
+
+/* ── Podium Top 3 ────────────────────────────────────────── */
+function _initials(name) {
+  return String(name || '?').trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+}
+
+function _renderPodium(standings) {
+  const wrap = document.getElementById('podium-wrap');
+  if (!wrap) return;
+
+  if (standings.length < 3) {
+    wrap.style.display = 'none';
+    wrap.innerHTML = '';
+    return;
+  }
+
+  // ترتيب العرض البصري: التاني - الأول - التالت (الأول في النص وأطول منصة)
+  const top3 = standings.slice(0, 3);
+  const order = [top3[1], top3[0], top3[2]];
+
+  wrap.style.display = 'flex';
+  wrap.innerHTML = order.map(s => {
+    const rank = top3.indexOf(s) + 1;
+    const ringCls  = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : 'rank-3';
+    const platCls  = rank === 1 ? 'p1'     : rank === 2 ? 'p2'     : 'p3';
+    const numCls   = rank === 1 ? 'r1'     : rank === 2 ? 'r2'     : 'r3';
+    return `
+      <div class="podium-col">
+        <div class="podium-avatar-ring ${ringCls}">
+          ${rank === 1 ? `<span class="podium-crown">${icon('crown', 22)}</span>` : ''}
+          <div class="podium-avatar">${_initials(s.name)}</div>
+          <span class="podium-rank-num ${numCls}">${rank}</span>
+        </div>
+        <div class="podium-name">${s.name}</div>
+        <div class="podium-xp">${fmtNum(Math.round(s.xp))} XP</div>
+        <div class="podium-plat ${platCls}">${rank}</div>
+      </div>`;
+  }).join('');
+}
+
+/* ── Standings ────────────────────────────────────────────── */
+function _renderStandings(data) {
+  const el = document.getElementById('standings-list');
+  const standings = (data.standings || []).filter(s => s.xp > 0);
+
+  if (standings.length === 0) {
+    document.getElementById('podium-wrap').style.display = 'none';
+    el.innerHTML = `<div class="hist-empty">No activity this week yet. Be the first!</div>`;
+    return;
+  }
+
+  _renderPodium(standings);
+
+  // لو الـ podium ظاهر (3 لاعبين فأكتر) نعرض في القايمة العادية بس الترتيب من الرابع فما فوق
+  const hasPodium = standings.length >= 3;
+  const listed = hasPodium ? standings.slice(3) : standings;
+
+  if (listed.length === 0) {
+    el.innerHTML = '';
+    return;
+  }
+
+  const maxXP = standings[0].xp || 1;
+  const startRank = hasPodium ? 4 : 1;
+
+  el.innerHTML = listed.map((s, i) => {
+    const pct = Math.min(Math.round(s.xp / maxXP * 100), 100);
+    const rank = startRank + i;
+    const rowClass = !hasPodium && rank === 1 ? 'gold' : !hasPodium && rank === 2 ? 'silver' : !hasPodium && rank === 3 ? 'bronze' : '';
+    const posClass = !hasPodium && rank === 1 ? 'p1'   : !hasPodium && rank === 2 ? 'p2'     : !hasPodium && rank === 3 ? 'p3'     : '';
+    const bar = !hasPodium && rank === 1 ? 'linear-gradient(90deg,#e8c840aa,#e8c840)'
+              : !hasPodium && rank === 2 ? 'linear-gradient(90deg,#c0c0d088,#c0c0d0)'
+              : !hasPodium && rank === 3 ? 'linear-gradient(90deg,#cd7f3288,#cd7f32)'
+              : 'var(--grad-bar)';
+    return `
+      <div class="st-row ${rowClass}">
+        <div class="st-pos ${posClass}">${rank}</div>
+        <div class="st-medal">${!hasPodium ? positionMedal(rank <= 3 ? rank : 0, 18) : ''}</div>
+        <div class="st-name">${s.name}</div>
+        <div class="st-bar-wrap">
+          <div class="st-bar-track"><div class="st-bar-fill" style="width:${pct}%;background:${bar}"></div></div>
+        </div>
+        <div class="st-xp">${fmtNum(Math.round(s.xp))} XP</div>
+      </div>`;
+  }).join('');
+}
+
+/* ── Skill leaders (deduped to the 5 core XP skills across all languages) ── */
+function _renderSkillLeaders(data) {
+  const el = document.getElementById('skill-leaders-list');
+  const leaders = data.skill_leaders || [];
+
+  // Keep only XP-bearing fixed skills (exclude touch_typing checkbox)
+  const xpSkillKeys = FIXED_SKILLS.filter(s => !s.isCheckbox).map(s => s.key);
+
+  // Group by skill_key, pick the entry with the highest leader value across languages
+  const bestByKey = {};
+  leaders.forEach(l => {
+    if (!xpSkillKeys.includes(l.skill_key)) return;
+    const val = l.leader?.value || 0;
+    if (!bestByKey[l.skill_key] || val > (bestByKey[l.skill_key].leader?.value || 0)) {
+      bestByKey[l.skill_key] = l;
+    }
+  });
+
+  // Order by FIXED_SKILLS order
+  const ordered = xpSkillKeys.map(k => bestByKey[k]).filter(Boolean);
+
+  if (ordered.length === 0) {
+    el.innerHTML = `<div class="hist-empty">No skill data yet.</div>`;
+    return;
+  }
+
+  el.innerHTML = ordered.map(l => {
+    const skillDef = FIXED_SKILLS.find(s => s.key === l.skill_key);
+    const iconName = skillDef?.iconName || 'star';
+    const dispVal = l.leader
+      ? (l.unit === 'min' ? fmtMin(l.leader.value) : `${fmtNum(l.leader.value)} ${l.unit}`)
+      : '';
+    return `
+      <div class="lcard">
+        <div class="lcard-left">
+          <span class="lcard-icon">${icon(iconName, 17)}</span>
+          <div>
+            <div class="lcard-skill">${l.skill_name}</div>
+          </div>
+        </div>
+        <div class="lcard-sep"></div>
+        <div class="lcard-right">
+          ${l.leader
+            ? `<span class="lcard-name">${l.leader.name} <span style="color:var(--t4);font-weight:600">(${flagIconHTML(langIsoByName(l.lang_name), 14)} ${l.lang_name})</span></span><span class="lcard-amount">${dispVal} ${icon('award', 14)}</span>`
+            : `<span class="lcard-none">No data yet</span>`}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/* ── Past week champions ─────────────────────────────────────── */
+function _renderHistory(data) {
+  const el = document.getElementById('history-list');
+  const history = data.history || [];
+
+  if (history.length === 0) {
+    el.innerHTML = `<div class="hist-empty">No completed weeks yet.</div>`;
+    return;
+  }
+
+  el.innerHTML = history.map(h => `
+    <div class="hist-row">
+      <div class="hist-week">${h.label}</div>
+      <div class="hist-trophy">${icon('crown', 18)}</div>
+      <div class="hist-name">${h.champion}</div>
+      <div class="hist-xp">${fmtNum(Math.round(h.xp))} XP</div>
+    </div>`).join('');
+}
+</script>

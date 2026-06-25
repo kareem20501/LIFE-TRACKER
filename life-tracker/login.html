@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Life Tracker — Sign In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #12101C;
+  --surface: rgba(138,131,218,0.08);
+  --border:  rgba(138,131,218,0.18);
+  --border2: rgba(138,131,218,0.45);
+  --indigo:  #8A83DA;
+  --violet:  #463699;
+  --cream:   #FBF5F0;
+  --peach:   #FBD5BD;
+  --dim:     rgba(251,245,240,0.55);
+  --f-brand: 'Syne', sans-serif;
+  --f-body:  'DM Sans', sans-serif;
+}
+
+html { min-height: 100%; background: var(--bg); }
+
+body {
+  font-family: var(--f-body);
+  background: var(--bg);
+  color: var(--cream);
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 4vw, 40px) 16px;
+  position: relative;
+}
+
+/* Ambient orbs */
+.orb { position: fixed; border-radius: 50%; filter: blur(100px); opacity: 0.16; pointer-events: none; z-index: 0; animation: drift 18s ease-in-out infinite alternate; }
+.orb-1 { width: 50vw; height: 50vw; max-width: 500px; max-height: 500px; background: #463699; top: -15%; left: -10%; animation-delay: 0s; }
+.orb-2 { width: 40vw; height: 40vw; max-width: 420px; max-height: 420px; background: #8A83DA; bottom: -15%; right: -8%; animation-delay: -8s; }
+.orb-3 { width: 25vw; height: 25vw; max-width: 260px; max-height: 260px; background: #FBD5BD; top: 40%; left: 55%; opacity: 0.07; animation-delay: -14s; }
+@keyframes drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(30px, 24px) scale(1.06); } }
+
+/* Grid lines */
+.grid-lines {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: linear-gradient(rgba(138,131,218,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(138,131,218,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Card */
+.card {
+  position: relative; z-index: 1;
+  width: min(440px, 100%);
+  background: rgba(26, 23, 40, 0.88);
+  border: 1px solid var(--border);
+  border-radius: clamp(16px, 3vw, 24px);
+  padding: clamp(28px, 5vw, 48px) clamp(22px, 5vw, 44px) clamp(24px, 4vw, 40px);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 0 0 1px rgba(138,131,218,0.06), 0 24px 64px rgba(0,0,0,0.50), inset 0 1px 0 rgba(255,255,255,0.05);
+  animation: rise .45s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes rise { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Logo */
+.logotype { display: flex; align-items: center; gap: 10px; margin-bottom: clamp(24px, 4vw, 36px); }
+.logo-mark {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--violet), var(--indigo));
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 18px rgba(138,131,218,0.32); flex-shrink: 0;
+}
+.logo-mark svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.logo-name {
+  font-family: var(--f-brand); font-size: clamp(13px, 2vw, 15px); font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase;
+  background: linear-gradient(90deg, var(--cream), var(--indigo)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+/* Headline */
+.headline { font-family: var(--f-brand); font-size: clamp(22px, 5vw, 30px); font-weight: 800; line-height: 1.15; color: var(--cream); margin-bottom: 10px; letter-spacing: -0.3px; }
+.subline   { font-size: clamp(12px, 2vw, 14px); color: var(--dim); line-height: 1.6; margin-bottom: clamp(24px, 4vw, 36px); }
+
+/* Steps — Email step & OTP step */
+.step { transition: opacity .25s, transform .25s; }
+.step.hidden { display: none; }
+
+/* Form */
+.form-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(251,245,240,0.50); margin-bottom: 8px; display: block; }
+.form-input {
+  width: 100%; padding: clamp(11px, 2vw, 14px) 16px;
+  background: rgba(70,54,153,0.18); border: 1px solid var(--border);
+  border-radius: 12px; color: var(--cream); font-size: clamp(14px, 2vw, 16px);
+  font-family: var(--f-body); font-weight: 500;
+  transition: border-color .15s, background .15s;
+  outline: none;
+}
+.form-input:focus { border-color: var(--border2); background: rgba(70,54,153,0.28); }
+.form-input::placeholder { color: rgba(251,245,240,0.30); }
+
+/* OTP input */
+.otp-input {
+  width: 100%;
+  padding: 18px 16px;
+  font-size: 32px; font-weight: 800; letter-spacing: 16px;
+  text-align: center; font-family: 'Courier New', monospace;
+  background: rgba(70,54,153,0.22); border: 2px solid var(--border);
+  border-radius: 14px; color: var(--cream);
+  transition: border-color .15s, background .15s; outline: none;
+}
+.otp-input:focus { border-color: var(--border2); background: rgba(70,54,153,0.35); }
+.otp-input::placeholder { font-size: 24px; letter-spacing: 8px; color: rgba(251,245,240,0.20); font-weight: 400; }
+
+/* Primary button */
+.btn-primary {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: clamp(11px, 2vw, 14px) 20px;
+  background: linear-gradient(135deg, var(--violet), var(--indigo));
+  color: var(--cream); border: none; border-radius: 12px;
+  font-family: var(--f-body); font-size: clamp(13px, 2vw, 15px); font-weight: 700;
+  cursor: pointer; transition: opacity .15s, transform .12s, box-shadow .15s;
+  box-shadow: 0 4px 20px rgba(70,54,153,0.40); letter-spacing: 0.2px; margin-top: 12px;
+}
+.btn-primary:hover  { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 6px 28px rgba(70,54,153,0.55); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* Ghost button */
+.btn-ghost {
+  background: none; border: none; color: var(--indigo);
+  font-family: var(--f-body); font-size: 13px; font-weight: 600;
+  cursor: pointer; padding: 6px 0; display: flex; align-items: center; gap: 5px;
+  transition: opacity .15s;
+}
+.btn-ghost:hover { opacity: 0.75; }
+
+/* Spinner */
+.spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(251,245,240,0.25);
+  border-top-color: var(--cream);
+  border-radius: 50%; animation: spin .7s linear infinite; display: none;
+}
+.loading .spinner { display: block; }
+.loading .btn-lbl { opacity: 0.6; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Timer */
+.otp-timer { font-size: 12px; color: var(--dim); margin-top: 10px; text-align: center; }
+.otp-timer strong { color: var(--peach); font-weight: 700; }
+.otp-email-hint { font-size: 13px; color: var(--dim); margin-bottom: 20px; line-height: 1.6; }
+.otp-email-hint strong { color: var(--cream); }
+
+/* Message */
+.msg {
+  margin-top: 12px; padding: 10px 14px;
+  border-radius: 10px; font-size: 13px; line-height: 1.5; text-align: center;
+  animation: rise .22s ease; display: none;
+}
+.msg.error   { background: rgba(255,80,80,0.08);   border: 1px solid rgba(255,80,80,0.24);   color: #ff9090; }
+.msg.success { background: rgba(80,220,120,0.08);  border: 1px solid rgba(80,220,120,0.24);  color: #80ffb0; }
+.msg.info    { background: rgba(138,131,218,0.10); border: 1px solid rgba(138,131,218,0.28); color: var(--indigo); }
+.msg.show    { display: block; }
+
+/* Divider */
+.divider { display: flex; align-items: center; gap: 12px; margin: 22px 0 18px; }
+.divider-line { flex: 1; height: 1px; background: var(--border); }
+.divider-txt  { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--dim); }
+
+/* Features */
+.features { margin-top: clamp(20px, 3vw, 30px); padding-top: clamp(18px, 3vw, 26px); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+.feature-row { display: flex; align-items: center; gap: 12px; font-size: clamp(11px, 1.8vw, 13px); color: var(--dim); }
+.feature-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+
+/* Trust */
+.trust { margin-top: clamp(18px, 3vw, 26px); font-size: clamp(10px, 1.5vw, 11px); color: rgba(251,245,240,0.28); text-align: center; line-height: 1.7; }
+.trust a { color: rgba(138,131,218,0.55); text-decoration: none; }
+.trust a:hover { color: var(--indigo); }
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="grid-lines"></div>
+
+<div class="card">
+
+  <!-- Logo -->
+  <div class="logotype">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    </div>
+    <span class="logo-name">Life Tracker</span>
+  </div>
+
+  <!-- ══ STEP 1: Email ══ -->
+  <div class="step" id="step-email">
+    <h1 class="headline">Track what<br>matters daily.</h1>
+    <p class="subline">Enter your email — we'll send you a one-time code to sign in.</p>
+
+    <label class="form-label" for="email-input">Email address</label>
+    <input type="email" id="email-input" class="form-input" placeholder="you@example.com"
+      autocomplete="email" inputmode="email" maxlength="254"
+      onkeydown="if(event.key==='Enter') sendOTP()">
+
+    <div class="msg" id="email-msg"></div>
+
+    <button class="btn-primary" id="btn-send" onclick="sendOTP()">
+      <div class="spinner"></div>
+      <span class="btn-lbl">Send Code</span>
+    </button>
+
+    <div class="divider"><div class="divider-line"></div><span class="divider-txt">Secure sign-in</span><div class="divider-line"></div></div>
+
+    <div class="features">
+      <div class="feature-row"><div class="feature-icon">🔥</div><span>Daily streaks across all your language skills</span></div>
+      <div class="feature-row"><div class="feature-icon">🏆</div><span>XP rank system — Bronze to Conqueror</span></div>
+      <div class="feature-row"><div class="feature-icon">⚔️</div><span>Weekly league — compete with others</span></div>
+    </div>
+  </div>
+
+  <!-- ══ STEP 2: OTP ══ -->
+  <div class="step hidden" id="step-otp">
+    <h1 class="headline">Check your<br>email.</h1>
+    <p class="otp-email-hint">We sent a 6-digit code to <strong id="otp-email-display"></strong></p>
+
+    <label class="form-label" for="otp-input">Verification code</label>
+    <input type="text" id="otp-input" class="otp-input" placeholder="000000"
+      maxlength="6" inputmode="numeric" autocomplete="one-time-code"
+      onkeydown="if(event.key==='Enter') verifyOTP()"
+      oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+
+    <div class="otp-timer" id="otp-timer"></div>
+    <div class="msg" id="otp-msg"></div>
+
+    <button class="btn-primary" id="btn-verify" onclick="verifyOTP()">
+      <div class="spinner"></div>
+      <span class="btn-lbl">Verify &amp; Sign In</span>
+    </button>
+
+    <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <button class="btn-ghost" onclick="goBack()">
+        ← Change email
+      </button>
+      <button class="btn-ghost" id="btn-resend" onclick="resendOTP()" style="opacity:0.4;pointer-events:none">
+        Resend code
+      </button>
+    </div>
+  </div>
+
+  <p class="trust">
+    By continuing you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.<br>
+    Your data is stored securely and never shared.
+  </p>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   LOGIN JS — OTP AUTH
+══════════════════════════════════════════════════════════ */
+
+const API = '';
+let _currentEmail   = '';
+let _otpExpiresIn   = 0;  // seconds
+let _timerInterval  = null;
+let _resendCooldown = null;
+
+/* ── إذا كان المستخدم مسجلاً دخوله بالفعل → انتقل للتطبيق ── */
+(function checkExistingSession() {
+  const token = sessionStorage.getItem('lt_token');
+  if (!token) return;
+  // تحقق من صحة الـ token
+  fetch(`${API}/api/auth/validate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token }),
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (d.ok && d.data?.ok) window.location.href = '/app';
+  })
+  .catch(() => {});
+})();
+
+/* ── STEP 1: Send OTP ── */
+async function sendOTP() {
+  const email = document.getElementById('email-input').value.trim().toLowerCase();
+  if (!email || !email.includes('@')) {
+    showMsg('email-msg', 'Please enter a valid email address.', 'error');
+    return;
+  }
+
+  setLoading('btn-send', true);
+  clearMsg('email-msg');
+
+  try {
+    const res  = await fetch(`${API}/api/auth/send_otp`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ email }),
+    });
+    const json = await res.json();
+    const d    = json.data || json;
+
+    if (!d.ok) {
+      if (d.waitSec) {
+        showMsg('email-msg', `Too many attempts. Wait ${d.waitSec} seconds.`, 'error');
+      } else {
+        showMsg('email-msg', d.error || 'Failed to send code. Try again.', 'error');
+      }
+      return;
+    }
+
+    _currentEmail  = email;
+    _otpExpiresIn  = d.expiresIn || 300;
+    goToOTPStep();
+
+  } catch (err) {
+    showMsg('email-msg', 'Network error. Check your connection.', 'error');
+  } finally {
+    setLoading('btn-send', false);
+  }
+}
+
+/* ── STEP 2: Verify OTP ── */
+async function verifyOTP() {
+  const otp = document.getElementById('otp-input').value.trim();
+  if (otp.length !== 6) {
+    showMsg('otp-msg', 'Enter the 6-digit code.', 'error');
+    return;
+  }
+
+  setLoading('btn-verify', true);
+  clearMsg('otp-msg');
+
+  try {
+    const res  = await fetch(`${API}/api/auth/verify_otp`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ email: _currentEmail, otp }),
+    });
+    const json = await res.json();
+    const d    = json.data || json;
+
+    if (!d.ok) {
+      if (d.expired || d.noCode) {
+        showMsg('otp-msg', d.error || 'Code expired. Request a new one.', 'error');
+        stopTimer();
+        enableResend();
+      } else if (d.tooMany) {
+        showMsg('otp-msg', 'Too many wrong attempts. Request a new code.', 'error');
+        stopTimer();
+        enableResend();
+      } else {
+        showMsg('otp-msg', d.error || 'Wrong code. Try again.', 'error');
+        document.getElementById('otp-input').value = '';
+        document.getElementById('otp-input').focus();
+      }
+      return;
+    }
+
+    // نجح التحقق
+    showMsg('otp-msg', 'Verified! Signing you in…', 'success');
+    stopTimer();
+
+    // خزّن الـ session token
+    sessionStorage.setItem('lt_token', d.token);
+    sessionStorage.setItem('lt_email', d.email);
+    sessionStorage.setItem('lt_uid',   d.userId);
+
+    setTimeout(() => { window.location.href = '/app'; }, 600);
+
+  } catch (err) {
+    showMsg('otp-msg', 'Network error. Try again.', 'error');
+  } finally {
+    setLoading('btn-verify', false);
+  }
+}
+
+/* ── Resend ── */
+async function resendOTP() {
+  disableResend();
+  clearMsg('otp-msg');
+  document.getElementById('otp-input').value = '';
+
+  try {
+    const res  = await fetch(`${API}/api/auth/send_otp`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ email: _currentEmail }),
+    });
+    const json = await res.json();
+    const d    = json.data || json;
+
+    if (!d.ok) {
+      showMsg('otp-msg', d.error || 'Failed to resend. Try again later.', 'error');
+      setTimeout(enableResend, 30000);
+      return;
+    }
+
+    _otpExpiresIn = d.expiresIn || 300;
+    startTimer();
+    showMsg('otp-msg', 'New code sent!', 'success');
+    setTimeout(() => clearMsg('otp-msg'), 3000);
+  } catch {
+    showMsg('otp-msg', 'Network error.', 'error');
+    setTimeout(enableResend, 30000);
+  }
+}
+
+/* ── Navigation ── */
+function goToOTPStep() {
+  document.getElementById('step-email').classList.add('hidden');
+  document.getElementById('step-otp').classList.remove('hidden');
+  document.getElementById('otp-email-display').textContent = _currentEmail;
+  document.getElementById('otp-input').value = '';
+  document.getElementById('otp-input').focus();
+  clearMsg('otp-msg');
+  startTimer();
+}
+
+function goBack() {
+  stopTimer();
+  document.getElementById('step-otp').classList.add('hidden');
+  document.getElementById('step-email').classList.remove('hidden');
+  clearMsg('email-msg');
+  document.getElementById('email-input').focus();
+}
+
+/* ── Timer ── */
+function startTimer() {
+  stopTimer();
+  disableResend();
+  let remaining = _otpExpiresIn;
+  updateTimerDisplay(remaining);
+  _timerInterval = setInterval(() => {
+    remaining--;
+    updateTimerDisplay(remaining);
+    if (remaining <= 0) {
+      stopTimer();
+      updateTimerDisplay(0);
+      enableResend();
+      showMsg('otp-msg', 'Code expired. Click "Resend code" for a new one.', 'info');
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  if (_timerInterval) { clearInterval(_timerInterval); _timerInterval = null; }
+}
+
+function updateTimerDisplay(sec) {
+  const el = document.getElementById('otp-timer');
+  if (!el) return;
+  if (sec <= 0) {
+    el.innerHTML = 'Code expired.';
+  } else {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    el.innerHTML = `Code expires in <strong>${m}:${String(s).padStart(2,'0')}</strong>`;
+  }
+}
+
+function enableResend() {
+  const btn = document.getElementById('btn-resend');
+  if (btn) { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; }
+}
+function disableResend() {
+  const btn = document.getElementById('btn-resend');
+  if (btn) { btn.style.opacity = '0.4'; btn.style.pointerEvents = 'none'; }
+}
+
+/* ── Helpers ── */
+function setLoading(btnId, loading) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.disabled = loading;
+  btn.classList.toggle('loading', loading);
+}
+
+function showMsg(id, text, type) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = text;
+  el.className   = `msg ${type} show`;
+}
+
+function clearMsg(id) {
+  const el = document.getElementById(id);
+  if (el) el.className = 'msg';
+}
+
+/* ── Keyboard ── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const otpStep = document.getElementById('step-otp');
+    if (!otpStep.classList.contains('hidden')) verifyOTP();
+    else sendOTP();
+  }
+});
+</script>
+</body>
+</html>

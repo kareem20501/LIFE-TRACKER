@@ -1,0 +1,776 @@
+<style>
+/* ══════════════════════════════════════════════════════════
+   PROFILE — page-scoped styles
+══════════════════════════════════════════════════════════ */
+
+.profile-hero {
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  padding: 24px;
+  background: linear-gradient(160deg, var(--bg) 0%, var(--bg2) 55%, rgba(70,54,153,0.35) 100%);
+  border: 1px solid var(--b1);
+  border-radius: var(--r-xl);
+  margin-bottom: 18px;
+}
+
+.profile-avatar {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--grad);
+  border: 3px solid var(--b2);
+  box-shadow: var(--glow);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: #fff;
+  overflow: hidden; flex-shrink: 0;
+}
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+.profile-info { flex: 1; min-width: 150px; }
+
+/* Editable name */
+.profile-name {
+  font-family: var(--f-display);
+  font-size: 19px; font-weight: 700; line-height: 1.4;
+  color: var(--t1); margin-bottom: 3px;
+  cursor: pointer; display: inline-block;
+  border-radius: 6px; padding: 2px 4px; margin-left: -4px;
+  transition: background .12s;
+}
+.profile-name:hover { background: var(--glass); }
+.profile-name-input {
+  font-family: var(--f-display);
+  font-size: 19px; font-weight: 700; line-height: 1.4;
+  color: var(--t1); background: rgba(70,54,153,0.22);
+  border: 1px solid var(--b2); border-radius: 6px;
+  padding: 2px 6px; margin-left: -6px;
+  width: auto; max-width: 220px;
+}
+.profile-email { font-size: 12px; color: var(--t3); margin-bottom: 9px; }
+
+.profile-rank-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 11px;
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: 100px; margin-bottom: 8px;
+}
+.profile-rank-chip span:first-child { font-size: 11px; font-weight: 700; }
+.profile-rank-chip span:last-child  { font-size: 10px; color: var(--t3); }
+.profile-joined { font-size: 11px; color: var(--t4); }
+
+/* ── Stats grid ── */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 10px; margin-bottom: 8px;
+}
+.stat-card {
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: var(--r-lg); padding: 16px 12px;
+  text-align: center;
+}
+.stat-num {
+  font-family: var(--f-display);
+  font-size: 24px; font-weight: 800; line-height: 1.35;
+  color: var(--t1);
+}
+.stat-lbl { font-size: 10px; color: var(--t3); margin-top: 5px; font-weight: 500; }
+
+/* ── Language tabs ── */
+.profile-lang-tabs {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin: 24px 0 14px;
+}
+
+/* ── Language stats card ── */
+.lang-stats-card {
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: var(--r-lg); padding: 18px; margin-bottom: 16px;
+}
+.lang-stats-head {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+}
+.lang-stats-flag { font-size: 28px; }
+.lang-stats-name { font-family: var(--f-display); font-size: 16px; font-weight: 700; line-height: 1.4; color: var(--t1); }
+.lang-stats-level { font-size: 11px; color: var(--t3); margin-top: 2px; }
+
+.lang-skill-rows { display: flex; flex-direction: column; gap: 8px; }
+.lang-skill-row {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px;
+}
+.lang-skill-row-name {
+  flex: 1; color: var(--t2);
+  display: flex; align-items: center; gap: 6px;
+}
+.lang-skill-row-rank {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.lang-skill-row-bar {
+  width: 80px; height: 4px;
+  background: rgba(255,255,255,0.07); border-radius: 100px; overflow: hidden;
+  flex-shrink: 0;
+}
+.lang-skill-row-fill { height: 100%; border-radius: 100px; }
+
+/* ── Per-language analytics ── */
+.lang-analytics-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-bottom: 8px;
+}
+.analytics-card h4 {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--indigo); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 6px;
+}
+.analytics-bar-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; min-width: 0; }
+.analytics-bar-label {
+  flex: 1; font-size: 12px; color: var(--t3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+}
+.analytics-bar-track { flex: 2; height: 8px; background: rgba(255,255,255,0.07); border-radius: 100px; overflow: hidden; min-width: 40px; }
+.analytics-bar-fill  { height: 100%; border-radius: 100px; transition: width .8s; }
+.analytics-bar-value { font-size: 12px; font-weight: 600; color: var(--t1); min-width: 38px; text-align: right; flex-shrink: 0; }
+.analytics-donut-legend {
+  margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+}
+.analytics-donut-legend span.dot {
+  width: 8px; height: 8px; border-radius: 2px; display: inline-block;
+}
+
+/* ── Donut center overlay ── */
+.donut-wrap { position: relative; display: flex; justify-content: center; }
+.donut-center {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  text-align: center; pointer-events: none;
+}
+.donut-center-num {
+  font-family: var(--f-display); font-size: 22px; font-weight: 800;
+  color: var(--t1); line-height: 1.3;
+}
+.donut-center-sub { font-size: 9px; color: var(--t3); margin-top: 2px; }
+
+/* ── XP trend chart ── */
+.trend-sub { font-size: 10px; color: var(--t4); margin-bottom: 8px; }
+.trend-scroll {
+  overflow-x: auto; border-radius: 8px;
+  scrollbar-width: thin; scrollbar-color: rgba(138,131,218,0.30) transparent;
+}
+.trend-scroll::-webkit-scrollbar { height: 4px; }
+.trend-scroll::-webkit-scrollbar-thumb { background: rgba(138,131,218,0.30); border-radius: 4px; }
+
+/* ── Achievements preview ── */
+.ach-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.ach-preview-card {
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: var(--r-lg); padding: 14px 10px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  transition: border-color .15s, transform .15s, background .15s;
+  cursor: pointer; text-align: center;
+}
+.ach-preview-card:hover { transform: translateY(-2px); border-color: var(--b2); }
+.ach-preview-card.unlocked {
+  border-color: rgba(138,131,218,0.30);
+  background: rgba(138,131,218,0.07);
+}
+.ach-preview-lbl {
+  font-size: 9px; font-weight: 700; color: var(--t3);
+  letter-spacing: 1px; text-transform: uppercase;
+}
+.ach-preview-progress {
+  font-size: 10px; color: var(--t4); font-weight: 500;
+}
+.ach-viewall-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 4px; flex-wrap: wrap; gap: 8px;
+}
+
+/* ── XP Trend tooltip ── */
+.trend-tooltip {
+  position: absolute;
+  background: #1A1728;
+  border: 1px solid rgba(138,131,218,0.55);
+  border-radius: 8px;
+  padding: 7px 12px;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 999;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  display: none;
+}
+.trend-tooltip-date {
+  font-size: 10px; color: var(--t3); font-weight: 600;
+  margin-bottom: 3px; letter-spacing: 0.5px;
+}
+.trend-tooltip-val {
+  font-family: 'Sora', sans-serif;
+  font-size: 16px; font-weight: 800; color: var(--indigo);
+  display: flex; align-items: center; gap: 5px;
+}
+.trend-scroll-wrap {
+  position: relative;
+}
+
+/* ── Rank progression (no info button) ── */
+.rank-prog-wrap {
+  overflow-x: auto; padding: 8px 0;
+  -ms-overflow-style: none; scrollbar-width: none;
+}
+.rank-prog-wrap::-webkit-scrollbar { display: none; }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .stats-grid { gap: 8px; }
+  .stat-num { font-size: 20px; }
+  .profile-hero { padding: 18px; gap: 14px; }
+  .lang-analytics-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="page-inner">
+
+  <!-- Profile hero -->
+  <div class="profile-hero">
+    <div class="profile-avatar" id="prof-avatar"></div>
+    <div class="profile-info">
+      <div id="prof-name-wrap">
+        <span class="profile-name" id="prof-name" ondblclick="editProfileName()" title="Double-click to edit"></span>
+      </div>
+      <div class="profile-email" id="prof-email"></div>
+      <div class="profile-rank-chip">
+        <span id="prof-rank-label"></span>
+        <span id="prof-rank-level"></span>
+      </div>
+      <div class="profile-joined" id="prof-joined"></div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-level" style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">1</div>
+      <div class="stat-lbl">Overall Level</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-langs">0</div>
+      <div class="stat-lbl">Languages</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-streak">0</div>
+      <div class="stat-lbl">Best Streak</div>
+    </div>
+  </div>
+
+  <!-- Per-language tabs -->
+  <div class="profile-lang-tabs" id="prof-lang-tabs"></div>
+  <div id="prof-lang-content"></div>
+
+  <!-- Achievements preview -->
+  <div class="ach-viewall-row">
+    <div class="sec-label" style="margin:0">🏅 Achievements</div>
+    <button class="btn btn-ghost btn-sm" onclick="navigate('achievements')" style="flex-shrink:0">
+      View All →
+    </button>
+  </div>
+  <div class="ach-summary-text" id="ach-summary-text" style="margin:4px 0 12px;font-size:12px;color:var(--t3)"></div>
+  <div class="ach-preview-grid" id="ach-grid"></div>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   PROFILE JS
+══════════════════════════════════════════════════════════ */
+
+function renderProfile() {
+  const p = STATE.profile;
+  if (!p) return;
+
+  const name     = p.display_name || p.username || 'User';
+  const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  const joined   = p.created_at
+    ? new Date(p.created_at).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })
+    : '—';
+
+  // Avatar
+  const avEl = document.getElementById('prof-avatar');
+  avEl.innerHTML = p.avatar_url
+    ? `<img src="${p.avatar_url}" alt="${name}">`
+    : initials;
+
+  // Name + email
+  document.getElementById('prof-name').textContent  = name;
+  document.getElementById('prof-email').textContent = p.email || '';
+  document.getElementById('prof-joined').textContent = `Member since ${joined}`;
+
+  // Overall rank chip
+  const info = getLevelInfo(STATE.overallXP || 0, XP_OVERALL);
+  const rankLbl = document.getElementById('prof-rank-label');
+  rankLbl.textContent = info.rank.label;
+  rankLbl.style.color = info.rank.col;
+  document.getElementById('prof-rank-level').textContent = `Level ${info.level}`;
+
+  // Stats
+  document.getElementById('stat-level').textContent = info.level;
+  document.getElementById('stat-langs').textContent = STATE.languages.length;
+  const bestStreak = Math.max(0, ...Object.values(STATE.streakMap).map(s => s.current || 0), 0);
+  document.getElementById('stat-streak').textContent = bestStreak;
+
+  // Language tabs + content
+  _buildProfLangTabs();
+  _renderProfLangContent();
+
+  // Achievements placeholder
+  _renderAchievements();
+}
+
+/* ── Editable name ────────────────────────────────────────── */
+function editProfileName() {
+  const span = document.getElementById('prof-name');
+  const current = span.textContent;
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'profile-name-input';
+  input.value = current;
+  input.maxLength = 60;
+
+  span.replaceWith(input);
+  input.focus();
+  input.select();
+
+  const save = async () => {
+    const newName = input.value.trim();
+    if (!newName) { toast('Name cannot be empty', 'warn'); restoreSpan(current); return; }
+    if (newName === current) { restoreSpan(current); return; }
+
+    try {
+      await api.profile.update({ display_name: newName });
+      STATE.profile.display_name = newName;
+      restoreSpan(newName);
+      _updateSidebarProfile();
+      toast('Name updated ✓', 'success', 1600);
+    } catch (err) {
+      toast(err.message || 'Failed to save', 'error');
+      restoreSpan(current);
+    }
+  };
+
+  function restoreSpan(text) {
+    const newSpan = document.createElement('span');
+    newSpan.className = 'profile-name';
+    newSpan.id = 'prof-name';
+    newSpan.textContent = text;
+    newSpan.ondblclick = editProfileName;
+    newSpan.title = 'Double-click to edit';
+    input.replaceWith(newSpan);
+  }
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter')  { e.preventDefault(); save(); }
+    if (e.key === 'Escape') restoreSpan(current);
+  });
+  input.addEventListener('blur', save);
+}
+
+/* ── Language tabs ────────────────────────────────────────── */
+function _buildProfLangTabs() {
+  const langs = STATE.languages;
+  const wrap  = document.getElementById('prof-lang-tabs');
+
+  const activeLang = STATE.getActiveLang('profile');
+
+  if (langs.length === 0) { wrap.innerHTML = ''; return; }
+  if (langs.length === 1) { wrap.innerHTML = ''; return; }
+
+  wrap.innerHTML = langs.map(l => `
+    <button class="lang-tab ${l.id === activeLang ? 'active' : ''}"
+      onclick="_switchProfLang('${l.id}')">
+      <span class="lang-tab-flag">${flagIconHTML(langIso(l.code), 18)}</span>
+      <span class="lang-tab-name">${l.name}</span>
+    </button>`).join('');
+}
+
+function _switchProfLang(langId) {
+  STATE.setActiveLang('profile', langId);
+  _buildProfLangTabs();
+  _renderProfLangContent();
+}
+
+/* ── Per-language content ─────────────────────────────────── */
+async function _renderProfLangContent() {
+  const wrap  = document.getElementById('prof-lang-content');
+  const langs = STATE.languages;
+
+  if (langs.length === 0) {
+    wrap.innerHTML = `
+      <div class="empty-state">
+        <span class="empty-icon">${icon('globe', 36)}</span>
+        <div class="empty-title">No languages yet</div>
+        <div class="empty-body">Add one in Settings to see your progress here.</div>
+      </div>`;
+    return;
+  }
+
+  const lang   = langs.find(l => l.id === STATE.getActiveLang('profile')) || langs[0];
+  const skills = STATE.skillsForLang(lang.id)
+    .slice().sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+
+  const langXP   = STATE.xpForLang(lang.id);
+  const langInfo = getLevelInfo(langXP, XP_LANG);
+
+  let rows = '';
+  skills.forEach(s => {
+    if (s.is_checkbox || s.key === 'touch_typing') {
+      const streak = STATE.streakMap[s.id]?.current || 0;
+      rows += `
+        <div class="lang-skill-row">
+          <span class="lang-skill-row-name">${skillIconHTML(s, 14)} ${s.name}</span>
+          <span style="color:var(--indigo);font-weight:700;display:flex;align-items:center;gap:4px">${streak}d ${icon('flame',12)}</span>
+        </div>`;
+      return;
+    }
+    const xp = STATE.xpMap[s.id] || 0;
+    const si = getLevelInfo(xp, XP_SKILL);
+    rows += `
+      <div class="lang-skill-row">
+        <span class="lang-skill-row-name">${skillIconHTML(s, 14)} ${s.name}</span>
+        <span class="lang-skill-row-rank" style="color:${si.rank.col}">${si.rank.label}</span>
+        <div class="lang-skill-row-bar">
+          <div class="lang-skill-row-fill" style="width:${si.pct}%;background:${si.rank.col}"></div>
+        </div>
+      </div>`;
+  });
+
+  wrap.innerHTML = `
+    <div class="lang-stats-card">
+      <div class="lang-stats-head">
+        <span class="lang-stats-flag">${flagIconHTML(langIso(lang.code), 30)}</span>
+        <div>
+          <div class="lang-stats-name">${lang.name}</div>
+          <div class="lang-stats-level">
+            Level <strong style="color:var(--t1)">${langInfo.level}</strong>
+            · <span style="color:${langInfo.rank.col};font-weight:700">${langInfo.rank.label}</span>
+            · ${fmtNum(Math.round(langXP))} XP
+          </div>
+        </div>
+      </div>
+      <div class="lang-skill-rows">${rows}</div>
+    </div>
+
+    <div class="sec-label">${icon('pie-chart', 12)} ${lang.name} Analytics</div>
+    <div class="lang-analytics-grid" id="lang-analytics">
+      <div class="card" style="grid-column:1/-1"><div style="text-align:center;padding:24px;color:var(--t3);font-size:13px">Loading…</div></div>
+    </div>`;
+
+  _renderLangAnalytics(lang, skills);
+}
+
+/* ── Per-language analytics: XP contribution / 30-day achievement / XP trend ── */
+const ANALYTICS_COLORS = ['#8A83DA','#FBD5BD','#4ECDC4','#EBA328','#ff6b9d','#80d8ff'];
+
+async function _renderLangAnalytics(lang, skills) {
+  const grid = document.getElementById('lang-analytics');
+  if (!grid) return;
+
+  const xpSkills = skills.filter(s => !(s.is_checkbox || s.key === 'touch_typing'));
+  if (xpSkills.length === 0) {
+    grid.innerHTML = `<div class="card" style="grid-column:1/-1"><div style="text-align:center;padding:24px;color:var(--t3);font-size:13px">No skills to analyze yet</div></div>`;
+    return;
+  }
+
+  let entriesMap = {};
+  try {
+    const results = await Promise.all(xpSkills.map(s => api.entries.forSkill(s.id)));
+    if (STATE.getActiveLang('profile') !== lang.id) return; // المستخدم بدّل اللغة قبل اكتمال التحميل
+    xpSkills.forEach((s, i) => { entriesMap[s.id] = results[i].data || []; });
+  } catch (e) {
+    console.error('[lang-analytics]', e);
+    grid.innerHTML = `<div class="card" style="grid-column:1/-1"><div style="text-align:center;padding:24px;color:var(--t3);font-size:13px">Failed to load analytics</div></div>`;
+    return;
+  }
+
+  /* XP contribution donut */
+  const donutItems = xpSkills.map((s, i) => ({
+    label: s.name,
+    value: STATE.xpMap[s.id] || 0,
+    color: ANALYTICS_COLORS[i % ANALYTICS_COLORS.length],
+  }));
+  const totalXP = donutItems.reduce((a, b) => a + b.value, 0);
+  // Build the donut without an embedded text label — overlay our own HTML center label instead
+  const donut = donutSVG(donutItems, 140, '', '');
+  let legend = '<div class="analytics-donut-legend">';
+  donutItems.forEach(it => {
+    const pct = totalXP > 0 ? Math.round(it.value / totalXP * 100) : 0;
+    if (!pct) return;
+    legend += `<span style="font-size:10px;color:var(--t3);display:flex;align-items:center;gap:4px"><span class="dot" style="background:${it.color}"></span>${it.label} ${pct}%</span>`;
+  });
+  legend += '</div>';
+
+  /* 30-day goal achievement */
+  const tz = STATE.tz;
+  let achieveHTML = '';
+  xpSkills.forEach(s => {
+    const byDate = entriesByDate(entriesMap[s.id] || []);
+    let sum = 0;
+    for (let i = 0; i < 30; i++) sum += byDate[dateOffsetStr(i, tz)] || 0;
+    const avg = sum / 30;
+    const pct = s.goal > 0 ? Math.round(avg / s.goal * 100) : 0;
+    const disp = Math.min(pct, 100);
+    achieveHTML += `
+      <div class="analytics-bar-item">
+        <span class="analytics-bar-label">${skillIconHTML(s,12)} ${s.name}</span>
+        <div class="analytics-bar-track"><div class="analytics-bar-fill" style="width:${disp}%;background:#4ECDC4"></div></div>
+        <span class="analytics-bar-value" style="color:${pct > 100 ? '#4ECDC4' : 'var(--t1)'}">${pct}%</span>
+      </div>`;
+  });
+
+  /* XP trend — last 60 days, default view shows ~10 days, scrollable */
+  const trendData = [];
+  for (let i = 59; i >= 0; i--) {
+    const ds = dateOffsetStr(i, tz);
+    let xpDay = 0;
+    xpSkills.forEach(s => {
+      const e = (entriesMap[s.id] || []).find(en => en.log_date === ds);
+      if (e) xpDay += e.value * (s.xp_per_unit || s.xpU || 1);
+    });
+    const d = new Date(ds + 'T12:00:00');
+    trendData.push({ label: `${d.getMonth()+1}/${d.getDate()}`, value: xpDay });
+  }
+  const trend = buildTrendChart(trendData);
+
+  if (STATE.getActiveLang('profile') !== lang.id) return;
+
+  grid.innerHTML = `
+    <div class="card analytics-card">
+      <h4>${icon('pie-chart', 13)} XP Contribution</h4>
+      <div class="donut-wrap">
+        ${donut}
+        <div class="donut-center">
+          <div class="donut-center-num">${fmtNum(Math.round(totalXP))}</div>
+          <div class="donut-center-sub">Total XP</div>
+        </div>
+      </div>
+      ${legend}
+    </div>
+    <div class="card analytics-card">
+      <h4>${icon('target', 13)} 30-Day Achievement</h4>
+      ${achieveHTML}
+    </div>
+    <div class="card analytics-card" style="grid-column:1/-1">
+      <h4>${icon('trending-up', 13)} XP Trend</h4>
+      <div class="trend-sub">Last 60 days — scroll to explore</div>
+      ${trend}
+    </div>`;
+
+  // Scroll the trend chart to the right so the most recent ~10 days are visible
+  const ts = grid.querySelector('.trend-scroll');
+  if (ts) requestAnimationFrame(() => { ts.scrollLeft = ts.scrollWidth; });
+}
+
+/* ── Custom XP trend chart: hover tooltip ── */
+function buildTrendChart(data) {
+  if (!data || !data.length) return `<div style="text-align:center;padding:24px;color:var(--t3);font-size:13px">No data yet</div>`;
+
+  const maxV   = Math.max(...data.map(d => d.value || 0), 1);
+  const H = 160, padT = 14, padB = 24, padL = 4, padR = 10;
+  const innerH = H - padT - padB;
+  const W = Math.max(data.length * 34, 300);
+
+  let gridLines = '', yLabels = '';
+  for (let i = 0; i <= 4; i++) {
+    const v = Math.round(maxV * i / 4);
+    const y = padT + innerH - (innerH * i / 4);
+    gridLines += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
+    yLabels   += `<text x="${padL}" y="${y - 3}" font-size="9" fill="rgba(251,245,240,0.35)" font-family="DM Sans,sans-serif">${fmtNum(v)}</text>`;
+  }
+
+  let points = '', area = `${padL},${padT + innerH} `, xLabels = '';
+  const coords = [];
+  data.forEach((d, i) => {
+    const x = padL + i * ((W - padL - padR) / (data.length - 1 || 1));
+    const y = padT + innerH - ((d.value || 0) / maxV * innerH);
+    points += `${x.toFixed(1)},${y.toFixed(1)} `;
+    area   += `${x.toFixed(1)},${y.toFixed(1)} `;
+    coords.push({ x: parseFloat(x.toFixed(1)), y: parseFloat(y.toFixed(1)), value: d.value || 0, label: d.label });
+    if (i % 3 === 0 || i === data.length - 1) {
+      xLabels += `<text x="${x.toFixed(1)}" y="${H - 6}" font-size="9" fill="rgba(251,245,240,0.40)" font-family="DM Sans,sans-serif" text-anchor="middle">${d.label}</text>`;
+    }
+  });
+  const lastX = coords.length ? coords[coords.length-1].x : padL;
+  area += `${lastX},${padT + innerH}`;
+
+  let dots = '', hitTargets = '';
+  const cid = 'tc' + Math.random().toString(36).slice(2,7);
+  coords.forEach((c, i) => {
+    if (c.value > 0) dots += `<circle cx="${c.x}" cy="${c.y}" r="3" fill="#8A83DA" stroke="rgba(18,16,28,0.9)" stroke-width="1.5"/>`;
+    const x1 = i === 0 ? padL : (coords[i-1].x + c.x)/2;
+    const x2 = i === coords.length-1 ? W-padR : (c.x + coords[i+1].x)/2;
+    hitTargets += `<rect x="${x1.toFixed(1)}" y="${padT}" width="${(x2-x1).toFixed(1)}" height="${innerH}" fill="transparent" data-i="${i}" class="th-${cid}"/>`;
+  });
+
+  const cJson = JSON.stringify(coords).replace(/</g,'\u003c');
+
+  return `
+    <div class="trend-scroll-wrap">
+      <div class="trend-tooltip" id="tt-${cid}">
+        <div class="trend-tooltip-date" id="ttd-${cid}"></div>
+        <div class="trend-tooltip-val"  id="ttv-${cid}"></div>
+      </div>
+      <div class="trend-scroll" id="ts-${cid}">
+        <svg id="sv-${cid}" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="display:block;overflow:visible">
+          <defs>
+            <linearGradient id="tf-${cid}" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#8A83DA" stop-opacity="0.28"/>
+              <stop offset="100%" stop-color="#8A83DA" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="${W}" height="${H}" fill="rgba(255,255,255,0.015)" rx="6"/>
+          ${gridLines}
+          <polygon points="${area}" fill="url(#tf-${cid})"/>
+          <polyline points="${points}" fill="none" stroke="#8A83DA" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+          ${dots}
+          ${yLabels}${xLabels}
+          <line id="cl-${cid}" x1="0" y1="${padT}" x2="0" y2="${padT+innerH}" stroke="rgba(138,131,218,0.50)" stroke-width="1" stroke-dasharray="3 3" display="none"/>
+          <circle id="cd-${cid}" cx="0" cy="0" r="5" fill="#8A83DA" stroke="rgba(138,131,218,0.4)" stroke-width="3" display="none"/>
+          <line x1="${padL}" y1="${padT+innerH}" x2="${W-padR}" y2="${padT+innerH}" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+          ${hitTargets}
+        </svg>
+      </div>
+    </div>
+    <script>(function(){
+      var C=${cJson},
+          tt=document.getElementById('tt-${cid}'),
+          ttd=document.getElementById('ttd-${cid}'),
+          ttv=document.getElementById('ttv-${cid}'),
+          cl=document.getElementById('cl-${cid}'),
+          cd=document.getElementById('cd-${cid}'),
+          sv=document.getElementById('sv-${cid}'),
+          sc=document.getElementById('ts-${cid}');
+      document.querySelectorAll('.th-${cid}').forEach(function(r){
+        r.addEventListener('mouseenter',function(){
+          var i=parseInt(this.getAttribute('data-i')),c=C[i];
+          cl.setAttribute('x1',c.x);cl.setAttribute('x2',c.x);cl.setAttribute('display','block');
+          if(c.value>0){cd.setAttribute('cx',c.x);cd.setAttribute('cy',c.y);cd.setAttribute('display','block');}
+          else{cd.setAttribute('display','none');}
+          ttd.textContent=c.label;
+          ttv.innerHTML=c.value>0?'<span style="color:#8A83DA;font-weight:800;font-family:Sora,sans-serif;font-size:15px">'+c.value.toLocaleString()+' XP</span>':'<span style="color:rgba(251,245,240,0.35);font-size:12px">No activity</span>';
+          var sr=sv.getBoundingClientRect(),wr=sc.parentElement.getBoundingClientRect();
+          var tx=sr.left+c.x-sc.scrollLeft-wr.left+14;
+          var ty=sr.top+c.y-wr.top-52;
+          if(tx+130>wr.width)tx=sr.left+c.x-sc.scrollLeft-wr.left-144;
+          if(ty<0)ty=4;
+          tt.style.left=tx+'px';tt.style.top=ty+'px';tt.style.display='block';
+        });
+        r.addEventListener('mouseleave',function(){
+          cl.setAttribute('display','none');cd.setAttribute('display','none');tt.style.display='none';
+        });
+      });
+    })();<\/script>`;
+}
+
+/* ── Achievements preview — أعلى إنجاز لكل مهارة رئيسية ── */
+function _renderAchievements() {
+  const skills = STATE.skills || [];
+
+  // أعلى streak عام
+  let bestStreakSkill = null, bestStreakVal = 0;
+  skills.forEach(s => {
+    const cur = STATE.streakMap[s.id]?.current || 0;
+    if (cur > bestStreakVal) { bestStreakVal = cur; bestStreakSkill = s; }
+  });
+
+  // أعلى كلمات (new_words)
+  let bestWordsXP = 0;
+  skills.filter(s => s.key === 'new_words').forEach(s => {
+    bestWordsXP += STATE.xpMap[s.id] || 0;
+  });
+  const bestWordsUnits = Math.round(bestWordsXP / 5); // xp_per_unit=5
+
+  // أعلى استماع (listening)
+  let bestListenXP = 0;
+  skills.filter(s => s.key === 'listening').forEach(s => {
+    bestListenXP += STATE.xpMap[s.id] || 0;
+  });
+  const bestListenMins = Math.round(bestListenXP / 3); // xp_per_unit=3
+
+  // أعلى قراءة (reading)
+  let bestReadXP = 0;
+  skills.filter(s => s.key === 'reading').forEach(s => {
+    bestReadXP += STATE.xpMap[s.id] || 0;
+  });
+  const bestReadPages = Math.round(bestReadXP / 50); // xp_per_unit=50
+
+  // أعلى محادثة (speaking)
+  let bestSpeakXP = 0;
+  skills.filter(s => s.key === 'speaking').forEach(s => {
+    bestSpeakXP += STATE.xpMap[s.id] || 0;
+  });
+  const bestSpeakMins = Math.round(bestSpeakXP / 7); // xp_per_unit=7
+
+  const items = [
+    {
+      icon: 'flame', iconCol: '#ff9d52',
+      label: 'Best Streak',
+      value: bestStreakVal ? `${bestStreakVal} days` : '—',
+      sub: bestStreakSkill ? bestStreakSkill.name : 'No streaks yet',
+      hasVal: bestStreakVal > 0,
+    },
+    {
+      icon: 'book-plus', iconCol: '#8A83DA',
+      label: 'New Words',
+      value: bestWordsUnits ? fmtNum(bestWordsUnits) : '—',
+      sub: 'words total',
+      hasVal: bestWordsUnits > 0,
+    },
+    {
+      icon: 'headphones', iconCol: '#4ECDC4',
+      label: 'Listening',
+      value: bestListenMins ? fmtMin(bestListenMins) : '—',
+      sub: 'total time',
+      hasVal: bestListenMins > 0,
+    },
+    {
+      icon: 'book-open', iconCol: '#EBA328',
+      label: 'Reading',
+      value: bestReadPages ? `${fmtNum(bestReadPages)} pages` : '—',
+      sub: 'total pages',
+      hasVal: bestReadPages > 0,
+    },
+    {
+      icon: 'mic', iconCol: '#ff6b9d',
+      label: 'Speaking',
+      value: bestSpeakMins ? fmtMin(bestSpeakMins) : '—',
+      sub: 'total time',
+      hasVal: bestSpeakMins > 0,
+    },
+  ];
+
+  const summaryEl = document.getElementById('ach-summary-text');
+  if (summaryEl) {
+    const hasAny = items.some(i => i.hasVal);
+    summaryEl.textContent = hasAny
+      ? 'Your top records across all skills and languages'
+      : 'Start logging to see your personal records here';
+  }
+
+  const grid = document.getElementById('ach-grid');
+  if (!grid) return;
+
+  grid.innerHTML = items.map(item => `
+    <div class="ach-preview-card ${item.hasVal ? 'unlocked' : ''}" onclick="navigate('achievements')">
+      <div style="width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid var(--b1);
+        display:flex;align-items:center;justify-content:center;color:${item.hasVal ? item.iconCol : 'var(--t4)'}">
+        ${icon(item.icon, 20)}
+      </div>
+      <div class="ach-preview-lbl">${item.label}</div>
+      <div style="font-family:'Sora',sans-serif;font-size:16px;font-weight:800;
+        color:${item.hasVal ? 'var(--t1)' : 'var(--t4)'}">
+        ${item.value}
+      </div>
+      <div class="ach-preview-progress">${item.sub}</div>
+    </div>`).join('');
+}
+</script>
