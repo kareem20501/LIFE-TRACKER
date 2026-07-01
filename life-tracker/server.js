@@ -1,4 +1,5 @@
-
+// ═══════════════════════════════════════════════════════════
+//  server.js  —  Life Tracker Backend
 // ═══════════════════════════════════════════════════════════
 
 const http    = require('http');
@@ -25,6 +26,11 @@ const APPS_SCRIPT_URL  = process.env.APPS_SCRIPT_URL  || '';
 const ADMIN_KEY        = process.env.ADMIN_KEY         || '';
 const __root = __dirname;
 
+if (!SUPABASE_URL || !SUPABASE_SERVICE) {
+  console.error('❌  SUPABASE_URL / SUPABASE_SERVICE_KEY env vars are required');
+  process.exit(1);
+}
+
 /* ══════════════════════════════════════════════════════════
    §2  SUPABASE CLIENT (service_role — كل الصلاحيات)
 ══════════════════════════════════════════════════════════ */
@@ -36,6 +42,15 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE, {
    §3  SUPABASE SESSION STORE
 ══════════════════════════════════════════════════════════ */
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+
+// ✅ FIX: كانت هذه الدالة مفقودة تمامًا، مما تسبب في
+// ReferenceError: randomToken is not defined عند كل تسجيل دخول
+function randomToken() {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let t = '';
+  for (let i = 0; i < 64; i++) t += chars[Math.floor(Math.random() * chars.length)];
+  return t + Date.now().toString(36);
+}
 
 async function createSession(userId, email) {
   const token     = randomToken();
@@ -116,14 +131,11 @@ async function requireAuth(req, res) {
   if (!s) { unauth(res); return null; }
   return s;
 }
+
 /* ══════════════════════════════════════════════════════════
    §5  APPS SCRIPT PROXY
-   الـ frontend يتكلم مع الـ server،
-   والـ server يتكلم مع Apps Script
-   (يتجنب CORS issues مع Apps Script)
 ══════════════════════════════════════════════════════════ */
 async function appsScriptCall(body) {
-  // node-fetch dynamic import
   const fetch = (await import('node-fetch')).default;
 
   let res;
@@ -141,7 +153,6 @@ async function appsScriptCall(body) {
 
   const raw = await res.text();
 
-  // اطبع أول 500 حرف من الرد عشان تشوف فعليًا إيه اللي راجع من Google
   console.log('[appsScriptCall] HTTP status:', res.status);
   console.log('[appsScriptCall] raw response (first 500 chars):', raw.slice(0, 500));
 
@@ -149,7 +160,6 @@ async function appsScriptCall(body) {
   try {
     json = JSON.parse(raw);
   } catch (err) {
-    // الرد مش JSON — غالبًا صفحة HTML من جوجل (مشكلة صلاحيات الـ deployment)
     console.error('[appsScriptCall] Apps Script لم يُرجع JSON صالح.');
     throw new Error(
       'Apps Script رجّع رد غير صالح (مش JSON). راجع إعدادات الـ Deployment: ' +
@@ -160,7 +170,7 @@ async function appsScriptCall(body) {
 }
 
 /* ══════════════════════════════════════════════════════════
-   §6  FIXED SKILLS (تُضاف تلقائياً عند إنشاء لغة)
+   §6  FIXED SKILLS
 ══════════════════════════════════════════════════════════ */
 const FIXED_SKILLS = [
   { key:'new_words',    name:'New Words',    unit:'words', goal:30,  xp_per_unit:5,  is_checkbox:false, can_edit_xp:false },
@@ -213,30 +223,24 @@ async function handle(req, res) {
   const p      = url.pathname;
   const method = req.method.toUpperCase();
 
-  /* ── OPTIONS preflight ── */
   if (method === 'OPTIONS') { cors(res); res.writeHead(204); return res.end(); }
 
   /* ══════════════════════════════════════════════════════
      STATIC FILES
   ══════════════════════════════════════════════════════ */
   if (!p.startsWith('/api/')) {
-    // صفحة Login
     if (p === '/' || p === '/login') {
       return serveStatic(res, path.join(__root, 'login.html')) || notFound(res);
     }
-    // صفحة App
     if (p === '/app') {
       return serveStatic(res, path.join(__root, 'app.html')) || notFound(res);
     }
-    // JS files
     if (p.startsWith('/js/')) {
       return serveStatic(res, path.join(__root, p)) || notFound(res);
     }
-    // Page partials
     if (p.startsWith('/pages/')) {
       return serveStatic(res, path.join(__root, p)) || notFound(res);
     }
-    // أي ملف آخر
     return serveStatic(res, path.join(__root, p.slice(1))) || notFound(res);
   }
 
@@ -265,12 +269,10 @@ async function handle(req, res) {
 
       const result = await appsScriptCall({ action: 'verify_otp', email: b.email, otp: b.otp });
 
-      if (!result.ok) return ok(res, result); // أعد الخطأ للـ frontend
+      if (!result.ok) return ok(res, result);
 
-      // OTP صحيح → أنشئ أو احضر المستخدم في Supabase
       const email = b.email.trim().toLowerCase();
 
-      // هل المستخدم موجود؟
       let { data: profile, error: fetchErr } = await supabase
         .from('profiles')
         .select('*')
@@ -279,7 +281,6 @@ async function handle(req, res) {
 
       if (fetchErr && fetchErr.code !== 'PGRST116') throw fetchErr;
 
-      // مش موجود → أنشئه
       if (!profile) {
         const displayName = email.split('@')[0].replace(/[._-]/g, ' ')
           .replace(/\b\w/g, c => c.toUpperCase());
@@ -292,7 +293,6 @@ async function handle(req, res) {
         profile = newProfile;
       }
 
-      // أنشئ session
       const { token, expiresAt } = await createSession(profile.id, email);
 
       return ok(res, {
@@ -308,7 +308,7 @@ async function handle(req, res) {
     if (p === '/api/auth/validate' && method === 'POST') {
       const b     = await parseBody(req);
       const token = b.token || extractToken(req);
-      const s     = getSession(token);
+      const s     = await getSession(token);   // ✅ FIX: كان ناقص await
       if (!s) return ok(res, { ok: false, error: 'Session expired' });
       return ok(res, { ok: true, userId: s.userId, email: s.email, expiresAt: s.expiresAt });
     }
@@ -321,8 +321,7 @@ async function handle(req, res) {
     }
 
     /* ────────────────────────────────────────────────────
-       ADMIN ROUTES — محمية بـ ADMIN_KEY الخاص بيها، مش بـ
-       session المستخدم العادي، فلازم تتفحص قبل requireAuth
+       ADMIN ROUTES
     ──────────────────────────────────────────────────── */
     if (p.startsWith('/api/admin/')) {
       return await handleAdmin(req, res, p, method);
@@ -332,7 +331,7 @@ async function handle(req, res) {
        كل الـ routes التالية تحتاج auth
     ──────────────────────────────────────────────────── */
     const sess = await requireAuth(req, res);
-    if (!sess) return; // unauth أُرسل بالفعل
+    if (!sess) return;
     const userId = sess.userId;
 
     /* ────────────────────────────────────────────────────
@@ -395,14 +394,12 @@ async function handle(req, res) {
         const b = await parseBody(req);
         if (!b.code || !b.name) return badReq(res, 'code and name required');
 
-        // تحقق من الحد الأقصى
         const { count } = await supabase
           .from('languages')
           .select('id', { count: 'exact', head: true })
           .eq('user_id', userId);
         if (count >= 2) return badReq(res, 'Maximum 2 languages per account');
 
-        // تحقق من التكرار
         const { data: existing } = await supabase
           .from('languages')
           .select('id')
@@ -411,7 +408,6 @@ async function handle(req, res) {
           .single();
         if (existing) return badReq(res, `You already study ${b.name}`);
 
-        // أنشئ اللغة
         const { data: lang, error: langErr } = await supabase
           .from('languages')
           .insert({ user_id: userId, code: b.code, name: b.name, flag: b.flag || '🌐' })
@@ -419,7 +415,6 @@ async function handle(req, res) {
           .single();
         if (langErr) throw langErr;
 
-        // أنشئ المهارات الثابتة
         const skillsToInsert = FIXED_SKILLS.map((sk, i) => ({
           lang_id:     lang.id,
           key:         sk.key,
@@ -443,7 +438,6 @@ async function handle(req, res) {
     const langMatch = p.match(/^\/api\/languages\/([a-zA-Z0-9-]+)$/);
     if (langMatch && method === 'DELETE') {
       const langId = langMatch[1];
-      // تحقق من الملكية
       const { data: lang } = await supabase
         .from('languages').select('id').eq('id', langId).eq('user_id', userId).single();
       if (!lang) return forbidden(res, 'Language not found');
@@ -465,7 +459,6 @@ async function handle(req, res) {
         q = q.order('sort_order');
         const { data, error } = await q;
         if (error) throw error;
-        // أزل الـ join data
         return ok(res, (data || []).map(s => { const {languages, ...rest} = s; return rest; }));
       }
 
@@ -473,12 +466,10 @@ async function handle(req, res) {
         const b = await parseBody(req);
         if (!b.lang_id || !b.name) return badReq(res, 'lang_id and name required');
 
-        // تحقق من الملكية
         const { data: lang } = await supabase
           .from('languages').select('id').eq('id', b.lang_id).eq('user_id', userId).single();
         if (!lang) return forbidden(res, 'Language not found');
 
-        // تحقق من الحد الأقصى للمهارات المخصصة
         const { count } = await supabase
           .from('skills')
           .select('id', { count: 'exact', head: true })
@@ -511,7 +502,6 @@ async function handle(req, res) {
     if (skillMatch) {
       const skillId = skillMatch[1];
 
-      // تحقق من الملكية
       const { data: skill } = await supabase
         .from('skills')
         .select('*, languages!inner(user_id)')
@@ -563,7 +553,6 @@ async function handle(req, res) {
         }
 
         if (skillId) {
-          // تحقق من الملكية
           const { data: sk } = await supabase
             .from('skills')
             .select('id, languages!inner(user_id)')
@@ -641,7 +630,7 @@ async function handle(req, res) {
     }
 
     /* ────────────────────────────────────────────────────
-       ACHIEVEMENT SEEN (sync across devices)
+       ACHIEVEMENT SEEN
     ──────────────────────────────────────────────────── */
     if (p === '/api/achievements/seen') {
       if (method === 'GET') {
@@ -669,8 +658,6 @@ async function handle(req, res) {
 
     /* ────────────────────────────────────────────────────
        SUPPORT / FEEDBACK
-       يتطلب auth (المستخدم لازم يكون مسجل دخول) — بيبعت
-       الرسالة لـ Apps Script اللي بيحفظها في شيت Feedback
     ──────────────────────────────────────────────────── */
     if (p === '/api/support/feedback' && method === 'POST') {
       const b       = await parseBody(req);
@@ -687,8 +674,6 @@ async function handle(req, res) {
         });
         return ok(res, result);
       } catch (err) {
-        // فشل الوصول لـ Apps Script — لا نمنع المستخدم من المتابعة،
-        // الـ frontend عنده fallback (mailto:) في هذه الحالة
         console.error('[feedback] appsScriptCall failed:', err.message);
         return ok(res, { ok: true, note: 'apps_script_unreachable' });
       }
@@ -702,14 +687,9 @@ async function handle(req, res) {
 }
 
 /* ══════════════════════════════════════════════════════════
-   §9b  ADMIN ROUTES (مخفية — لا روابط أو أزرار في الفرونت إند)
-   تُستدعى يدويًا فقط (Postman/curl) بعد مراجعة طلب صورة في
-   شيت Feedback. محمية بـ ADMIN_KEY عبر header وليس عبر session.
+   §9b  ADMIN ROUTES
 ══════════════════════════════════════════════════════════ */
 async function handleAdmin(req, res, p, method) {
-  // POST /api/admin/set-avatar
-  // Headers: x-admin-key: <ADMIN_KEY>
-  // Body: { email, avatar_url }
   if (p === '/api/admin/set-avatar' && method === 'POST') {
     const key = req.headers['x-admin-key'] || '';
     if (key !== ADMIN_KEY) return unauth(res);
