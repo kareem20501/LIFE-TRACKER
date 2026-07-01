@@ -224,10 +224,9 @@ function _updateSidebarProfile() {
 
   if (avWrap) {
     if (p.avatar_url) {
-      avWrap.innerHTML = `<img src="${p.avatar_url}" alt="${name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+      avWrap.innerHTML = avatarInnerHTML(name, p.avatar_url);
     } else {
-      const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-      avWrap.innerHTML = `<span style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:700;color:#fff">${initials}</span>`;
+      avWrap.innerHTML = `<span style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:700;color:#fff">${avatarInitials(name)}</span>`;
     }
   }
 
