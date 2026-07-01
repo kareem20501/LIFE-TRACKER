@@ -1,767 +1,506 @@
 <style>
 /* ══════════════════════════════════════════════════════════
-   ACHIEVEMENTS — page-scoped styles
+   LEAGUE — page-scoped styles
 ══════════════════════════════════════════════════════════ */
-.ach-hero {
-  padding: 26px 0 18px; text-align: center;
-  background: radial-gradient(ellipse 60% 50% at 50% 130%, rgba(255,107,157,0.10), transparent 60%);
+
+.league-hero {
+  padding: 26px 0 16px; text-align: center;
+  background: radial-gradient(ellipse 60% 50% at 50% 130%, rgba(251,213,189,0.12), transparent 60%);
   margin: -22px -18px 0;
 }
-.ach-tag {
-  font-size: 10px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase;
-  color: var(--t3); margin-bottom: 8px;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.ach-title {
+.league-title {
   font-family: 'Sora', sans-serif;
   font-size: clamp(22px, 5vw, 34px); font-weight: 800;
   line-height: 1.35; letter-spacing: 1px; color: var(--t1);
 }
-.ach-title em {
-  font-style: normal;
-  background: linear-gradient(90deg, #ff9d52, #ff6b9d);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
+.league-title em {
+  font-style: normal; color: var(--indigo);
 }
-.ach-hero-grid {
-  display: flex; gap: 12px; justify-content: center; align-items: stretch;
-  flex-wrap: wrap; margin-top: 20px;
-}
-.ach-ring-card, .ach-info-card, .ach-next-card {
-  background: var(--glass); border: 1px solid var(--b1);
-  border-radius: var(--r-xl); padding: 14px 18px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 4px; min-width: 130px;
-}
-.ach-ring-card { padding: 10px; }
-.ach-info-card-num { font-family: var(--f-display); font-size: 24px; font-weight: 800; color: var(--t1); }
-.ach-info-card-lbl { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--t3); }
-.ach-next-card { min-width: 220px; flex-direction: row; gap: 12px; text-align: left; align-items: center; justify-content: flex-start; }
-.ach-next-eyebrow { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--peach); margin-bottom: 4px; }
-.ach-next-title { font-size: 13px; font-weight: 700; color: var(--t1); margin-bottom: 3px; }
-.ach-next-lbl   { font-size: 11px; color: var(--t3); }
-.ach-next-medal { flex-shrink: 0; }
 
-/* Filter tabs */
-.ach-filter-tabs { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin: 22px 0 6px; }
-.ach-filter-tab {
-  padding: 7px 16px; border-radius: 100px;
-  font-size: 12px; font-weight: 600;
-  border: 1px solid var(--b1); background: var(--glass); color: var(--t2);
+/* ── Timer ── */
+.timer-wrap {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: var(--r-lg); padding: 12px 18px;
+  margin-top: 14px;
+}
+.timer-block { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 42px; }
+.timer-num   { font-family: 'Sora', sans-serif; font-size: 20px; font-weight: 800; color: var(--indigo); line-height: 1; }
+.timer-lbl   { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--t3); }
+.timer-sep   { font-family: 'Sora', sans-serif; font-size: 18px; font-weight: 800; color: var(--b2); margin-bottom: 12px; }
+
+/* ── Standings ── */
+.standings-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 8px; }
+.st-row {
+  display: flex; align-items: center; gap: 11px;
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: var(--r-md); padding: 11px 13px;
+}
+.st-row.gold   { border-color: rgba(232,193,64,0.40);  background: rgba(232,193,64,0.06); }
+.st-row.silver { border-color: rgba(192,192,200,0.35); background: rgba(192,192,200,0.04); }
+.st-row.bronze { border-color: rgba(205,127,50,0.35);  background: rgba(205,127,50,0.04); }
+
+/* 3) رقم الترتيب في قائمة الـ standings العادية (المركز الرابع فما فوق) */
+.st-pos { font-family: var(--f-display); font-size: 16px; font-weight: 700; width: 24px; text-align: center; flex-shrink: 0; color: var(--t3); }.st-pos.p1 { color: #e8c840; } .st-pos.p2 { color: #c0c0d0; } .st-pos.p3 { color: #cd7f32; }
+.st-medal { font-size: 17px; flex-shrink: 0; width: 20px; }
+.st-avatar {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  background: var(--grad);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 800; color: #fff;
+  overflow: hidden;
+}
+.st-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.st-name  { font-size: 13px; font-weight: 700; color: var(--t1); flex: 1; min-width: 60px; }
+.st-bar-wrap { flex: 2; min-width: 70px; max-width: 240px; }
+.st-bar-track { height: 5px; background: rgba(255,255,255,0.06); border-radius: 100px; overflow: hidden; }
+.st-bar-fill  { height: 100%; border-radius: 100px; transition: width .9s; }
+.st-xp { font-size: 11px; font-weight: 700; color: var(--indigo); white-space: nowrap; flex-shrink: 0; }
+
+/* ── View more ── */
+.st-viewmore-btn {
+  width: 100%; margin-top: 4px;
+  padding: 9px; border-radius: var(--r-md);
+  background: var(--glass); border: 1px solid var(--b1);
+  color: var(--t2); font-size: 12px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
   transition: all .15s; cursor: pointer;
 }
-.ach-filter-tab:hover { border-color: var(--b2); color: var(--t1); }
-.ach-filter-tab.active { background: var(--glass3); border-color: var(--b3); color: var(--t1); box-shadow: 0 0 12px rgba(138,131,218,0.18); }
+.st-viewmore-btn:hover { border-color: var(--b2); color: var(--t1); background: var(--glass2); }
+.st-viewmore-btn .chev { transition: transform .2s; }
+.st-viewmore-btn.open .chev { transform: rotate(180deg); }
 
-/* Language filter tabs */
-.ach-lang-tabs { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin: 0 0 14px; }
-.ach-lang-tab {
-  padding: 5px 13px; border-radius: 100px;
-  font-size: 11px; font-weight: 600;
-  border: 1px solid var(--b1); background: var(--glass); color: var(--t3);
-  transition: all .15s; cursor: pointer;
-  display: flex; align-items: center; gap: 5px;
-}
-.ach-lang-tab:hover { border-color: var(--b2); color: var(--t2); }
-.ach-lang-tab.active { background: var(--glass2); border-color: var(--b2); color: var(--t1); }
-
-/* Category label */
-.ach-cat-count { color: var(--t4); font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 10px; }
-
-/* Achievement grid */
-.ach-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; margin-bottom: 6px; }
-.ach-card {
-  display: flex; gap: 14px; align-items: center;
+/* ── Skill leaders ── */
+.skill-leaders-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 8px; }
+.lcard {
   background: var(--glass); border: 1px solid var(--b1);
-  border-radius: var(--r-lg); padding: 13px 14px;
-  transition: border-color .15s, transform .15s, background .15s;
+  border-radius: var(--r-md); padding: 11px 14px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
 }
-.ach-card:hover { transform: translateY(-2px); border-color: var(--b2); }
-.ach-card.unlocked { border-color: rgba(138,131,218,0.35); background: rgba(138,131,218,0.08); box-shadow: 0 0 16px rgba(138,131,218,0.10); }
-.ach-card.newly-unlocked { border-color: rgba(251,213,189,0.55); background: rgba(251,213,189,0.07); box-shadow: 0 0 20px rgba(251,213,189,0.15); animation: achPulse 1.2s ease; }
-@keyframes achPulse {
-  0%,100%{box-shadow:0 0 20px rgba(251,213,189,0.15)}
-  50%{box-shadow:0 0 30px rgba(251,213,189,0.35)}
+.lcard-left {
+  display: flex; align-items: center; gap: 8px;
+  min-width: 130px; flex-shrink: 0;
 }
-.ach-card-medal { flex-shrink: 0; width: 52px; display: flex; justify-content: center; }
-.ach-card-body  { flex: 1; min-width: 0; }
-.ach-card-title { font-size: 13px; font-weight: 700; color: var(--t2); margin-bottom: 3px; }
-.ach-card.unlocked .ach-card-title { color: var(--t1); }
-.ach-card-desc  { font-size: 11px; color: var(--t3); line-height: 1.5; margin-bottom: 9px; }
-.ach-card-progress-track { height: 4px; background: rgba(255,255,255,0.06); border-radius: 100px; overflow: hidden; margin-bottom: 5px; }
-.ach-card-progress-fill  { height: 100%; border-radius: 100px; transition: width .9s cubic-bezier(.4,0,.2,1); background: rgba(255,255,255,0.18); }
-.ach-card.unlocked .ach-card-progress-fill { background: var(--grad-bar); }
-.ach-card-progress-lbl { font-size: 10px; color: var(--t4); font-weight: 700; letter-spacing: 0.4px; display: flex; align-items: center; gap: 4px; }
-.ach-card.unlocked .ach-card-progress-lbl { color: var(--indigo); }
-.ach-card.newly-unlocked .ach-card-progress-lbl { color: var(--peach); }
+.lcard-icon  { flex-shrink: 0; color: var(--indigo); display:flex; align-items:center; }
+.lcard-skill { font-size: 12px; font-weight: 800; letter-spacing: 0.5px; color: var(--t1); }
+.lcard-lang  { font-size: 9px; color: var(--t4); }
+.lcard-sep   { width: 1px; height: 26px; background: var(--b1); flex-shrink: 0; }
+.lcard-right { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.lcard-name  { font-size: 13px; font-weight: 800; color: var(--t1); }
+.lcard-amount{ font-size: 14px; font-weight: 800; color: var(--indigo); display:flex; align-items:center; gap:5px; }
+.lcard-none  { font-size: 11px; color: var(--t4); }
 
-/* NEW badge */
-.ach-new-badge {
-  font-size: 8px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
-  background: var(--peach); color: #1a0800; border-radius: 4px; padding: 2px 5px;
-  margin-left: 5px;
+/* ── History ── */
+.history-list { display: flex; flex-direction: column; gap: 7px; }
+.hist-row {
+  display: flex; align-items: center; gap: 11px;
+  background: var(--glass); border: 1px solid var(--b1);
+  border-radius: var(--r-md); padding: 11px 13px;
+}
+.hist-week   { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--t3); min-width: 70px; flex-shrink: 0; }
+.hist-trophy { flex-shrink: 0; color: #EBA328; display:flex; align-items:center; }
+.hist-name   { font-size: 13px; font-weight: 700; color: var(--t1); flex: 1; }
+.hist-xp     { font-size: 11px; font-weight: 700; color: #e8c840; white-space: nowrap; }
+.hist-empty  { text-align: center; color: var(--t4); font-size: 12px; padding: 18px 0; }
+
+/* ── Podium Top 3 ── */
+.podium-wrap {
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: 10px; margin-bottom: 18px; padding: 4px 4px 0;
+}
+.podium-col {
+  display: flex; flex-direction: column; align-items: center; gap: 9px;
+  flex: 1; max-width: 130px; min-width: 86px;
+}
+.podium-avatar-ring {
+  width: 64px; height: 64px;
+  border-radius: 50%; padding: 3px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  animation: podiumRise .5s cubic-bezier(0.16,1,0.3,1) both;
+}
+.podium-avatar-ring.rank-1 {
+  width: 76px; height: 76px;
+  background: conic-gradient(from 180deg, #e8c840, #fff3b0, #e8c840);
+  box-shadow: 0 0 28px rgba(232,200,64,0.55), 0 0 0 1px rgba(232,200,64,0.3);
+  animation-delay: .12s;
+}
+.podium-avatar-ring.rank-2 {
+  background: conic-gradient(from 180deg, #c0c0d0, #eef0f8, #c0c0d0);
+  box-shadow: 0 0 20px rgba(192,192,208,0.40), 0 0 0 1px rgba(192,192,208,0.25);
+}
+.podium-avatar-ring.rank-3 {
+  background: conic-gradient(from 180deg, #cd7f32, #f0b87a, #cd7f32);
+  box-shadow: 0 0 20px rgba(205,127,50,0.40), 0 0 0 1px rgba(205,127,50,0.25);
+  animation-delay: .06s;
+}
+@keyframes podiumRise { from { opacity:0; transform: translateY(14px) scale(.85); } to { opacity:1; transform: translateY(0) scale(1); } }
+.podium-avatar {
+  width: 100%; height: 100%; border-radius: 50%;
+  background: var(--bg2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 800; color: var(--t1);
+  font-size: 18px; overflow: hidden;
+}
+.podium-avatar-ring.rank-1 .podium-avatar { font-size: 21px; }
+.podium-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.podium-crown {
+  position: absolute; top: -17px; left: 50%; transform: translateX(-50%);
+  filter: drop-shadow(0 2px 6px rgba(232,200,64,0.6));
+}
+/* 1) الإطار الصغير اللي فيه رقم 1/2/3 فوق صورة الأفاتار */
+.podium-plat {
+  position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--f-display); font-size: 12px; font-weight: 700;
+  border: 2px solid var(--bg2);
+  color: #fff;
+}
+.podium-rank-num.r1 { background: #e8c840; }
+.podium-rank-num.r2 { background: #c0c0d0; color: #1a1a2a; }
+.podium-rank-num.r3 { background: #cd7f32; }
+.podium-name {
+  font-size: 12px; font-weight: 700; color: var(--t1);
+  text-align: center; white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; width: 100%; margin-top: 4px;
+}
+.podium-xp { font-size: 11px; font-weight: 700; color: var(--indigo); }
+/* 2) الرقم الكبير على منصة التتويج نفسها */
+.podium-plat {
+  border-radius: 10px 10px 0 0; width: 100%;
+  display: flex; align-items: flex-start; justify-content: center; padding-top: 10px;
+  font-family: var(--f-display); font-size: 24px; font-weight: 800; letter-spacing: 0.5px;
+  position: relative; overflow: hidden;
+}
+.podium-plat::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), transparent 60%);
+}
+.podium-plat.p1 { height: 76px; background: linear-gradient(180deg,rgba(232,200,64,0.22),rgba(232,200,64,0.05)); border: 1px solid rgba(232,200,64,0.40); border-bottom: none; color: #e8c840; }
+.podium-plat.p2 { height: 54px; background: linear-gradient(180deg,rgba(192,192,208,0.18),rgba(192,192,208,0.04)); border: 1px solid rgba(192,192,208,0.32); border-bottom: none; color: #c0c0d8; }
+.podium-plat.p3 { height: 40px; background: linear-gradient(180deg,rgba(205,127,50,0.18),rgba(205,127,50,0.04)); border: 1px solid rgba(205,127,50,0.30); border-bottom: none; color: #cd7f32; }
+
+@media (max-width: 420px) {
+  .podium-wrap { gap: 6px; }
+  .podium-col { min-width: 76px; }
+  .podium-avatar-ring { width: 52px; height: 52px; }
+  .podium-avatar-ring.rank-1 { width: 62px; height: 62px; }
+  .podium-name { font-size: 11px; }
 }
 
-@media (max-width: 640px) { .ach-grid { grid-template-columns: repeat(2, 1fr); } .ach-next-card { flex: 1 1 100%; } }
-@media (max-width: 420px) { .ach-grid { grid-template-columns: 1fr; } .ach-hero-grid { flex-direction: column; align-items: center; } }
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .lcard { flex-wrap: wrap; }
+  .lcard-sep { display: none; }
+  .lcard-left { min-width: 100%; }
+}
 </style>
 
 <div class="page-inner">
-  <!-- Hero -->
-  <div class="ach-hero">
-    <div class="ach-tag">${icon('trophy', 11)} Hall of Achievements</div>
-    <h1 class="ach-title">YOUR <em>TROPHY CASE</em></h1>
-    <div class="ach-hero-grid">
-      <div class="ach-ring-card" id="ach-ring"></div>
-      <div class="ach-info-card">
-        <div class="ach-info-card-num" id="ach-stat-unlocked">0 / 0</div>
-        <div class="ach-info-card-lbl">Unlocked</div>
-      </div>
-      <div class="ach-info-card">
-        <div class="ach-info-card-num" id="ach-stat-new">0</div>
-        <div class="ach-info-card-lbl">New This Week</div>
-      </div>
-      <div class="ach-next-card" id="ach-next-up"></div>
+
+  <!-- Hero + timer -->
+  <div class="league-hero">
+    <h1 class="league-title">WEEKLY <em>LEAGUE</em></h1>
+    <div class="timer-wrap">
+      <div class="timer-block"><div class="timer-num" id="t-d">00</div><div class="timer-lbl">Days</div></div>
+      <div class="timer-sep">:</div>
+      <div class="timer-block"><div class="timer-num" id="t-h">00</div><div class="timer-lbl">Hrs</div></div>
+      <div class="timer-sep">:</div>
+      <div class="timer-block"><div class="timer-num" id="t-m">00</div><div class="timer-lbl">Min</div></div>
+      <div class="timer-sep">:</div>
+      <div class="timer-block"><div class="timer-num" id="t-s">00</div><div class="timer-lbl">Sec</div></div>
     </div>
   </div>
 
-  <!-- Filter: status -->
-  <div class="ach-filter-tabs" id="ach-filters"></div>
+  <!-- Podium Top 3 -->
+  <div class="podium-wrap" id="podium-wrap" style="display:none"></div>
 
-  <!-- Filter: language scope -->
-  <div class="ach-lang-tabs" id="ach-lang-tabs"></div>
+  <!-- Standings -->
+  <div class="sec-label" id="standings-label"></div>
+  <div class="standings-list" id="standings-list"></div>
 
-  <!-- Sections -->
-  <div id="ach-sections" style="margin-top:6px"></div>
+  <!-- Skill leaders -->
+  <div class="sec-label" id="skill-leaders-label"></div>
+  <div class="skill-leaders-list" id="skill-leaders-list"></div>
+
+  <!-- History -->
+  <div class="sec-label" id="history-label"></div>
+  <div class="history-list" id="history-list"></div>
+
 </div>
 
 <script>
 /* ══════════════════════════════════════════════════════════
-   ACHIEVEMENTS PAGE — Full System
+   LEAGUE JS
 ══════════════════════════════════════════════════════════ */
 
-let _achFilter    = 'all';
-let _achLangScope = 'all';
-let _achAllItems  = [];
+let _leagueTimerIv  = null;
+let _leagueData     = null;
 
-/* ───────────────────────────────────────────────────────
-   ACHIEVEMENT DEFINITIONS
-   Each achievement: { id, cat, scope, title, desc,
-     icon, iconCol, unlocked, progress [0-1], progressLabel }
-   scope: 'global' | lang.id
-─────────────────────────────────────────────────────── */
+function renderLeague() {
+  const sl = document.getElementById('standings-label');
+  const kl = document.getElementById('skill-leaders-label');
+  const hl = document.getElementById('history-label');
+  if (sl) sl.innerHTML = `${icon('swords', 12)} Weekly Standings`;
+  if (kl) kl.innerHTML = `${icon('award', 12)} Skill Leaders This Week`;
+  if (hl) hl.innerHTML = `${icon('crown', 12)} Past Week Champions`;
 
-// Category metadata
-const ACH_CATS = [
-  { id:'streak',    label:'Streaks',          icon:'flame'       },
-  { id:'milestone', label:'Skill Milestones', icon:'target'      },
-  { id:'rank',      label:'Ranks & Levels',   icon:'award'       },
-  { id:'discipline',label:'Perfect Days',     icon:'calendar'    },
-  { id:'league',    label:'League',           icon:'swords'      },
-  { id:'xp',        label:'XP Milestones',    icon:'trending-up' },
-  { id:'loyalty',   label:'Loyalty',          icon:'star'        },
-];
-
-/* ── Streak milestones (per skill) ── */
-const STREAK_MILESTONES = [1,3,7,14,30,60,100,180,365];
-const STREAK_LABELS     = ['First Step','3-Day','7-Day','14-Day','30-Day','60-Day','100-Day','180-Day','365-Day'];
-
-/* ── Skill quantity milestones ── */
-const SKILL_MILESTONES = {
-  new_words:    [{v:100,l:'100 Words'},{v:200,l:'200 Words'},{v:500,l:'500 Words'},{v:1000,l:'1,000 Words'},{v:2000,l:'2,000 Words'},{v:5000,l:'5,000 Words'},{v:10000,l:'10K Words'}],
-  review_words: [{v:400,l:'400 Reviewed'},{v:1000,l:'1,000 Reviewed'},{v:2000,l:'2,000 Reviewed'},{v:5000,l:'5,000 Reviewed'},{v:10000,l:'10K Reviewed'}],
-  reading:      [{v:10,l:'10 Pages'},{v:50,l:'50 Pages'},{v:100,l:'100 Pages'},{v:250,l:'250 Pages'},{v:500,l:'500 Pages'},{v:1000,l:'1,000 Pages'}],
-  listening:    [{v:600,l:'10 Hours'},{v:1500,l:'25 Hours'},{v:3000,l:'50 Hours'},{v:6000,l:'100 Hours'}],   // in minutes
-  speaking:     [{v:300,l:'5 Hours'},{v:1500,l:'25 Hours'},{v:3000,l:'50 Hours'},{v:6000,l:'100 Hours'}],    // in minutes
-};
-
-/* ── XP milestones (overall) ── */
-const XP_MILESTONES = [1000,5000,10000,25000,50000,100000];
-
-/* ── Rank-based achievements ── */
-const RANK_ACH = [
-  {id:'rank_bronze',    label:'Bronze Rank',    tier:'Bronze',    icon:'award',   col:'#cd7f32'},
-  {id:'rank_silver',    label:'Silver Rank',    tier:'Silver',    icon:'award',   col:'#c0c8d8'},
-  {id:'rank_gold',      label:'Gold Rank',      tier:'Gold',      icon:'award',   col:'#EBA328'},
-  {id:'rank_platinum',  label:'Platinum Rank',  tier:'Platinum',  icon:'award',   col:'#d0e8f4'},
-  {id:'rank_diamond',   label:'Diamond Rank',   tier:'Diamond',   icon:'award',   col:'#80d8ff'},
-  {id:'rank_crown',     label:'Crown Rank',     tier:'Crown',     icon:'award',   col:'#ff9040'},
-  {id:'rank_ace',       label:'Ace Rank',       tier:'Ace',       icon:'award',   col:'#ff6080'},
-  {id:'rank_conqueror', label:'Conqueror',      tier:'Conqueror', icon:'crown',   col:'#EBA328'},
-];
-
-/* Rank index helper (which SKILL_LEVELS index does a tier start at?) */
-const TIER_START_IDX = {
-  Bronze:0, Silver:5, Gold:10, Platinum:15, Diamond:20, Crown:25, Ace:30, Conqueror:33
-};
-
-/* ─────────────────────────────────────────────────────────
-   RENDER ENTRY POINT
-───────────────────────────────────────────────────────── */
-async function renderAchievements() {
-  _achSeenCache = null; // أعد تحميل الـ seen من السيرفر
-
-  _renderAchFilters();
-  _renderLangTabs();
-  _renderSkeleton();
-
-  const items = await _buildAllAchievements();
-  _achAllItems = items;
-
-  // مسح نقطة الإشعار — لازم تتنفذ بعد بناء _achAllItems مش قبلها
-  await _markAchievementsSeen();
-
-  await _renderAchHero(items);
-  await _renderAchSections(items);
+  _startLeagueTimer();
+  _fetchLeague();
 }
 
-/* ── Skeleton while loading ── */
-function _renderSkeleton() {
-  document.getElementById('ach-sections').innerHTML = `
-    <div style="padding:40px 0;text-align:center;color:var(--t3);font-size:13px">
-      ${icon('target',20)} Loading achievements…
-    </div>`;
-}
+/* ── Countdown timer to end of week (Sunday 23:59:59) ──────── */
+function _startLeagueTimer() {
+  function tick() {
+    const now = new Date();
+    const end = weekEndDate();
+    const diff = Math.max(0, end.getTime() - now.getTime());
 
-/* ── Filter buttons ── */
-function _renderAchFilters() {
-  const wrap = document.getElementById('ach-filters');
-  if (!wrap) return;
-  const tabs = [
-    {id:'all',label:'All'},
-    {id:'unlocked',label:'Unlocked'},
-    {id:'locked',label:'Locked'},
-  ];
-  wrap.innerHTML = tabs.map(t =>
-    `<button class="ach-filter-tab ${_achFilter===t.id?'active':''}" onclick="setAchFilter('${t.id}')">${t.label}</button>`
-  ).join('');
-}
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
 
-/* ── Language scope tabs ── */
-function _renderLangTabs() {
-  const wrap = document.getElementById('ach-lang-tabs');
-  if (!wrap) return;
-  const langs = STATE.languages || [];
-  if (langs.length === 0) { wrap.innerHTML=''; return; }
-
-  let html = `<button class="ach-lang-tab ${_achLangScope==='all'?'active':''}" onclick="setAchLangScope('all')">${icon('globe',11)} All</button>`;
-  langs.forEach(l => {
-    html += `<button class="ach-lang-tab ${_achLangScope===l.id?'active':''}" onclick="setAchLangScope('${l.id}')">${l.flag} ${l.name}</button>`;
-  });
-  wrap.innerHTML = html;
-}
-
-function setAchFilter(f) {
-  _achFilter = f;
-  _renderAchFilters();
-  _renderAchSections(_achAllItems);
-}
-
-function setAchLangScope(scope) {
-  _achLangScope = scope;
-  _renderLangTabs();
-  _renderAchSections(_achAllItems);
-}
-
-/* ─────────────────────────────────────────────────────────
-   BUILD ALL ACHIEVEMENTS
-───────────────────────────────────────────────────────── */
-async function _buildAllAchievements() {
-  const langs  = STATE.languages || [];
-  const skills = STATE.skills    || [];
-  const items  = [];
-
-  /* ── 1. GLOBAL: XP milestones ── */
-  const totalXP = STATE.overallXP || 0;
-  XP_MILESTONES.forEach(threshold => {
-    const unlocked = totalXP >= threshold;
-    const prog     = Math.min(totalXP / threshold, 1);
-    items.push({
-      id: `xp_${threshold}`,
-      cat: 'xp', scope: 'global',
-      title: `${fmtNum(threshold)} XP`,
-      desc: `Earn a total of ${fmtNum(threshold)} XP across all skills and languages.`,
-      icon: 'trending-up', iconCol: '#8A83DA',
-      unlocked, progress: prog,
-      progressLabel: `${fmtNum(Math.round(totalXP))} / ${fmtNum(threshold)} XP`,
-    });
-  });
-
-  /* ── 2. GLOBAL: Overall rank achievements ── */
-  const overallInfo = getLevelInfo(totalXP, XP_OVERALL);
-  const overallTierIdx = TIER_START_IDX[overallInfo.rank.tier] || 0;
-  RANK_ACH.forEach(r => {
-    const reqIdx = TIER_START_IDX[r.tier] || 0;
-    const unlocked = overallTierIdx >= reqIdx;
-    items.push({
-      id: `rank_overall_${r.id}`,
-      cat: 'rank', scope: 'global',
-      title: r.label,
-      desc: `Reach ${r.label} in your overall account rank.`,
-      icon: r.icon, iconCol: r.col,
-      unlocked, progress: unlocked ? 1 : Math.min(totalXP / ((reqIdx * 3 + 1) * XP_OVERALL), 0.99),
-      progressLabel: unlocked ? 'Achieved' : `Need ${r.tier} overall rank`,
-    });
-  });
-
-  /* ── 3. GLOBAL: Loyalty ── */
-  const created = STATE.profile?.created_at ? new Date(STATE.profile.created_at) : null;
-  const daysSince = created ? Math.floor((Date.now() - created.getTime()) / 86400000) : 0;
-  [{d:30,l:'One Month In'},{d:180,l:'Six Months Strong'},{d:365,l:'One Year Anniversary'}].forEach(m => {
-    const unlocked = daysSince >= m.d;
-    items.push({
-      id: `loyalty_${m.d}`,
-      cat: 'loyalty', scope: 'global',
-      title: m.l,
-      desc: `Use Life Tracker for ${m.d}+ days.`,
-      icon: 'star', iconCol: '#EBA328',
-      unlocked, progress: Math.min(daysSince / m.d, 1),
-      progressLabel: `${Math.min(daysSince,m.d)} / ${m.d} days`,
-    });
-  });
-
-  /* ── 4. GLOBAL: Multi-streaker ── */
-  const activeStreaks7Plus = skills.filter(s => (STATE.streakMap[s.id]?.current || 0) >= 7).length;
-  items.push({
-    id: 'streak_multi',
-    cat: 'streak', scope: 'global',
-    title: 'Multi-Streaker',
-    desc: 'Maintain a 7+ day streak in 3 different skills simultaneously.',
-    icon: 'flame', iconCol: '#ff9040',
-    unlocked: activeStreaks7Plus >= 3,
-    progress: Math.min(activeStreaks7Plus / 3, 1),
-    progressLabel: `${Math.min(activeStreaks7Plus,3)} / 3 skills`,
-  });
-
-  /* ── 5. GLOBAL: Perfect discipline ── */
-  const xpSkills = skills.filter(s => !(s.is_checkbox || s.key === 'touch_typing'));
-  let perfectDay = false, bestRun = 0;
-  if (xpSkills.length > 0) {
-    try {
-      const results = await Promise.all(xpSkills.map(s => api.entries.forSkill(s.id)));
-      const dailyMaps = {};
-      const allDates  = new Set();
-      xpSkills.forEach((s, i) => {
-        const map = entriesByDate(results[i].data || []);
-        dailyMaps[s.id] = map;
-        Object.keys(map).forEach(d => allDates.add(d));
-      });
-      const sortedDates = Array.from(allDates).sort();
-      let curRun = 0, prevDate = null;
-      sortedDates.forEach(ds => {
-        const allMet = xpSkills.every(s => (dailyMaps[s.id][ds] || 0) >= (s.goal || 1));
-        if (allMet) perfectDay = true;
-        const isConsec = prevDate && (new Date(ds+'T12:00:00').getTime()-new Date(prevDate+'T12:00:00').getTime())===86400000;
-        if (allMet) { curRun = isConsec ? curRun+1 : 1; bestRun = Math.max(bestRun,curRun); }
-        else curRun = 0;
-        prevDate = ds;
-      });
-    } catch(e) { console.error('[ach] discipline',e); }
+    const elD = document.getElementById('t-d');
+    const elH = document.getElementById('t-h');
+    const elM = document.getElementById('t-m');
+    const elS = document.getElementById('t-s');
+    if (elD) elD.textContent = pad(d);
+    if (elH) elH.textContent = pad(h);
+    if (elM) elM.textContent = pad(m);
+    if (elS) elS.textContent = pad(s);
   }
-  items.push(
-    { id:'perfect_day', cat:'discipline', scope:'global', title:'Perfect Day',
-      desc:'Meet every skill goal in a single day.', icon:'calendar', iconCol:'#4ECDC4',
-      unlocked:perfectDay, progress:perfectDay?1:0,
-      progressLabel:perfectDay?'Achieved':'Meet all goals in one day' },
-    { id:'perfect_week', cat:'discipline', scope:'global', title:'Perfect Week',
-      desc:'7 consecutive perfect days.', icon:'calendar', iconCol:'#8A83DA',
-      unlocked:bestRun>=7, progress:Math.min(bestRun/7,1),
-      progressLabel:`${Math.min(bestRun,7)} / 7 days` },
-    { id:'perfect_month', cat:'discipline', scope:'global', title:'Perfect Month',
-      desc:'28 consecutive perfect days.', icon:'calendar', iconCol:'#EBA328',
-      unlocked:bestRun>=28, progress:Math.min(bestRun/28,1),
-      progressLabel:`${Math.min(bestRun,28)} / 28 days` },
-  );
+  if (_leagueTimerIv) clearInterval(_leagueTimerIv);
+  tick();
+  _leagueTimerIv = setInterval(tick, 1000);
+}
 
-  /* ── 6. GLOBAL: League ── */
+/* ── Fetch league data ────────────────────────────────────── */
+async function _fetchLeague() {
   try {
     const { data } = await api.league.get();
-    const standings = (data.standings||[]).filter(s=>s.xp>0);
-    const myId      = STATE.profile?.id;
-    const myName    = STATE.profile?.display_name;
-    const myRow     = standings.find(s=>s.user_id===myId);
-    const myRank    = myRow ? standings.indexOf(myRow)+1 : 0;
-    const skillLeader = (data.skill_leaders||[]).some(l => l.leader && myName && l.leader.name===myName);
-
-    items.push(
-      { id:'league_first_blood', cat:'league', scope:'global', title:'First Blood',
-        desc:'Appear in the league standings with any XP this week.', icon:'swords', iconCol:'#ff6080',
-        unlocked:!!myRow, progress:myRow?1:0, progressLabel:myRow?'Achieved':'Earn XP this week' },
-      { id:'league_podium', cat:'league', scope:'global', title:'Podium Finish',
-        desc:'Finish in the top 3 in the weekly league.', icon:'swords', iconCol:'#EBA328',
-        unlocked:myRank>=1&&myRank<=3, progress:(myRank>=1&&myRank<=3)?1:0,
-        progressLabel:(myRank>=1&&myRank<=3)?'Achieved':'Finish top 3 this week' },
-      { id:'league_champion', cat:'league', scope:'global', title:'League Champion',
-        desc:'Finish #1 in the weekly league.', icon:'crown', iconCol:'#e8c840',
-        unlocked:myRank===1, progress:myRank===1?1:0,
-        progressLabel:myRank===1?'Achieved':'Finish #1 this week' },
-      { id:'league_skill_leader', cat:'league', scope:'global', title:'Skill Leader',
-        desc:'Top any skill category in the weekly league.', icon:'award', iconCol:'#4ECDC4',
-        unlocked:skillLeader, progress:skillLeader?1:0,
-        progressLabel:skillLeader?'Achieved':'Top a skill this week' },
-    );
-  } catch(e) {
-    console.error('[ach] league',e);
-    ['league_first_blood','league_podium','league_champion','league_skill_leader'].forEach(id => {
-      items.push({ id, cat:'league', scope:'global', title:id, desc:'', icon:'swords', iconCol:'#8A83DA',
-        unlocked:false, progress:0, progressLabel:'Loading failed' });
-    });
-  }
-
-  /* ── 7. PER-LANGUAGE achievements ── */
-  for (const lang of langs) {
-    const langSkills = skills.filter(s => s.lang_id === lang.id);
-    const langXpSkills = langSkills.filter(s => !(s.is_checkbox || s.key==='touch_typing'));
-
-    // Fetch all entries for this language's XP skills at once
-    let langEntriesMap = {};
-    try {
-      const results = await Promise.all(langXpSkills.map(s => api.entries.forSkill(s.id)));
-      langXpSkills.forEach((s,i) => { langEntriesMap[s.id] = entriesByDate(results[i].data||[]); });
-    } catch(e) { console.error('[ach] lang entries',e); }
-
-    // Compute total per-skill quantities
-    const totalByKey = {};
-    langXpSkills.forEach(s => {
-      const tot = Object.values(langEntriesMap[s.id]||{}).reduce((a,b)=>a+b,0);
-      totalByKey[s.key] = (totalByKey[s.key]||0) + tot;
-    });
-
-    /* ── 7a. Streak milestones (per skill in this language) ── */
-    langSkills.forEach(skill => {
-      const cur = STATE.streakMap[skill.id]?.current || 0;
-      STREAK_MILESTONES.forEach((days,i) => {
-        const unlocked = cur >= days;
-        items.push({
-          id: `streak_${lang.id}_${skill.key}_${days}`,
-          cat:'streak', scope: lang.id,
-          title: `${STREAK_LABELS[i]} — ${skill.name}`,
-          desc: `${days}-day streak in ${skill.name} (${lang.flag} ${lang.name}).`,
-          icon:'flame', iconCol:'#ff9d52',
-          unlocked, progress:Math.min(cur/days,1),
-          progressLabel:`${Math.min(cur,days)} / ${days} days`,
-          langFlag:lang.flag,
-        });
-      });
-    });
-
-    /* ── 7b. Skill quantity milestones ── */
-    Object.entries(SKILL_MILESTONES).forEach(([key, milestones]) => {
-      const skillDef = langXpSkills.find(s=>s.key===key);
-      if (!skillDef) return;
-      const total = totalByKey[key] || 0;
-      const isMin = skillDef.unit === 'min';
-      milestones.forEach(m => {
-        const unlocked = total >= m.v;
-        const displayVal = isMin ? fmtMin(m.v) : `${fmtNum(m.v)} ${skillDef.unit}`;
-        items.push({
-          id:`milestone_${lang.id}_${key}_${m.v}`,
-          cat:'milestone', scope:lang.id,
-          title:`${m.l} — ${skillDef.name}`,
-          desc:`Log a total of ${displayVal} in ${skillDef.name} (${lang.flag} ${lang.name}).`,
-          icon:skillIconName(skillDef), iconCol:'#8A83DA',
-          unlocked, progress:Math.min(total/m.v,1),
-          progressLabel:`${isMin?fmtMin(total):fmtNum(Math.round(total))} / ${displayVal}`,
-          langFlag:lang.flag,
-        });
-      });
-    });
-
-    /* ── 7c. Touch typing streak specials ── */
-    const typingSkill = langSkills.find(s=>s.key==='touch_typing'||s.is_checkbox);
-    if (typingSkill) {
-      const typingStreak = STATE.streakMap[typingSkill.id]?.current || 0;
-      items.push({
-        id:`milestone_${lang.id}_typing_habit`,
-        cat:'milestone', scope:lang.id,
-        title:`Typing Habit — ${lang.flag} ${lang.name}`,
-        desc:`30-day touch typing streak in ${lang.name}.`,
-        icon:'keyboard', iconCol:'#4ECDC4',
-        unlocked:typingStreak>=30, progress:Math.min(typingStreak/30,1),
-        progressLabel:`${Math.min(typingStreak,30)} / 30 days`, langFlag:lang.flag,
-      });
-      items.push({
-        id:`milestone_${lang.id}_typing_master`,
-        cat:'milestone', scope:lang.id,
-        title:`Typing Master — ${lang.flag} ${lang.name}`,
-        desc:`100-day touch typing streak in ${lang.name}.`,
-        icon:'keyboard', iconCol:'#8A83DA',
-        unlocked:typingStreak>=100, progress:Math.min(typingStreak/100,1),
-        progressLabel:`${Math.min(typingStreak,100)} / 100 days`, langFlag:lang.flag,
-      });
-    }
-
-    /* ── 7d. Per-skill rank achievements ── */
-    langXpSkills.forEach(skill => {
-      const xp = STATE.xpMap[skill.id] || 0;
-      const si = getLevelInfo(xp, XP_SKILL);
-      const skillTierIdx = TIER_START_IDX[si.rank.tier] || 0;
-      RANK_ACH.forEach(r => {
-        const reqIdx = TIER_START_IDX[r.tier] || 0;
-        const unlocked = skillTierIdx >= reqIdx;
-        items.push({
-          id:`rank_skill_${lang.id}_${skill.key}_${r.id}`,
-          cat:'rank', scope:lang.id,
-          title:`${r.label} — ${skill.name}`,
-          desc:`Reach ${r.label} in ${skill.name} (${lang.flag} ${lang.name}).`,
-          icon:r.icon, iconCol:r.col,
-          unlocked, progress:unlocked?1:Math.min(xp/Math.max((reqIdx*3+1)*XP_SKILL,1),0.99),
-          progressLabel:unlocked?'Achieved':`Need ${r.tier} rank in this skill`,
-          langFlag:lang.flag,
-        });
-      });
-    });
-
-    /* ── 7e. Language-level rank ── */
-    const langXP = STATE.xpForLang(lang.id);
-    const langInfo = getLevelInfo(langXP, XP_LANG);
-    const langTierIdx = TIER_START_IDX[langInfo.rank.tier] || 0;
-    RANK_ACH.slice(0,4).forEach(r => { // Bronze → Platinum for lang-level
-      const reqIdx = TIER_START_IDX[r.tier] || 0;
-      const unlocked = langTierIdx >= reqIdx;
-      items.push({
-        id:`rank_lang_${lang.id}_${r.id}`,
-        cat:'rank', scope:lang.id,
-        title:`Language ${r.label} — ${lang.flag} ${lang.name}`,
-        desc:`Reach ${r.label} in your overall ${lang.name} level.`,
-        icon:r.icon, iconCol:r.col,
-        unlocked, progress:unlocked?1:Math.min(langXP/Math.max((reqIdx*3+1)*XP_LANG,1),0.99),
-        progressLabel:unlocked?'Achieved':`Need ${r.tier} rank in ${lang.name}`,
-        langFlag:lang.flag,
-      });
-    });
-  }
-
-  /* ── 8. Polyglot (needs 2+ languages at Gold+) ── */
-  const langsAtGold = langs.filter(l => {
-    const lxp = STATE.xpForLang(l.id);
-    const li = getLevelInfo(lxp, XP_LANG);
-    return TIER_START_IDX[li.rank.tier] >= TIER_START_IDX['Gold'];
-  }).length;
-  items.push({
-    id:'rank_polyglot',
-    cat:'rank', scope:'global',
-    title:'Polyglot',
-    desc:'Reach Gold rank or higher in 2+ different languages.',
-    icon:'globe', iconCol:'#EBA328',
-    unlocked:langsAtGold>=2, progress:Math.min(langsAtGold/2,1),
-    progressLabel:`${Math.min(langsAtGold,2)} / 2 languages at Gold+`,
-  });
-
-  return items;
-}
-
-/* ─────────────────────────────────────────────────────────
-   SEEN / NEW BADGE SYSTEM  (server-side via API)
-───────────────────────────────────────────────────────── */
-
-// cache محلي للـ session الحالية فقط
-let _achSeenCache = null;
-
-async function _getSeenIds() {
-  if (_achSeenCache) return _achSeenCache;
-  try {
-    const res   = await api.achievements.getSeen();
-    _achSeenCache = new Set(res.data || []);
-  } catch(e) {
-    console.error('[ach] getSeen', e);
-    _achSeenCache = new Set();
-  }
-  return _achSeenCache;
-}
-
-async function _markAchievementsSeen() {
-  try {
-    const seen     = await _getSeenIds();
-    const newIds   = _achAllItems.filter(a => a.unlocked && !seen.has(a.id)).map(a => a.id);
-    if (newIds.length > 0) {
-      await api.achievements.markSeen(newIds);
-      newIds.forEach(id => seen.add(id));
-    }
-    _clearAchNotificationDots();
-  } catch(e) {
-    console.error('[ach] markSeen', e);
+    _leagueData = data;
+    _renderStandings(data);
+    _renderSkillLeaders(data);
+    _renderHistory(data);
+  } catch (err) {
+    console.error('[league]', err);
+    document.getElementById('standings-list').innerHTML =
+      `<div class="hist-empty">Could not load league data.</div>`;
   }
 }
 
-function _clearAchNotificationDots() {
-  document.querySelectorAll('.ach-notif-dot').forEach(el => el.remove());
-}
-
-/* ─────────────────────────────────────────────────────────
-   HERO RENDER
-───────────────────────────────────────────────────────── */
-function _achRing(pct, size=100) {
-  const r=size/2-9, circ=2*Math.PI*r, da=pct/100*circ;
-  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-    <defs><linearGradient id="achRG" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#8A83DA"/><stop offset="100%" stop-color="#FBD5BD"/>
-    </linearGradient></defs>
-    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
-    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="url(#achRG)" stroke-width="8"
-      stroke-linecap="round" stroke-dasharray="${da.toFixed(1)} ${(circ-da).toFixed(1)}"
-      transform="rotate(-90 ${size/2} ${size/2})" style="transition:stroke-dasharray .9s cubic-bezier(.4,0,.2,1)"/>
-    <text x="${size/2}" y="${size/2-2}" text-anchor="middle" fill="#FBF5F0" font-size="20" font-weight="800" font-family="Sora,sans-serif">${pct}%</text>
-    <text x="${size/2}" y="${size/2+16}" text-anchor="middle" fill="rgba(251,245,240,0.45)" font-size="9" font-family="DM Sans,sans-serif">Done</text>
+/* ── Position medal icon (1st/2nd/3rd) ── */
+function positionMedal(rank, size = 18) {
+  const colors = { 1: '#e8c840', 2: '#c0c0d0', 3: '#cd7f32' };
+  const col = colors[rank];
+  if (!col) return '';
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="9" fill="${col}" opacity="0.18"/>
+    <circle cx="12" cy="12" r="9" fill="none" stroke="${col}" stroke-width="1.6"/>
+    <text x="12" y="16" text-anchor="middle" font-family="Sora,sans-serif" font-size="11" font-weight="800" fill="${col}">${rank}</text>
   </svg>`;
 }
 
-async function _renderAchHero(all) {
-  const total    = all.length;
-  const unlocked = all.filter(a=>a.unlocked===true).length;
-  const pct      = total ? Math.round(unlocked/total*100) : 0;
-  const seen     = await _getSeenIds();
-  const newCount = all.filter(a=>a.unlocked&&!seen.has(a.id)).length;
-
-  const ring = document.getElementById('ach-ring');
-  if (ring) ring.innerHTML = _achRing(pct);
-  const numEl = document.getElementById('ach-stat-unlocked');
-  if (numEl) numEl.textContent = `${unlocked} / ${total}`;
-  const newEl = document.getElementById('ach-stat-new');
-  if (newEl) newEl.textContent = newCount;
-
-  const candidates = all.filter(a=>!a.unlocked&&a.progress>0).sort((a,b)=>b.progress-a.progress);
-  const next = candidates[0];
-  const nextWrap = document.getElementById('ach-next-up');
-  if (nextWrap) {
-    if (next) {
-      nextWrap.innerHTML = `
-        <div class="ach-next-medal">${_achMedalSVG(next,46)}</div>
-        <div>
-          <div class="ach-next-eyebrow">${icon('target',10)} Next Up</div>
-          <div class="ach-next-title">${next.title}</div>
-          <div class="ach-next-lbl">${next.progressLabel}</div>
-        </div>`;
-    } else if (unlocked===total) {
-      nextWrap.innerHTML = `
-        <div class="ach-next-medal">${_achMedalSVG({cat:'rank',icon:'trophy',iconCol:'#EBA328',unlocked:true},46)}</div>
-        <div>
-          <div class="ach-next-eyebrow">${icon('star',10)} Legend</div>
-          <div class="ach-next-title">All achievements unlocked!</div>
-          <div class="ach-next-lbl">You've conquered the trophy case.</div>
-        </div>`;
-    } else {
-      nextWrap.innerHTML = `<div class="ach-next-lbl" style="padding:8px">Start logging to unlock achievements!</div>`;
-    }
-  }
-
-  // Update notification dots based on new achievements
-  _updateNotificationDots(newCount > 0);
+/* ── Podium Top 3 ────────────────────────────────────────── */
+function _initials(name) {
+  return String(name || '?').trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
 }
 
-/* ── Achievement medal SVG ── */
-function _achMedalSVG(ach, size=52) {
-  const colMap = {
-    streak:'#ff9d52', milestone:'#8A83DA', rank:'#EBA328',
-    discipline:'#4ECDC4', league:'#ff6080', xp:'#8A83DA', loyalty:'#EBA328',
-  };
-  const col = ach.iconCol || colMap[ach.cat] || '#8A83DA';
-  const opacity = ach.unlocked ? 1 : 0.35;
-  const iconName = ach.icon || 'star';
-  return `<div style="width:${size}px;height:${size}px;border-radius:${size*0.25}px;
-    background:${ach.unlocked?`rgba(${_hexToRgb(col)},0.18)`:'rgba(255,255,255,0.04)'};
-    border:2px solid ${ach.unlocked?col+'66':'rgba(255,255,255,0.06)'};
-    display:flex;align-items:center;justify-content:center;
-    color:${col};opacity:${opacity};flex-shrink:0">
-    ${icon(iconName, Math.round(size*0.45))}
-  </div>`;
+/* Renders an avatar image if avatar_url is present, else falls back to initials */
+function _avatarInner(s) {
+  return s.avatar_url
+    ? `<img src="${s.avatar_url}" alt="${escAttr(s.name || '')}">`
+    : _initials(s.name);
 }
 
-function _hexToRgb(hex) {
-  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
-  return isNaN(r)?'138,131,218':`${r},${g},${b}`;
-}
-
-/* ─────────────────────────────────────────────────────────
-   SECTIONS RENDER
-───────────────────────────────────────────────────────── */
-async function _renderAchSections(all) {
-  const wrap = document.getElementById('ach-sections');
+function _renderPodium(standings) {
+  const wrap = document.getElementById('podium-wrap');
   if (!wrap) return;
 
-  const seen = await _getSeenIds();
+  if (standings.length < 3) {
+    wrap.style.display = 'none';
+    wrap.innerHTML = '';
+    return;
+  }
 
-  // Filter by lang scope
-  let filtered = _achLangScope==='all' ? all : all.filter(a=>a.scope==='global'||a.scope===_achLangScope);
+  // ترتيب العرض البصري: التاني - الأول - التالت (الأول في النص وأطول منصة)
+  const top3 = standings.slice(0, 3);
+  const order = [top3[1], top3[0], top3[2]];
 
-  // Filter by status
-  if (_achFilter==='unlocked') filtered = filtered.filter(a=>a.unlocked);
-  if (_achFilter==='locked')   filtered = filtered.filter(a=>!a.unlocked);
+  wrap.style.display = 'flex';
+  wrap.innerHTML = order.map(s => {
+    const rank = top3.indexOf(s) + 1;
+    const ringCls  = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : 'rank-3';
+    const platCls  = rank === 1 ? 'p1'     : rank === 2 ? 'p2'     : 'p3';
+    const numCls   = rank === 1 ? 'r1'     : rank === 2 ? 'r2'     : 'r3';
+    return `
+      <div class="podium-col">
+        <div class="podium-avatar-ring ${ringCls}">
+          ${rank === 1 ? `<span class="podium-crown">${icon('crown', 22)}</span>` : ''}
+          <div class="podium-avatar">${_avatarInner(s)}</div>
+          <span class="podium-rank-num ${numCls}">${rank}</span>
+        </div>
+        <div class="podium-name">${s.name}</div>
+        <div class="podium-xp">${fmtNum(Math.round(s.xp))} XP</div>
+        <div class="podium-plat ${platCls}">${rank}</div>
+      </div>`;
+  }).join('');
+}
 
-  let html = '';
-  ACH_CATS.forEach(cat => {
-    const catItems = filtered.filter(a=>a.cat===cat.id);
-    if (!catItems.length) return;
+/* ── Standings ────────────────────────────────────────────── */
+function _renderStandings(data) {
+  const el = document.getElementById('standings-list');
+  const standings = (data.standings || []).filter(s => s.xp > 0);
 
-    const allInCat = all.filter(a=>a.cat===cat.id&&(
-      _achLangScope==='all'||(a.scope==='global'||a.scope===_achLangScope)
-    ));
-    const unlockedCount = allInCat.filter(a=>a.unlocked).length;
+  if (standings.length === 0) {
+    document.getElementById('podium-wrap').style.display = 'none';
+    el.innerHTML = `<div class="hist-empty">No activity this week yet. Be the first!</div>`;
+    return;
+  }
 
-    html += `<div class="sec-label">${icon(cat.icon,12)} ${cat.label} <span class="ach-cat-count">(${unlockedCount}/${allInCat.length})</span></div>`;
-    html += `<div class="ach-grid">`;
-    catItems.forEach(ach => {
-      const isNew   = ach.unlocked && !seen.has(ach.id);
-      const pct     = Math.round((ach.progress||0)*100);
-      const cls     = ach.unlocked ? (isNew?'ach-card newly-unlocked':'ach-card unlocked') : 'ach-card';
-      html += `
-        <div class="${cls}">
-          <div class="ach-card-medal">${_achMedalSVG(ach,52)}</div>
-          <div class="ach-card-body">
-            <div class="ach-card-title">${ach.langFlag?`<span style="margin-right:3px">${ach.langFlag}</span>`:''}${ach.title}${isNew?`<span class="ach-new-badge">New!</span>`:''}
-            </div>
-            <div class="ach-card-desc">${ach.desc}</div>
-            <div class="ach-card-progress-track"><div class="ach-card-progress-fill" style="width:${pct}%"></div></div>
-            <div class="ach-card-progress-lbl">
-              ${ach.unlocked?icon('check',11)+' Unlocked':ach.progressLabel}
-            </div>
-          </div>
-        </div>`;
-    });
-    html += `</div>`;
+  _renderPodium(standings);
+
+  // لو الـ podium ظاهر (3 لاعبين فأكتر) نعرض في القايمة العادية بس الترتيب من الرابع فما فوق
+  const hasPodium = standings.length >= 3;
+  const listedAll = hasPodium ? standings.slice(3) : standings;
+
+  if (listedAll.length === 0) {
+    el.innerHTML = '';
+    return;
+  }
+
+  const maxXP    = standings[0].xp || 1;
+  const startRank = hasPodium ? 4 : 1;
+
+  // Cap the expandable list at rank 10 total
+  const capped     = listedAll.slice(0, Math.max(0, 10 - (startRank - 1)));
+  const alwaysShow = 2; // rank 4 & 5 (or 1 & 2 if no podium) are shown by default
+  const visible    = capped.slice(0, alwaysShow);
+  const hidden     = capped.slice(alwaysShow);
+
+  const rowHTML = (s, i) => {
+    const pct = Math.min(Math.round(s.xp / maxXP * 100), 100);
+    const rank = startRank + i;
+    const rowClass = !hasPodium && rank === 1 ? 'gold' : !hasPodium && rank === 2 ? 'silver' : !hasPodium && rank === 3 ? 'bronze' : '';
+    const posClass = !hasPodium && rank === 1 ? 'p1'   : !hasPodium && rank === 2 ? 'p2'     : !hasPodium && rank === 3 ? 'p3'     : '';
+    const bar = !hasPodium && rank === 1 ? 'linear-gradient(90deg,#e8c840aa,#e8c840)'
+              : !hasPodium && rank === 2 ? 'linear-gradient(90deg,#c0c0d088,#c0c0d0)'
+              : !hasPodium && rank === 3 ? 'linear-gradient(90deg,#cd7f3288,#cd7f32)'
+              : 'var(--grad-bar)';
+    return `
+      <div class="st-row ${rowClass}">
+        <div class="st-pos ${posClass}">${rank}</div>
+        <div class="st-medal">${!hasPodium ? positionMedal(rank <= 3 ? rank : 0, 18) : ''}</div>
+        <div class="st-avatar">${_avatarInner(s)}</div>
+        <div class="st-name">${s.name}</div>
+        <div class="st-bar-wrap">
+          <div class="st-bar-track"><div class="st-bar-fill" style="width:${pct}%;background:${bar}"></div></div>
+        </div>
+        <div class="st-xp">${fmtNum(Math.round(s.xp))} XP</div>
+      </div>`;
+  };
+
+  let html = visible.map((s, i) => rowHTML(s, i)).join('');
+
+  if (hidden.length > 0) {
+    html += `<div id="st-hidden-rows" style="display:none">
+      ${hidden.map((s, i) => rowHTML(s, alwaysShow + i)).join('')}
+    </div>
+    <button class="st-viewmore-btn" id="st-viewmore-btn" onclick="_toggleStandingsMore()">
+      <span id="st-viewmore-lbl">View ${hidden.length} more</span>
+      <span class="chev">${icon('chevron-right', 12)}</span>
+    </button>`;
+  }
+
+  el.innerHTML = html;
+}
+
+function _toggleStandingsMore() {
+  const hiddenWrap = document.getElementById('st-hidden-rows');
+  const btn        = document.getElementById('st-viewmore-btn');
+  const lbl        = document.getElementById('st-viewmore-lbl');
+  if (!hiddenWrap || !btn) return;
+
+  const isOpen = hiddenWrap.style.display !== 'none';
+  if (isOpen) {
+    hiddenWrap.style.display = 'none';
+    btn.classList.remove('open');
+    lbl.textContent = `View ${hiddenWrap.children.length} more`;
+  } else {
+    hiddenWrap.style.display = 'contents';
+    btn.classList.add('open');
+    lbl.textContent = 'Show less';
+  }
+}
+
+/* ── Skill leaders (deduped to the 5 core XP skills across all languages) ── */
+function _renderSkillLeaders(data) {
+  const el = document.getElementById('skill-leaders-list');
+  const leaders = data.skill_leaders || [];
+
+  // Keep only XP-bearing fixed skills (exclude touch_typing checkbox)
+  const xpSkillKeys = FIXED_SKILLS.filter(s => !s.isCheckbox).map(s => s.key);
+
+  // Group by skill_key, pick the entry with the highest leader value across languages
+  const bestByKey = {};
+  leaders.forEach(l => {
+    if (!xpSkillKeys.includes(l.skill_key)) return;
+    const val = l.leader?.value || 0;
+    if (!bestByKey[l.skill_key] || val > (bestByKey[l.skill_key].leader?.value || 0)) {
+      bestByKey[l.skill_key] = l;
+    }
   });
 
-  if (!html) {
-    html = `<div class="empty-state">
-      <span class="empty-icon">${icon('trophy',40)}</span>
-      <div class="empty-title">Nothing here yet</div>
-      <div class="empty-body">Try a different filter, or keep logging to unlock achievements.</div>
-    </div>`;
+  // Order by FIXED_SKILLS order
+  const ordered = xpSkillKeys.map(k => bestByKey[k]).filter(Boolean);
+
+  if (ordered.length === 0) {
+    el.innerHTML = `<div class="hist-empty">No skill data yet.</div>`;
+    return;
   }
-  wrap.innerHTML = html;
+
+  el.innerHTML = ordered.map(l => {
+    const skillDef = FIXED_SKILLS.find(s => s.key === l.skill_key);
+    const iconName = skillDef?.iconName || 'star';
+    const dispVal = l.leader
+      ? (l.unit === 'min' ? fmtMin(l.leader.value) : `${fmtNum(l.leader.value)} ${l.unit}`)
+      : '';
+    return `
+      <div class="lcard">
+        <div class="lcard-left">
+          <span class="lcard-icon">${icon(iconName, 17)}</span>
+          <div>
+            <div class="lcard-skill">${l.skill_name}</div>
+          </div>
+        </div>
+        <div class="lcard-sep"></div>
+        <div class="lcard-right">
+          ${l.leader
+            ? `<span class="lcard-name">${l.leader.name} <span style="color:var(--t4);font-weight:600">(${flagIconHTML(langIsoByName(l.lang_name), 14)} ${l.lang_name})</span></span><span class="lcard-amount">${dispVal} ${icon('award', 14)}</span>`
+            : `<span class="lcard-none">No data yet</span>`}
+        </div>
+      </div>`;
+  }).join('');
 }
 
-/* ─────────────────────────────────────────────────────────
-   NOTIFICATION DOTS
-───────────────────────────────────────────────────────── */
-function _updateNotificationDots(hasNew) {
-  if (!hasNew) return;
+/* ── Past week champions ─────────────────────────────────────── */
+function _renderHistory(data) {
+  const el = document.getElementById('history-list');
+  const history = data.history || [];
 
-  const menuBtn = document.getElementById('btn-menu');
-  if (menuBtn && !menuBtn.querySelector('.ach-notif-dot')) {
-    const dot = document.createElement('span');
-    dot.className = 'ach-notif-dot';
-    dot.style.cssText = `position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:#ff4d4d;box-shadow:0 0 6px rgba(255,77,77,0.7);pointer-events:none;z-index:5;`;
-    menuBtn.style.position = 'relative';
-    menuBtn.appendChild(dot);
+  if (history.length === 0) {
+    el.innerHTML = `<div class="hist-empty">No completed weeks yet.</div>`;
+    return;
   }
 
-  const achLink = document.querySelector('.sb-link[data-page="achievements"]');
-  if (achLink && !achLink.querySelector('.ach-notif-dot')) {
-    const dot = document.createElement('span');
-    dot.className = 'ach-notif-dot';
-    dot.style.cssText = `display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff4d4d;box-shadow:0 0 6px rgba(255,77,77,0.7);margin-left:auto;flex-shrink:0;`;
-    achLink.appendChild(dot);
-  }
+  el.innerHTML = history.map(h => `
+    <div class="hist-row">
+      <div class="hist-week">${h.label}</div>
+      <div class="hist-trophy">${icon('crown', 18)}</div>
+      <div class="hist-name">${h.champion}</div>
+      <div class="hist-xp">${fmtNum(Math.round(h.xp))} XP</div>
+    </div>`).join('');
 }
-
-/* ─────────────────────────────────────────────────────────
-   NOTE: renderAchievements() is invoked explicitly by app.html's
-   navigate() dispatch table after this script is injected.
-   Do NOT auto-invoke here — doing so caused a race condition
-   where two concurrent renders fought over the same DOM nodes
-   and shared caches (_achSeenCache), which made the page appear
-   to render nothing.
-───────────────────────────────────────────────────────── */
-
 </script>
