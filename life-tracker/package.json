@@ -1,15 +1,11 @@
 {
-  "name": "life-tracker",
+  "name": "life-tracker1",
   "version": "1.0.0",
   "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
   "dependencies": {
-    "@supabase/supabase-js": "^2.0.0",
-    "node-fetch": "^3.3.2"
-  },
-  "engines": {
-    "node": ">=18.0.0"
+    "@supabase/supabase-js": "^2.x",
+    "node-fetch": "^3.x"
   }
 }
