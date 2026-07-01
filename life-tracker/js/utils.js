@@ -82,6 +82,21 @@ function escAttr(str) {
   return String(str ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+/* ══════════════════════════════════════════════════════════
+   AVATAR HELPER — مشترك بين الشريط الجانبي (app.html)،
+   صفحة Profile، وصفوف/منصة الـ League. يعرض صورة لو avatarUrl
+   موجودة، وإلا الحروف الأولى من الاسم كـ fallback.
+══════════════════════════════════════════════════════════ */
+function avatarInitials(name) {
+  return String(name || '?').trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+}
+
+function avatarInnerHTML(name, avatarUrl) {
+  return avatarUrl
+    ? `<img src="${avatarUrl}" alt="${escAttr(name || '')}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+    : avatarInitials(name);
+}
+
 function icon(name, size = 16, strokeWidth = 2) {
   const path = ICON_PATHS[name] || ICON_PATHS['star'];
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;flex-shrink:0">${path}</svg>`;
@@ -108,12 +123,13 @@ function entriesByDate(entries) {
 }
 
 // دائرة Donut: items = [{label, value, color}]
+// SVG بيتمدد لعرض الحاوية (responsive) لحد أقصى = size px، بدل حجم ثابت دايمًا
 function donutSVG(items, size = 140, centerLabel = '', centerSub = '') {
   const total = (items || []).reduce((s, i) => s + (i.value || 0), 0);
   const r = size / 2 - 14;
   const circ = 2 * Math.PI * r;
   let cum = 0;
-  let svg = `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">`;
+  let svg = `<svg viewBox="0 0 ${size} ${size}" style="width:100%;max-width:${size}px;height:auto;display:block;margin:0 auto">`;
   if (total <= 0) {
     svg += `<circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="16"/>`;
   } else {
