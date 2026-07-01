@@ -4,18 +4,18 @@
 //  يُحمَّل بعد utils.js و state.js
 // ═══════════════════════════════════════════════════════════
 
-const API_BASE = '';
+const API_BASE = 'http://localhost:3000';
 
 /* ══════════════════════════════════════════════════════════
    §1  SESSION MANAGEMENT
-   Token مخزون في sessionStorage فقط
-   (يُمسح عند إغلاق التاب — لا localStorage)
+   Token مخزون في localStorage
+   (يبقى بعد إغلاق التاب/المتصفح — جلسة دائمة)
 ══════════════════════════════════════════════════════════ */
 
 function loadSessionFromStorage() {
-  const token = sessionStorage.getItem('lt_token');
-  const email = sessionStorage.getItem('lt_email');
-  const uid   = sessionStorage.getItem('lt_uid');
+  const token = localStorage.getItem('lt_token');
+  const email = localStorage.getItem('lt_email');
+  const uid   = localStorage.getItem('lt_uid');
   if (token && uid) {
     STATE.token   = token;
     STATE.email   = email;
@@ -46,6 +46,9 @@ function doLogout() {
   sessionStorage.removeItem('lt_token');
   sessionStorage.removeItem('lt_email');
   sessionStorage.removeItem('lt_uid');
+  localStorage.removeItem('lt_token');
+  localStorage.removeItem('lt_email');
+  localStorage.removeItem('lt_uid');
   STATE.reset();
   window.location.href = '/';
 }
