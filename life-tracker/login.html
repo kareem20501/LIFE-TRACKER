@@ -276,7 +276,7 @@ let _resendCooldown = null;
 
 /* ── إذا كان المستخدم مسجلاً دخوله بالفعل → انتقل للتطبيق ── */
 (function checkExistingSession() {
-  const token = localStorage.getItem('lt_token');
+  const token = sessionStorage.getItem('lt_token');
   if (!token) return;
   // تحقق من صحة الـ token
   fetch(`${API}/api/auth/validate`, {
@@ -373,9 +373,9 @@ async function verifyOTP() {
     stopTimer();
 
     // خزّن الـ session token
-    localStorage.setItem('lt_token', d.token);
-    localStorage.setItem('lt_email', d.email);
-    localStorage.setItem('lt_uid',   d.userId);
+    sessionStorage.setItem('lt_token', d.token);
+    sessionStorage.setItem('lt_email', d.email);
+    sessionStorage.setItem('lt_uid',   d.userId);
 
     setTimeout(() => { window.location.href = '/app'; }, 600);
 
