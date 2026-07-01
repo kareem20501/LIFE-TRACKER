@@ -78,6 +78,31 @@
   margin: 24px 0 14px;
 }
 
+/* Compact "flag-only" tab style — hides the pill background/border and the
+   text label, but keeps the flag, the button's footprint (space), and the
+   full tap target clickable. Used on the profile page where multiple
+   language tabs would otherwise compete for horizontal space. */
+.lang-tab-flagonly {
+  background: transparent;
+  border-color: transparent;
+}
+.lang-tab-flagonly:hover {
+  background: var(--glass);
+  border-color: var(--b1);
+}
+.lang-tab-flagonly.active {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.lang-tab-flagonly.active .lang-tab-flag {
+  box-shadow: 0 0 0 2px var(--indigo);
+  border-radius: 4px;
+}
+.lang-tab-flagonly .lang-tab-name {
+  visibility: hidden;
+}
+
 /* ── Language stats card ── */
 .lang-stats-card {
   background: var(--glass); border: 1px solid var(--b1);
@@ -120,14 +145,14 @@
   color: var(--indigo); margin-bottom: 12px;
   display: flex; align-items: center; gap: 6px;
 }
-.analytics-bar-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; min-width: 0; }
+.analytics-bar-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; min-width: 0; width: 100%; }
 .analytics-bar-label {
-  flex: 1; font-size: 12px; color: var(--t3);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+  flex: 1 1 auto; font-size: 12px; color: var(--t3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; max-width: 45%;
 }
-.analytics-bar-track { flex: 2; height: 8px; background: rgba(255,255,255,0.07); border-radius: 100px; overflow: hidden; min-width: 40px; }
+.analytics-bar-track { flex: 1 1 auto; height: 8px; background: rgba(255,255,255,0.07); border-radius: 100px; overflow: hidden; min-width: 24px; }
 .analytics-bar-fill  { height: 100%; border-radius: 100px; transition: width .8s; }
-.analytics-bar-value { font-size: 12px; font-weight: 600; color: var(--t1); min-width: 38px; text-align: right; flex-shrink: 0; }
+.analytics-bar-value { font-size: 12px; font-weight: 600; color: var(--t1); min-width: 34px; text-align: right; flex-shrink: 0; }
 .analytics-donut-legend {
   margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
 }
@@ -136,7 +161,7 @@
 }
 
 /* ── Donut center overlay ── */
-.donut-wrap { position: relative; display: flex; justify-content: center; }
+.donut-wrap { position: relative; display: flex; justify-content: center; width: 100%; max-width: 100%; }
 .donut-center {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
   text-align: center; pointer-events: none;
@@ -289,16 +314,13 @@ function renderProfile() {
   if (!p) return;
 
   const name     = p.display_name || p.username || 'User';
-  const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
   const joined   = p.created_at
     ? new Date(p.created_at).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })
     : '—';
 
-  // Avatar
+  // Avatar (shared helper — same logic as sidebar and league)
   const avEl = document.getElementById('prof-avatar');
-  avEl.innerHTML = p.avatar_url
-    ? `<img src="${p.avatar_url}" alt="${name}">`
-    : initials;
+  avEl.innerHTML = avatarInnerHTML(name, p.avatar_url);
 
   // Name + email
   document.getElementById('prof-name').textContent  = name;
@@ -386,8 +408,8 @@ function _buildProfLangTabs() {
   if (langs.length === 1) { wrap.innerHTML = ''; return; }
 
   wrap.innerHTML = langs.map(l => `
-    <button class="lang-tab ${l.id === activeLang ? 'active' : ''}"
-      onclick="_switchProfLang('${l.id}')">
+    <button class="lang-tab lang-tab-flagonly ${l.id === activeLang ? 'active' : ''}"
+      onclick="_switchProfLang('${l.id}')" title="${escAttr(l.name)}">
       <span class="lang-tab-flag">${flagIconHTML(langIso(l.code), 18)}</span>
       <span class="lang-tab-name">${l.name}</span>
     </button>`).join('');
@@ -567,7 +589,16 @@ async function _renderLangAnalytics(lang, skills) {
 
   // Scroll the trend chart to the right so the most recent ~10 days are visible
   const ts = grid.querySelector('.trend-scroll');
-  if (ts) requestAnimationFrame(() => { ts.scrollLeft = ts.scrollWidth; });
+  if (ts) {
+    const scrollToEnd = () => { ts.scrollLeft = ts.scrollWidth; };
+    // double-rAF: على بعض متصفحات الموبايل الـ layout مش جاهز خلاص بعد
+    // أول frame (خصوصًا مع خطوط/عرض متغير) — الـ rAF التانية بتضمن إن
+    // الـ scrollWidth النهائي الصحيح اتحسب قبل ما نستخدمه
+    requestAnimationFrame(() => {
+      scrollToEnd();
+      requestAnimationFrame(scrollToEnd);
+    });
+  }
 }
 
 /* ── Custom XP trend chart: hover tooltip ── */
@@ -575,9 +606,14 @@ function buildTrendChart(data) {
   if (!data || !data.length) return `<div style="text-align:center;padding:24px;color:var(--t3);font-size:13px">No data yet</div>`;
 
   const maxV   = Math.max(...data.map(d => d.value || 0), 1);
+  // على الموبايل: عمود أضيق لكل يوم ومساحة أدنى أصغر، عشان أول جزء من
+  // الرسم يبان بشكل مريح قبل الحاجة للسكرول
+  const isNarrow = window.innerWidth < 480;
+  const dayW   = isNarrow ? 24 : 34;
+  const minW   = isNarrow ? Math.max(window.innerWidth - 64, 240) : 300;
   const H = 160, padT = 14, padB = 24, padL = 4, padR = 10;
   const innerH = H - padT - padB;
-  const W = Math.max(data.length * 34, 300);
+  const W = Math.max(data.length * dayW, minW);
 
   let gridLines = '', yLabels = '';
   for (let i = 0; i <= 4; i++) {
